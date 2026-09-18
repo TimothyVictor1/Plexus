@@ -1,0 +1,13 @@
+{
+  "overview": {
+    "title": "Overview",
+    "subtitle": "Tenant health, immune score, cost, and tier distribution. Phase 0: dependency health only.",
+    "apiStatus": "Plexus API",
+    "status": {
+      "ok": "OK",
+      "degraded": "Degraded",
+      "down": "Down",
+      "unreachable": "Unreachable"
+    }
+  }
+}

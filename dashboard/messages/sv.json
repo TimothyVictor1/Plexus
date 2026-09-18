@@ -1,0 +1,13 @@
+{
+  "overview": {
+    "title": "Översikt",
+    "subtitle": "Hälsa per tenant, immunpoäng, kostnad och nivåfördelning. Fas 0: endast beroendehälsa.",
+    "apiStatus": "Plexus API",
+    "status": {
+      "ok": "OK",
+      "degraded": "Nedsatt",
+      "down": "Nere",
+      "unreachable": "Ej nåbar"
+    }
+  }
+}
