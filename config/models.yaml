@@ -1,0 +1,18 @@
+# Model role configuration. See specs/09-model-router.md.
+# Anthropic model ids verified current (2026-09). Non-Anthropic ids are unverified until the
+# router's boot-time list_models() check lands in Phase 1 (docs/QUESTIONS.md OQ-09-1).
+separation: vendor            # vendor | model   (model only allowed for local profiles, OQ-09-2)
+
+roles:
+  actor:      { vendor: anthropic, model: claude-fable-5-1, effort: high }
+  workhorse:  { vendor: anthropic, model: claude-sonnet-5 }
+  classifier: { vendor: anthropic, model: claude-haiku-4-5 }
+  verifier:   { vendor: openai,    model: gpt-5.5 }        # MUST differ from actor vendor
+  embedder:   { vendor: local,     model: bge-m3 }
+
+profiles:
+  sovereign:                                                # for customers that cannot send data out
+    separation: model
+    actor:     { vendor: local, model: qwen3.6-plus }
+    verifier:  { vendor: local, model: deepseek-v4 }
+    workhorse: { vendor: local, model: glm-5.3 }

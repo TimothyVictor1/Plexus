@@ -1,0 +1,24 @@
+# Autonomy Ledger trust formula parameters. See specs/04-autonomy-ledger.md.
+# Changing anything here requires sign-off and an ADR (brief §0.5d).
+window_n: 30
+weights:
+  approval_rate: 0.4
+  reversal_rate: 0.3
+  recency: 0.2
+  blast_radius: 0.1
+recency_tau_days: 14
+no_reversal_days_for_promotion: 14
+thresholds:            # trust required to be promoted INTO the tier
+  EXPLAIN: 0.0         # automatic once a process has >= min_samples shadow runs
+  SUGGEST: 0.6
+  ACT_WITH_APPROVAL: 0.75
+  AUTONOMOUS: 0.9
+min_samples:
+  EXPLAIN: 10
+  SUGGEST: 20
+  ACT_WITH_APPROVAL: 30
+  AUTONOMOUS: 30
+max_tier_for_risk_class:
+  low: AUTONOMOUS
+  medium: AUTONOMOUS
+  high: ACT_WITH_APPROVAL

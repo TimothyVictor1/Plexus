@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.pnpm-store/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+!config/dev-kms.key.example
+
+# Data
+data/
+volumes/
+*.db
+*.sqlite
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log

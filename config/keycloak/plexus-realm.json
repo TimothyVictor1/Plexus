@@ -1,0 +1,37 @@
+{
+  "realm": "plexus",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "viewer", "description": "Read-only access to graph, processes, ledger" },
+      { "name": "operator", "description": "Viewer + can run ingestion, edit ontology proposals" },
+      { "name": "approver", "description": "Operator + can approve actions and tier promotions" },
+      { "name": "admin", "description": "Approver + tenant config, adapter write enablement, kill switch" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "plexus-dashboard",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:3000"]
+    }
+  ],
+  "users": [
+    {
+      "username": "dev-admin",
+      "enabled": true,
+      "email": "dev-admin@plexus.local",
+      "credentials": [{ "type": "password", "value": "dev-admin", "temporary": false }],
+      "realmRoles": ["admin", "approver", "operator", "viewer"]
+    },
+    {
+      "username": "dev-approver",
+      "enabled": true,
+      "email": "dev-approver@plexus.local",
+      "credentials": [{ "type": "password", "value": "dev-approver", "temporary": false }],
+      "realmRoles": ["approver", "operator", "viewer"]
+    }
+  ]
+}
