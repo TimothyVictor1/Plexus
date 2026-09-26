@@ -95,27 +95,42 @@ def test_restore_only_in_executor(repo_root: Path) -> None:
 
 
 def test_adapter_write_only_in_executor(repo_root: Path) -> None:
-    """No module outside the executor may call `<something>.write(op)` on an adapter or build a
-    WriteOp. Adapters themselves define `write`; they may not call another adapter's."""
-    offenders: list[str] = []
+    """Only the executor may INVOKE a write.
+
+    Two separate rules, because they mean different things:
+
+    * Calling `<adapter>.write(op)` is the write itself. Only the executor may do it, and the
+      check covers every module including the adapters, so one adapter cannot drive another.
+    * Constructing a `WriteOp` is describing a write, not performing one. The executor builds
+      them, and an adapter builds one to hand back as the reversal instruction for something it
+      just did. Everywhere else it is a sign that a caller is assembling its own write path, so
+      it stays banned outside `adapters/`.
+    """
+    call_offenders: list[str] = []
+    build_offenders: list[str] = []
     for path in _python_files(repo_root):
         rel = path.relative_to(repo_root)
-        if rel == EXECUTOR or rel == Path("adapters/_contract/base.py"):
-            continue
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call):
-                func = node.func
-                if isinstance(func, ast.Name) and func.id == "WriteOp":
-                    offenders.append(f"{rel}:{node.lineno} constructs WriteOp")
-                if isinstance(func, ast.Attribute) and func.attr == "write":
-                    # Allow file-like writes: only flag when the receiver looks like an adapter.
-                    receiver = func.value
-                    name = receiver.id if isinstance(receiver, ast.Name) else ""
-                    attr = receiver.attr if isinstance(receiver, ast.Attribute) else ""
-                    if "adapter" in (name + attr).lower():
-                        offenders.append(f"{rel}:{node.lineno} calls adapter.write")
-    assert not offenders, "adapter write path used outside executor:\n" + "\n".join(offenders)
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            if isinstance(func, ast.Name) and func.id == "WriteOp":
+                in_adapters = rel.is_relative_to(Path("adapters"))
+                if rel != EXECUTOR and not in_adapters:
+                    build_offenders.append(f"{rel}:{node.lineno} constructs WriteOp")
+            if isinstance(func, ast.Attribute) and func.attr == "write" and rel != EXECUTOR:
+                receiver = func.value
+                name = receiver.id if isinstance(receiver, ast.Name) else ""
+                attr = receiver.attr if isinstance(receiver, ast.Attribute) else ""
+                if "adapter" in (name + attr).lower():
+                    call_offenders.append(f"{rel}:{node.lineno} calls adapter.write")
+    assert not call_offenders, "adapter write invoked outside executor:\n" + "\n".join(
+        call_offenders
+    )
+    assert not build_offenders, "WriteOp built outside executor/adapters:\n" + "\n".join(
+        build_offenders
+    )
 
 
 def test_no_eval_or_exec_in_twin(repo_root: Path) -> None:
