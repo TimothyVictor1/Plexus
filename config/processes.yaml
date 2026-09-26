@@ -1,0 +1,13 @@
+# How a process is judged and described (redesign B3).
+# Health compares the slowest single wait against the whole cycle.
+health:
+  slow_share: 0.45      # one wait is this share of the total cycle or more -> "slow"
+  watch_share: 0.30     # ... or this much -> "could be faster"
+  slow_absolute_days: 14  # any single wait this long is "slow" regardless of share
+
+onboarding:
+  ready_min_cases: 5    # a process needs this many cases before the org counts as "ready"
+
+mining:
+  min_edge_count: 2     # a transition seen fewer times than this is noise
+  min_dependency: 0.25

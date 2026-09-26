@@ -21,7 +21,7 @@ class _FixtureAdapter:
 
     async def backfill(self, since: datetime | None) -> AsyncIterator[SourceItem]:
         yield SourceItem(
-            tenant_id="nordvik",
+            tenant_id="demo",
             source_id=self.id,
             external_id="1",
             kind="email",
@@ -33,7 +33,7 @@ class _FixtureAdapter:
 
     async def watch(self) -> AsyncIterator[SourceEvent]:
         yield SourceEvent(
-            tenant_id="nordvik",
+            tenant_id="demo",
             source_id=self.id,
             ref=SourceRef(source_id=self.id, external_id="1"),
             change="updated",

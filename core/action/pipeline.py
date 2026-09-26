@@ -30,7 +30,7 @@ from twin.rules import PolicyRule
 # What the actor may propose for each process. In Phase 1 proper the actor model writes these
 # from the graph; the shape and every value below still come from the stored case.
 TEMPLATES: dict[str, dict[str, Any]] = {
-    "proc-quote": {
+    "quote_to_payment": {
         "target_source_id": "clickup",
         "operation": "clickup.create_task",
         "risk_class": "low",
@@ -47,9 +47,9 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {"kind": "edge", "op": "create", "label_or_type": "COMMITTED_TO", "key": "edge:new"},
         ],
     },
-    "proc-quote-invoice": {
-        "target_source_id": "economy",
-        "operation": "economy.approve_invoice",
+    "quote_to_payment-invoice": {
+        "target_source_id": "accounting",
+        "operation": "accounting.approve_invoice",
         "risk_class": "high",
         "rationale": "The amount matches the accepted quote and delivery was confirmed in the "
         "project thread.",
@@ -59,7 +59,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             {"kind": "edge", "op": "close", "label_or_type": "COMMITTED_TO", "key": "edge:close"},
         ],
     },
-    "proc-export": {
+    "share-file": {
         "target_source_id": "gdrive",
         "operation": "gdrive.share_file",
         "risk_class": "high",
@@ -127,7 +127,7 @@ async def _context_for(
         attributes = json.loads(raw) if isinstance(raw, str) else dict(raw or {})
     trigger_id = str(event["event_id"]) if event is not None else None
 
-    if process_id == "proc-quote-invoice":
+    if process_id == "quote_to_payment-invoice":
         arguments = {
             "external_id": "invoice-2026-0417",
             "invoice": "2026-0417",
@@ -135,10 +135,10 @@ async def _context_for(
             "currency": "SEK",
             "region": "EU",
         }
-    elif process_id == "proc-export":
+    elif process_id == "share-file":
         arguments = {
             "external_id": "file-clients-2026",
-            "file": "Kundlista_Nordvik_2026.xlsx",
+            "file": "Customer list 2026.xlsx",
             "recipient": "reviewer@auditpartner.com",
             "region": "us-east-1",
             "role": "reader",
@@ -158,13 +158,16 @@ async def propose(
     tenant_id: str, process_id: str, trace_id: str = ""
 ) -> tuple[ProposedAction, SimulationReport]:
     router = get_router()
-    template_key = process_id if process_id in TEMPLATES else "proc-quote"
+    template_key = process_id if process_id in TEMPLATES else "quote_to_payment"
     template = dict(TEMPLATES[template_key])
     cited, arguments, trigger_id = await _context_for(tenant_id, process_id)
     template["arguments"] = arguments
 
+    # The invoice and file-sharing scenarios are variants of one process for ledger purposes.
     ledger_process = (
-        "proc-quote" if process_id in {"proc-quote-invoice", "proc-export"} else process_id
+        "quote_to_payment"
+        if process_id in {"quote_to_payment-invoice", "share-file"}
+        else process_id
     )
     action = await plan(
         router,
@@ -184,7 +187,7 @@ async def propose(
         policies=await load_policies(tenant_id),
         process_id=action.process_id,
         risk_class=action.risk_class,
-        external_parties=1 if process_id in {"proc-quote-invoice", "proc-export"} else 0,
+        external_parties=1 if process_id in {"quote_to_payment-invoice", "share-file"} else 0,
         trace_id=action.trace_id,
     )
     action.simulation = report

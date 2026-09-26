@@ -7,7 +7,7 @@ from hypothesis import strategies as st
 from core.tenancy import Role, RoleRequiredError, TenantContext, require
 
 
-def ctx(*roles: Role, tenant: str = "nordvik") -> TenantContext:
+def ctx(*roles: Role, tenant: str = "acme") -> TenantContext:
     return TenantContext(tenant_id=tenant, subject="u1", roles=frozenset(roles), trace_id="t")
 
 
@@ -50,8 +50,8 @@ def test_valid_tenant_ids_accepted(tenant: str) -> None:
 
 
 def test_sandbox_detection() -> None:
-    assert ctx(tenant="sandbox-nordvik").is_sandbox
-    assert not ctx(tenant="nordvik").is_sandbox
+    assert ctx(tenant="sandbox-acme").is_sandbox
+    assert not ctx(tenant="acme").is_sandbox
 
 
 def test_role_parse() -> None:

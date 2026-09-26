@@ -27,7 +27,11 @@ class Ingestor:
         self.store = store
 
     async def ingest(
-        self, tenant_id: str, source_id: str, items: list[dict[str, Any]]
+        self,
+        tenant_id: str,
+        source_id: str,
+        items: list[dict[str, Any]],
+        connection_id: str | None = None,
     ) -> dict[str, int]:
         documents = 0
         nodes: list[NodeUpsert] = []
@@ -69,10 +73,11 @@ class Ingestor:
             async with tenant_conn(tenant_id) as conn:
                 await conn.execute(
                     "INSERT INTO documents (id, tenant_id, source_id, external_id, kind, title,"
-                    " body_tokenised, structured, actors, source_ref, created_at)"
-                    " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)"
+                    " body_tokenised, structured, actors, source_ref, created_at, connection_id)"
+                    " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)"
                     " ON CONFLICT (tenant_id, source_id, external_id) DO UPDATE"
-                    " SET body_tokenised = EXCLUDED.body_tokenised, title = EXCLUDED.title",
+                    " SET body_tokenised = EXCLUDED.body_tokenised, title = EXCLUDED.title,"
+                    " connection_id = EXCLUDED.connection_id",
                     str(uuid.uuid4()),
                     tenant_id,
                     source_id,
@@ -84,6 +89,7 @@ class Ingestor:
                     json.dumps([{"token": actor_token, "kind": "person"}]),
                     json.dumps(ref.model_dump()),
                     ts,
+                    connection_id,
                 )
             documents += 1
 
@@ -203,3 +209,10 @@ async def load_gazetteer(tenant_id: str) -> int:
         rows = await conn.fetch("SELECT name FROM pii_gazetteer WHERE tenant_id=$1", tenant_id)
     learn_names(tenant_id, [r["name"] for r in rows])
     return len(rows)
+
+
+async def load_all_gazetteers() -> int:
+    """Load every org's gazetteer at startup. No tenant id is hardcoded anywhere."""
+    async with tenant_conn("bootstrap") as conn:
+        tenants = await conn.fetch("SELECT id FROM tenants")
+    return sum([await load_gazetteer(row["id"]) for row in tenants])

@@ -13,10 +13,14 @@ from fastapi import Depends, Header, HTTPException
 
 from core.tenancy import Role, RoleRequiredError, TenantContext, require
 
+# Until OIDC carries the tenant, the console sends it in a header. The default is
+# the demo org so a fresh checkout has something to look at; nothing else assumes it.
+DEFAULT_TENANT = "demo"
+
 
 async def tenant_context(
-    x_plexus_tenant: str = Header(default="nordvik"),
-    x_plexus_subject: str = Header(default="dev-approver"),
+    x_plexus_tenant: str = Header(default=DEFAULT_TENANT),
+    x_plexus_subject: str = Header(default="dev-user"),
     x_plexus_role: str = Header(default="approver"),
 ) -> TenantContext:
     try:

@@ -1,114 +1,66 @@
 {
-  "nav": {
-    "overview": "Overview", "processes": "Processes", "inbox": "Inbox", "graph": "Graph",
-    "ledger": "Ledger", "boundary": "PII boundary", "adapters": "Adapters",
-    "operate": "Operate", "inspect": "Inspect", "actingAs": "Acting as", "tenant": "Tenant"
-  },
-  "common": {
-    "loading": "Loading…",
-    "apiUnreachable": "The Plexus API is not responding",
-    "apiHint": "Start the stack with make up, then seed it with make seed."
-  },
-  "overview": {
-    "title": "Overview",
-    "sub": "What Plexus has ingested, what it has learned, and what it is allowed to do.",
-    "killSwitch": "Pause everything", "resume": "Resume tenant",
-    "pausedTitle": "This tenant is paused",
-    "pausedBody": "The executor refuses every write while the pause flag is set, and records each refusal in the ledger.",
-    "documents": "Documents", "events": "Events", "eventsNote": "object-centric event log",
-    "graphNodes": "Graph nodes", "vault": "Vault entries",
-    "vaultNote": "real values, held nowhere else",
-    "writes": "Adapter writes", "writesNote": "made through the executor",
-    "chain": "Hash chain", "intact": "Intact", "broken": "Broken", "entries": "entries",
-    "processesTitle": "Discovered processes",
-    "process": "Process", "tier": "Tier", "cases": "Cases", "steps": "Steps",
-    "cycle": "Cycle time", "bottleneck": "Bottleneck", "paused": "Paused",
-    "modelTitle": "Model calls", "calls": "Calls", "cost": "Cost", "latency": "Avg latency",
-    "modelNote": "Every model call is routed and costed per tenant. The local profile runs on this machine, so cost is zero and nothing leaves the laptop.",
-    "chainTitle": "Ledger integrity", "noChain": "Nothing recorded yet."
-  },
-  "processes": {
-    "title": "Processes",
-    "sub": "Mined from the event log, not declared by anyone. Each carries its own trust score and tier.",
-    "none": "No processes discovered yet. Run make seed.",
-    "mined": "Mined steps", "actors": "actors",
-    "transitions": "Step transitions", "from": "From", "to": "To", "count": "Count",
-    "gap": "Median gap", "dependency": "Dependency",
-    "cases": "Cases", "cycle": "Median cycle time", "variants": "Variants", "bottleneck": "Bottleneck",
-    "trust": "Trust", "decisions": "decisions", "current": "current", "cleared": "cleared",
-    "startingRung": "starting rung",
-    "eligible": "Eligible for {tier}, awaiting an approver's confirmation.",
-    "promote": "Promote", "demote": "Demote", "pause": "Pause", "resume": "Resume", "paused": "Paused",
-    "term": {
-      "approval_rate": "Approval rate", "reversal_rate": "No reversals",
-      "recency": "Time since last error", "blast_radius": "Blast radius penalty"
+  "shell": {
+    "mainNav": "Main",
+    "home": "Home",
+    "ask": "Ask",
+    "askPlexus": "Ask Plexus",
+    "work": "Your work",
+    "review": "To review",
+    "connections": "Connections",
+    "settings": "Settings",
+    "waitingCount": "{n} waiting for you",
+    "exampleData": "Example data",
+    "inviteTeam": "Invite team",
+    "accountMenu": "Your account",
+    "actingAs": "Acting as",
+    "roleNote": "Plexus checks this on the server, so a viewer genuinely cannot approve anything.",
+    "loadingOrg": "Loading…",
+    "role": {
+      "viewer": "Can look",
+      "operator": "Can run things",
+      "approver": "Can approve",
+      "admin": "Can change settings"
     }
   },
-  "inbox": {
-    "title": "Inbox",
-    "sub": "Proposals waiting on a person, and the pipeline that produced them.",
-    "runTitle": "Run the pipeline",
-    "runBody": "Plan, simulate, verify, then the gate. Change the tier and the same proposal gets a different answer.",
-    "trigger": "Trigger", "tier": "Tier", "run": "Run pipeline", "result": "Result",
-    "scenario": {
-      "task": "Accepted quote, create the follow-up task",
-      "invoice": "Supplier invoice, 12 400 SEK",
-      "export": "Share the client file with an external reviewer"
+  "home": {
+    "greeting": {
+      "morning": "Good morning, what needs doing?",
+      "afternoon": "Good afternoon, what needs doing?",
+      "evening": "Good evening, what needs doing?"
     },
-    "proposal": "Proposal", "operation": "Operation", "risk": "Risk class",
-    "actorModel": "Actor model", "cited": "Cited context",
-    "simulation": "Simulation", "changes": "Predicted changes", "blast": "Blast radius",
-    "verdict": "Verdict",
-    "pendingTitle": "Waiting for a decision", "empty": "Nothing is waiting.",
-    "approve": "Approve", "reject": "Reject", "process": "Process"
+    "welcome": {
+      "morning": "Good morning, welcome to Plexus",
+      "afternoon": "Good afternoon, welcome to Plexus",
+      "evening": "Good evening, welcome to Plexus"
+    },
+    "askPlaceholder": "Ask anything about your company…",
+    "askButton": "Ask",
+    "slowSpots": "Slow spots",
+    "loading": "Loading…",
+    "connectFirst": "Connect a tool +",
+    "stage": {
+      "no_connections": {
+        "title": "Connect your first tool",
+        "body": "Plexus learns how your company works from the tools your team already uses. Nothing is read until you connect something."
+      },
+      "learning": {
+        "title": "Plexus is learning",
+        "body": "Reading from {connected} of your tools. First results usually show up after a week or two of normal work. You can already ask questions."
+      },
+      "ready": {
+        "title": "Plexus is up to date",
+        "body": "Reading from {connected} tools. It has found {processes} ways your company gets work done, and {reviews} things are waiting for you."
+      }
+    }
   },
-  "ledger": {
-    "title": "Ledger",
-    "sub": "Append-only and hash-chained. Corrections are new rows; nothing is ever edited.",
-    "chainTitle": "Chain status", "entries": "entries", "intact": "intact",
-    "brokenAt": "broken at", "noChain": "Nothing recorded yet.",
-    "intactBody": "Every row hashes to the value stored in the row after it.",
-    "brokenBody": "A row no longer matches its stored hash. The ledger detects the edit but never repairs it.",
-    "tamper": "Tamper with a row", "adminOnly": "Requires the admin role",
-    "entriesTitle": "Entries", "empty": "No entries.", "filter": "Filter by type",
-    "allTypes": "All types", "seq": "Seq", "type": "Type", "process": "Process",
-    "actor": "Actor", "when": "When", "prev": "Prev hash", "hash": "Hash"
+  "pages": {
+    "ask": { "title": "Ask", "sub": "Answers come from your own tools, and Plexus shows where each one came from." },
+    "work": { "title": "Your work", "sub": "Plexus found these by itself in your connected tools. Every company's list looks different." },
+    "review": { "title": "To review", "sub": "Plexus prepared these. Nothing happens until you say so." },
+    "connections": { "title": "Connections", "sub": "Plexus only learns from the tools you connect." },
+    "settings": { "title": "Settings", "sub": "Your organisation, your team, and the technical details." }
   },
-  "boundary": {
-    "title": "PII boundary",
-    "sub": "Every byte leaving an adapter is tokenised here before any model or store sees it.",
-    "panelTitle": "Live tokenisation", "reset": "Reset sample",
-    "source": "Source text, as it arrives from the adapter",
-    "modelSees": "What the model and the graph receive",
-    "inVault": "Real value held in the vault", "notInVault": "Not yet stored in the vault",
-    "nothingFound": "No personal data detected",
-    "noLeak": "No personal data remains in the tokenised text.",
-    "leakWarn": "{n} values were not caught. That is a release blocker.",
-    "howTitle": "How this works",
-    "how1": "Tokens are stable per tenant, so the same person yields the same token across Gmail, ClickUp and Drive, and the graph can resolve identity without holding a name.",
-    "how2": "Swedish identity numbers are validated with a Luhn check and a date check, so a number that only looks like a personnummer is not treated as one.",
-    "how3": "Real values are restored at exactly one moment: inside the executor, immediately before an adapter write, and never in a log."
-  },
-  "graph": {
-    "title": "Graph",
-    "sub": "Entities and relationships extracted from the ingested sources, with their provenance.",
-    "nodes": "Nodes", "search": "Search titles and keys", "noNodes": "No matching nodes.",
-    "kind": "Kind", "title2": "Title", "conf": "Conf",
-    "neighbourhood": "Neighbourhood", "pick": "Select a node to see what it connects to.",
-    "selected": "Selected", "connected": "Connected nodes", "relations": "Relations",
-    "edges": "Edges",
-    "provenanceNote": "Every node carries the source references it was derived from."
-  },
-  "adapters": {
-    "title": "Adapters",
-    "sub": "Connected sources, what the executor has written, and how to undo it.",
-    "connected": "Connected sources", "adapter": "Adapter", "documents": "Documents",
-    "write": "Write capability", "enabled": "Enabled", "readOnly": "Read only",
-    "executionsTitle": "Executions", "noExecutions": "Nothing has been executed yet.",
-    "operation": "Operation", "approver": "Approver", "when": "When", "status": "Status",
-    "automatic": "automatic", "reversed": "Reversed", "live": "Live", "reverse": "Reverse",
-    "recordsTitle": "Records written by the executor", "noRecords": "No records written yet.",
-    "id": "External id", "type": "Type", "fields": "Fields", "updated": "Updated",
-    "recordsNote": "These rows were written through the action pipeline, which is the only write path in the system."
+  "placeholder": {
+    "body": "This screen is being built next. It is deliberately empty rather than filled with made-up numbers."
   }
 }

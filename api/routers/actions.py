@@ -27,7 +27,7 @@ def _j(value: Any) -> Any:
 
 
 class RunRequest(BaseModel):
-    process_id: str = "proc-quote"
+    process_id: str = "quote_to_payment"
     tier: str | None = None
     approve: bool = False
 

@@ -30,7 +30,7 @@ from twin.engine import SimulationReport
 
 ALLOWED_OPERATIONS: dict[str, frozenset[str]] = {
     "clickup": frozenset({"clickup.create_task", "clickup.set_status", "clickup.delete"}),
-    "economy": frozenset({"economy.approve_invoice"}),
+    "accounting": frozenset({"accounting.approve_invoice"}),
     "gdrive": frozenset({"gdrive.share_file"}),
 }
 

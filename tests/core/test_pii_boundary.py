@@ -11,7 +11,7 @@ from hypothesis import strategies as st
 from core.pii.boundary import Boundary, TokenMap, learn_names, restore, scan
 from core.pii.kms import KMS
 from core.pii.recognisers import valid_orgnr, valid_personnummer
-from scripts.fixtures.nordvik import check_digit, orgnr, pnr
+from scripts.fixtures.demo import check_digit, orgnr, pnr
 
 TENANT = "testco"
 

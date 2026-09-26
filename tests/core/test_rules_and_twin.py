@@ -11,7 +11,7 @@ SPEND = PolicyRule(
     id="POL-003",
     tenant_id="t",
     name="Spending above 10 000 SEK requires an approver",
-    scope={"source_id": "economy"},
+    scope={"source_id": "accounting"},
     field="arguments.amount",
     operator="gt",
     value=10000,
@@ -30,8 +30,8 @@ RESIDENCY = PolicyRule(
 
 def ctx(**kw: object) -> dict[str, object]:
     base: dict[str, object] = {
-        "operation": "economy.approve_invoice",
-        "source_id": "economy",
+        "operation": "accounting.approve_invoice",
+        "source_id": "accounting",
         "arguments": {"amount": 12400},
         "target": {"region": "EU"},
         "risk_class": "low",
@@ -89,7 +89,7 @@ def test_simulation_reports_violation_and_blast_radius() -> None:
     report = simulate(
         action_id="a1",
         tenant_id="t",
-        operation="economy.approve_invoice",
+        operation="accounting.approve_invoice",
         arguments={"amount": 12400, "region": "EU"},
         expected_effects=[
             PredictedChange(kind="node", op="update", label_or_type="Record", key="inv:1")

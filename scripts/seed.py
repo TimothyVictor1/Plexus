@@ -1,15 +1,18 @@
-"""Seed a full Plexus tenant: migrate, ingest fixtures, mine processes, open the inbox.
+"""Seed a Plexus organisation.
 
-    uv run python -m scripts.seed
+    uv run python -m scripts.seed                 # the demo org, flagged is_demo
+    uv run python -m scripts.seed --org acme --name "Acme AB"   # a real, empty org
 
-Everything it writes is derived from scripts/fixtures/nordvik.py. Run it as often as you like;
-it is idempotent apart from the ledger, which is append-only by design.
+The demo org is deterministic and industry-neutral: the same seed always produces the same
+events. A real org starts empty and fills up as its tools are connected.
 """
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import json
+import uuid
 
 from agents.discover.miner import build_cases, mine
 from agents.extract.ingest import Ingestor, seed_gazetteer
@@ -17,17 +20,25 @@ from core.db.migrate import migrate
 from core.db.pool import close_pool, tenant_conn
 from core.events.model import read_events
 from core.graph.store import get_store
+from core.org.service import ensure_org
 from core.pii.boundary import get_boundary
 from core.pii.vault import TokenVault
-from scripts.fixtures.nordvik import CUSTOMERS, PEOPLE, TENANT, build
+from scripts.fixtures.demo import (
+    CUSTOMERS,
+    DEMO_CONNECTIONS,
+    DEMO_ORG_NAME,
+    DEMO_TENANT,
+    PEOPLE,
+    PROCESS_SPECS,
+    build,
+)
 
-# A rule that cannot be evaluated fails closed, so each rule carries the scope it applies to.
-# A spending limit has no business judging a task that involves no money.
+# Industry-neutral policies. Scoped, so a rule only judges actions it can actually judge.
 POLICIES = [
     (
         "POL-003",
-        "Spending above 10 000 SEK requires an approver",
-        {"source_id": "economy"},
+        "Spending above 10 000 SEK needs someone to approve it",
+        {"source_id": "accounting"},
         "arguments.amount",
         "gt",
         10000,
@@ -44,7 +55,7 @@ POLICIES = [
     ),
     (
         "POL-011",
-        "High-risk operations always need a person",
+        "Anything high risk always needs a person",
         {},
         "risk_class",
         "eq",
@@ -53,29 +64,15 @@ POLICIES = [
     ),
 ]
 
-PROCESS_NAMES = {
-    "quote_to_invoice": ("proc-quote", "Enquiry to quote to invoice"),
-    "onboarding": ("proc-onboard", "New-hire onboarding"),
-    "monthly_report": ("proc-report", "Monthly reporting"),
-}
 
-
-async def main() -> None:
-    applied = await migrate()
-    for name in applied:
-        print(f"migration {name}")
+async def seed_demo() -> None:
+    org = await ensure_org(DEMO_TENANT, DEMO_ORG_NAME, locale="en", is_demo=True)
+    print(f"org {org.id} ({org.display_name}) is_demo={org.is_demo}")
 
     fx = build()
+    await seed_gazetteer(DEMO_TENANT, PEOPLE, CUSTOMERS)
 
-    async with tenant_conn(TENANT) as conn:
-        await conn.execute(
-            "INSERT INTO tenants (id, name) VALUES ($1,$2) ON CONFLICT (id) DO NOTHING",
-            TENANT,
-            "Nordvik Konsult AB",
-        )
-    await seed_gazetteer(TENANT, PEOPLE, CUSTOMERS)
-
-    async with tenant_conn(TENANT) as conn:
+    async with tenant_conn(DEMO_TENANT) as conn:
         for pid, name, scope, field, op, value, effect in POLICIES:
             await conn.execute(
                 "INSERT INTO policies (id, tenant_id, name, scope, field, operator, value, effect)"
@@ -83,7 +80,7 @@ async def main() -> None:
                 " SET name=EXCLUDED.name, scope=EXCLUDED.scope, value=EXCLUDED.value,"
                 " effect=EXCLUDED.effect",
                 pid,
-                TENANT,
+                DEMO_TENANT,
                 name,
                 json.dumps(scope),
                 field,
@@ -92,50 +89,59 @@ async def main() -> None:
                 effect,
             )
 
+        connection_ids: dict[str, str] = {}
+        for category, provider, source_id in DEMO_CONNECTIONS:
+            row = await conn.fetchrow(
+                "INSERT INTO connections (id, tenant_id, category, provider, status, source_id,"
+                " last_sync) VALUES ($1,$2,$3,$4,'connected',$5, now())"
+                " ON CONFLICT (tenant_id, category, provider) DO UPDATE"
+                " SET status='connected', last_sync=now() RETURNING id",
+                str(uuid.uuid4()),
+                DEMO_TENANT,
+                category,
+                provider,
+                source_id,
+            )
+            connection_ids[source_id] = str(row["id"])
+
     store = get_store()
     await store.init_schema()
     ingestor = Ingestor(get_boundary(), TokenVault(), store)
 
     totals = {"documents": 0, "nodes": 0, "edges": 0, "events": 0}
-    for source_id, items in (("gmail", fx.emails), ("clickup", fx.tasks), ("gdrive", fx.files)):
-        counts = await ingestor.ingest(TENANT, source_id, items)
-        print(f"ingested {source_id}: {counts}")
+    for source_id, items in sorted(fx.items.items()):
+        counts = await ingestor.ingest(
+            DEMO_TENANT, source_id, items, connection_id=connection_ids.get(source_id)
+        )
+        print(f"  {source_id:12} {counts}")
         for k, v in counts.items():
             totals[k] += v
 
-    events = await read_events(TENANT)
+    events = await read_events(DEMO_TENANT, limit=20000)
     cases = build_cases(events)
-    print(f"cases: {len(cases)}")
 
-    by_prefix: dict[str, list] = {"quote": [], "onboard": [], "report": [], "other": []}
+    # Each case's events share one object whose type is the process key, so grouping needs no
+    # guesswork: read the key straight off the events.
+    grouped: dict[str, list] = {}
+    known = {spec.key for spec in PROCESS_SPECS}
     for case in cases:
-        objs = {o.object_id for e in case.events for o in e.objects}
-        bucket = next(
-            (p for p in ("quote", "onboard", "report") if any(str(o).startswith(p) for o in objs)),
-            "other",
-        )
-        by_prefix[bucket].append(case)
+        keys = {o.object_type for e in case.events for o in e.objects} & known
+        if len(keys) == 1:
+            grouped.setdefault(keys.pop(), []).append(case)
 
-    async with tenant_conn(TENANT) as conn:
-        for key, (pid, label) in PROCESS_NAMES.items():
-            bucket = {
-                "quote_to_invoice": "quote",
-                "onboarding": "onboard",
-                "monthly_report": "report",
-            }[key]
-            group = by_prefix[bucket]
-            if not group:
-                continue
-            discovered = mine(group, pid, label)
+    async with tenant_conn(DEMO_TENANT) as conn:
+        for key, group in sorted(grouped.items()):
+            discovered = mine(group, key, key.replace("_", " ").capitalize())
             await conn.execute(
                 "INSERT INTO processes (id, tenant_id, name, description, steps, edges,"
                 " metrics, case_count) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
                 " ON CONFLICT (tenant_id, id) DO UPDATE SET steps=EXCLUDED.steps,"
-                " edges=EXCLUDED.edges, metrics=EXCLUDED.metrics, case_count=EXCLUDED.case_count",
-                pid,
-                TENANT,
+                " edges=EXCLUDED.edges, metrics=EXCLUDED.metrics,"
+                " case_count=EXCLUDED.case_count, name=EXCLUDED.name",
+                key,
+                DEMO_TENANT,
                 discovered.name,
-                f"Mined from {discovered.case_count} cases in the event log.",
+                "",
                 json.dumps([s.__dict__ for s in discovered.steps]),
                 json.dumps([e.__dict__ for e in discovered.edges]),
                 json.dumps(discovered.metrics),
@@ -144,23 +150,40 @@ async def main() -> None:
             await conn.execute(
                 "INSERT INTO process_state (tenant_id, process_id, tier)"
                 " VALUES ($1,$2,'OBSERVE') ON CONFLICT (tenant_id, process_id) DO NOTHING",
-                TENANT,
-                pid,
+                DEMO_TENANT,
+                key,
             )
+            cycle = float(discovered.metrics["median_cycle_time_s"]) / 86400
             print(
-                f"mined {pid}: {len(discovered.steps)} steps, "
-                f"{discovered.case_count} cases, "
-                f"cycle {discovered.metrics['median_cycle_time_s'] / 86400:.1f} d"
+                f"  {key:20} {len(discovered.steps)} steps  "
+                f"{discovered.case_count:3} cases  {cycle:5.1f} d"
             )
 
-    vault_count = await TokenVault().count(TENANT)
-    graph_counts = await store.counts(TENANT)
+    vault = await TokenVault().count(DEMO_TENANT)
+    graph = await store.counts(DEMO_TENANT)
     await store.close()
-    await close_pool()
+    print(f"\ntotals {totals}\nvault {vault}\ngraph {graph}")
 
-    print(f"\ntotals: {totals}")
-    print(f"vault entries: {vault_count}")
-    print(f"graph: {graph_counts}")
+
+async def seed_empty(tenant_id: str, name: str) -> None:
+    org = await ensure_org(tenant_id, name, is_demo=False)
+    print(f"org {org.id} ({org.display_name}) created, no data")
+
+
+async def main() -> None:
+    parser = argparse.ArgumentParser(description="Seed a Plexus organisation")
+    parser.add_argument("--org", default=DEMO_TENANT, help="tenant id")
+    parser.add_argument("--name", default=None, help="display name")
+    args = parser.parse_args()
+
+    for applied in await migrate():
+        print(f"migration {applied}")
+
+    if args.org == DEMO_TENANT:
+        await seed_demo()
+    else:
+        await seed_empty(args.org, args.name or args.org)
+    await close_pool()
 
 
 if __name__ == "__main__":

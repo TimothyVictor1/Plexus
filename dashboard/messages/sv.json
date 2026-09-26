@@ -1,114 +1,66 @@
 {
-  "nav": {
-    "overview": "Översikt", "processes": "Processer", "inbox": "Inkorg", "graph": "Graf",
-    "ledger": "Liggare", "boundary": "PII-gräns", "adapters": "Adaptrar",
-    "operate": "Drift", "inspect": "Granska", "actingAs": "Agerar som", "tenant": "Kund"
-  },
-  "common": {
-    "loading": "Laddar…",
-    "apiUnreachable": "Plexus API svarar inte",
-    "apiHint": "Starta stacken med make up och seeda den med make seed."
-  },
-  "overview": {
-    "title": "Översikt",
-    "sub": "Vad Plexus har läst in, vad det har lärt sig och vad det får göra.",
-    "killSwitch": "Pausa allt", "resume": "Återuppta kund",
-    "pausedTitle": "Den här kunden är pausad",
-    "pausedBody": "Exekveraren vägrar varje skrivning medan pausflaggan är satt, och varje vägran hamnar i liggaren.",
-    "documents": "Dokument", "events": "Händelser", "eventsNote": "objektcentrerad händelselogg",
-    "graphNodes": "Grafnoder", "vault": "Valvposter",
-    "vaultNote": "verkliga värden, finns ingen annanstans",
-    "writes": "Adapterskrivningar", "writesNote": "gjorda via exekveraren",
-    "chain": "Hashkedja", "intact": "Intakt", "broken": "Bruten", "entries": "poster",
-    "processesTitle": "Upptäckta processer",
-    "process": "Process", "tier": "Nivå", "cases": "Fall", "steps": "Steg",
-    "cycle": "Cykeltid", "bottleneck": "Flaskhals", "paused": "Pausad",
-    "modelTitle": "Modellanrop", "calls": "Anrop", "cost": "Kostnad", "latency": "Snittlatens",
-    "modelNote": "Varje modellanrop routas och kostnadsförs per kund. Den lokala profilen kör på den här maskinen, så kostnaden är noll och inget lämnar datorn.",
-    "chainTitle": "Liggarens integritet", "noChain": "Inget registrerat än."
-  },
-  "processes": {
-    "title": "Processer",
-    "sub": "Utvunna ur händelseloggen, inte deklarerade av någon. Varje process bär sin egen tillitspoäng och nivå.",
-    "none": "Inga processer upptäckta än. Kör make seed.",
-    "mined": "Utvunna steg", "actors": "aktörer",
-    "transitions": "Stegövergångar", "from": "Från", "to": "Till", "count": "Antal",
-    "gap": "Medianlucka", "dependency": "Beroende",
-    "cases": "Fall", "cycle": "Median cykeltid", "variants": "Varianter", "bottleneck": "Flaskhals",
-    "trust": "Tillit", "decisions": "beslut", "current": "nuvarande", "cleared": "klarad",
-    "startingRung": "startnivå",
-    "eligible": "Kvalificerad för {tier}, väntar på en godkännares bekräftelse.",
-    "promote": "Befordra", "demote": "Degradera", "pause": "Pausa", "resume": "Återuppta", "paused": "Pausad",
-    "term": {
-      "approval_rate": "Godkännandegrad", "reversal_rate": "Inga återtaganden",
-      "recency": "Tid sedan senaste fel", "blast_radius": "Avdrag för spridningsradie"
+  "shell": {
+    "mainNav": "Huvudmeny",
+    "home": "Hem",
+    "ask": "Fråga",
+    "askPlexus": "Fråga Plexus",
+    "work": "Ert arbete",
+    "review": "Att granska",
+    "connections": "Anslutningar",
+    "settings": "Inställningar",
+    "waitingCount": "{n} väntar på dig",
+    "exampleData": "Exempeldata",
+    "inviteTeam": "Bjud in teamet",
+    "accountMenu": "Ditt konto",
+    "actingAs": "Agerar som",
+    "roleNote": "Plexus kontrollerar detta på servern, så den som bara får titta kan verkligen inte godkänna något.",
+    "loadingOrg": "Laddar…",
+    "role": {
+      "viewer": "Får titta",
+      "operator": "Får köra saker",
+      "approver": "Får godkänna",
+      "admin": "Får ändra inställningar"
     }
   },
-  "inbox": {
-    "title": "Inkorg",
-    "sub": "Förslag som väntar på en människa, och pipelinen som tog fram dem.",
-    "runTitle": "Kör pipelinen",
-    "runBody": "Planera, simulera, verifiera, sedan grinden. Byt nivå så får samma förslag ett annat svar.",
-    "trigger": "Utlösare", "tier": "Nivå", "run": "Kör pipeline", "result": "Resultat",
-    "scenario": {
-      "task": "Accepterad offert, skapa uppföljningsuppgiften",
-      "invoice": "Leverantörsfaktura, 12 400 SEK",
-      "export": "Dela kundfilen med en extern granskare"
+  "home": {
+    "greeting": {
+      "morning": "God morgon, vad behöver göras?",
+      "afternoon": "God eftermiddag, vad behöver göras?",
+      "evening": "God kväll, vad behöver göras?"
     },
-    "proposal": "Förslag", "operation": "Operation", "risk": "Riskklass",
-    "actorModel": "Aktörsmodell", "cited": "Citerad kontext",
-    "simulation": "Simulering", "changes": "Förutsagda ändringar", "blast": "Spridningsradie",
-    "verdict": "Utlåtande",
-    "pendingTitle": "Väntar på beslut", "empty": "Inget väntar.",
-    "approve": "Godkänn", "reject": "Avslå", "process": "Process"
+    "welcome": {
+      "morning": "God morgon, välkommen till Plexus",
+      "afternoon": "God eftermiddag, välkommen till Plexus",
+      "evening": "God kväll, välkommen till Plexus"
+    },
+    "askPlaceholder": "Fråga vad som helst om ert företag…",
+    "askButton": "Fråga",
+    "slowSpots": "Tröga ställen",
+    "loading": "Laddar…",
+    "connectFirst": "Anslut ett verktyg +",
+    "stage": {
+      "no_connections": {
+        "title": "Anslut ert första verktyg",
+        "body": "Plexus lär sig hur ert företag arbetar från de verktyg ert team redan använder. Ingenting läses förrän ni ansluter något."
+      },
+      "learning": {
+        "title": "Plexus lär sig",
+        "body": "Läser från {connected} av era verktyg. Första resultaten brukar dyka upp efter en eller två veckors vanligt arbete. Ni kan redan ställa frågor."
+      },
+      "ready": {
+        "title": "Plexus är uppdaterat",
+        "body": "Läser från {connected} verktyg. Det har hittat {processes} sätt ert företag får arbete gjort, och {reviews} saker väntar på er."
+      }
+    }
   },
-  "ledger": {
-    "title": "Liggare",
-    "sub": "Endast tillägg, med hashkedja. Rättelser är nya rader; inget redigeras någonsin.",
-    "chainTitle": "Kedjestatus", "entries": "poster", "intact": "intakt",
-    "brokenAt": "bruten vid", "noChain": "Inget registrerat än.",
-    "intactBody": "Varje rad hashar till värdet som lagrats i raden efter den.",
-    "brokenBody": "En rad stämmer inte längre med sin lagrade hash. Liggaren upptäcker ändringen men lagar den aldrig.",
-    "tamper": "Manipulera en rad", "adminOnly": "Kräver admin-rollen",
-    "entriesTitle": "Poster", "empty": "Inga poster.", "filter": "Filtrera på typ",
-    "allTypes": "Alla typer", "seq": "Nr", "type": "Typ", "process": "Process",
-    "actor": "Aktör", "when": "När", "prev": "Föregående hash", "hash": "Hash"
+  "pages": {
+    "ask": { "title": "Fråga", "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån." },
+    "work": { "title": "Ert arbete", "sub": "Plexus hittade dessa på egen hand i era anslutna verktyg. Varje företags lista ser olika ut." },
+    "review": { "title": "Att granska", "sub": "Plexus har förberett dessa. Ingenting händer förrän ni säger till." },
+    "connections": { "title": "Anslutningar", "sub": "Plexus lär sig bara från de verktyg ni ansluter." },
+    "settings": { "title": "Inställningar", "sub": "Er organisation, ert team och de tekniska detaljerna." }
   },
-  "boundary": {
-    "title": "PII-gräns",
-    "sub": "Varje byte som lämnar en adapter tokeniseras här innan någon modell eller lagring ser den.",
-    "panelTitle": "Tokenisering i realtid", "reset": "Återställ exempel",
-    "source": "Källtext, som den kommer från adaptern",
-    "modelSees": "Vad modellen och grafen får",
-    "inVault": "Verkligt värde finns i valvet", "notInVault": "Ännu inte lagrat i valvet",
-    "nothingFound": "Inga personuppgifter hittade",
-    "noLeak": "Inga personuppgifter återstår i den tokeniserade texten.",
-    "leakWarn": "{n} värden fångades inte. Det stoppar en release.",
-    "howTitle": "Så fungerar det",
-    "how1": "Token är stabila per kund, så samma person ger samma token i Gmail, ClickUp och Drive, och grafen kan knyta ihop identiteten utan att hålla ett namn.",
-    "how2": "Svenska identitetsnummer valideras med Luhn-kontroll och datumkontroll, så ett nummer som bara ser ut som ett personnummer behandlas inte som ett.",
-    "how3": "Verkliga värden återställs vid exakt ett tillfälle: inne i exekveraren, omedelbart före en adapterskrivning, och aldrig i en logg."
-  },
-  "graph": {
-    "title": "Graf",
-    "sub": "Entiteter och relationer utvunna ur de inlästa källorna, med sin proveniens.",
-    "nodes": "Noder", "search": "Sök titlar och nycklar", "noNodes": "Inga matchande noder.",
-    "kind": "Typ", "title2": "Titel", "conf": "Konf",
-    "neighbourhood": "Grannskap", "pick": "Välj en nod för att se vad den hänger ihop med.",
-    "selected": "Vald", "connected": "Anslutna noder", "relations": "Relationer",
-    "edges": "Kanter",
-    "provenanceNote": "Varje nod bär källhänvisningarna den härleddes ur."
-  },
-  "adapters": {
-    "title": "Adaptrar",
-    "sub": "Anslutna källor, vad exekveraren har skrivit och hur det ångras.",
-    "connected": "Anslutna källor", "adapter": "Adapter", "documents": "Dokument",
-    "write": "Skrivrättighet", "enabled": "Aktiverad", "readOnly": "Endast läsning",
-    "executionsTitle": "Exekveringar", "noExecutions": "Inget har exekverats än.",
-    "operation": "Operation", "approver": "Godkännare", "when": "När", "status": "Status",
-    "automatic": "automatisk", "reversed": "Återtagen", "live": "Aktiv", "reverse": "Återta",
-    "recordsTitle": "Poster skrivna av exekveraren", "noRecords": "Inga poster skrivna än.",
-    "id": "Externt id", "type": "Typ", "fields": "Fält", "updated": "Uppdaterad",
-    "recordsNote": "De här raderna skrevs via åtgärdspipelinen, som är systemets enda skrivväg."
+  "placeholder": {
+    "body": "Den här skärmen byggs härnäst. Den är medvetet tom i stället för fylld med påhittade siffror."
   }
 }
