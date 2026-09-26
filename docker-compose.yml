@@ -156,6 +156,8 @@ services:
       PLEXUS_ENV: ${PLEXUS_ENV:-development}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      PLEXUS_MODEL_PROFILE: ${PLEXUS_MODEL_PROFILE:-default}
     depends_on:
       postgres:
         condition: service_healthy

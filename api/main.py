@@ -14,6 +14,7 @@ from api.routers.health import router as health_router
 from api.routers.org import router as org_router
 from api.routers.overview import router as overview_router
 from api.routers.pii import router as pii_router
+from api.routers.processes import router as processes_router
 from core.db.pool import close_pool
 
 API_VERSION = "0.2.0"
@@ -45,7 +46,15 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for r in (health_router, org_router, overview_router, pii_router, actions_router):
+    routers = (
+        health_router,
+        org_router,
+        processes_router,
+        overview_router,
+        pii_router,
+        actions_router,
+    )
+    for r in routers:
         app.include_router(r, prefix="/v1")
     return app
 

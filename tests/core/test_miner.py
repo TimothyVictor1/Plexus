@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
 from adapters._contract.base import ActorRef, SourceRef
 from agents.discover.miner import build_cases, mine
 from core.events.model import ObjectRef, PlexusEvent
@@ -68,10 +70,23 @@ def test_cycle_time_within_ten_percent_of_ground_truth() -> None:
     assert abs(actual - expected) / expected < 0.10
 
 
-def test_bottleneck_is_the_longest_gap() -> None:
+def test_bottleneck_is_the_transition_not_the_step() -> None:
+    """A wait happens between two steps, so naming only the target loses half the answer."""
     events = [e for n in range(12) for e in quote_case(n, n * 9)]
     result = mine(build_cases(events), "quote_to_payment", "Q")
-    assert result.metrics["bottleneck_step"] == "invoiced"
+    assert result.bottleneck is not None
+    assert result.bottleneck.source == "created"
+    assert result.bottleneck.target == "invoiced"
+    assert result.metrics["bottleneck_from"] == "created"
+    assert result.metrics["bottleneck_to"] == "invoiced"
+    # created -> invoiced is the 25-day gap in the fixture.
+    assert result.metrics["bottleneck_gap_s"] == pytest.approx(25 * 86400, rel=0.01)
+
+
+def test_bottleneck_is_absent_when_there_are_no_transitions() -> None:
+    result = mine([], "empty", "Empty")
+    assert result.bottleneck is None
+    assert result.metrics["bottleneck_from"] == ""
 
 
 def test_noise_edges_are_dropped() -> None:

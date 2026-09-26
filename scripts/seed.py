@@ -23,6 +23,7 @@ from core.graph.store import get_store
 from core.org.service import ensure_org
 from core.pii.boundary import get_boundary
 from core.pii.vault import TokenVault
+from core.processes.service import refresh_labels
 from scripts.fixtures.demo import (
     CUSTOMERS,
     DEMO_CONNECTIONS,
@@ -158,6 +159,10 @@ async def seed_demo() -> None:
                 f"  {key:20} {len(discovered.steps)} steps  "
                 f"{discovered.case_count:3} cases  {cycle:5.1f} d"
             )
+
+    print("\nnaming things in plain English…")
+    for process_id, outcome in (await refresh_labels(DEMO_TENANT)).items():
+        print(f"  {process_id:20} {outcome}")
 
     vault = await TokenVault().count(DEMO_TENANT)
     graph = await store.counts(DEMO_TENANT)

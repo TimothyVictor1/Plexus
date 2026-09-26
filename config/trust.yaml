@@ -1,6 +1,10 @@
 # Autonomy Ledger trust formula parameters. See specs/04-autonomy-ledger.md.
 # Changing anything here requires sign-off and an ADR (brief §0.5d).
 window_n: 30
+# A process with no track record must not score well. Until it has made at least this many
+# decisions, the "no reversals" and "time since last error" terms pay nothing: having no
+# history is not the same as having a clean one.
+min_decisions_for_credit: 5
 weights:
   approval_rate: 0.4
   reversal_rate: 0.3

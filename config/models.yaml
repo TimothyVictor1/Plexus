@@ -6,9 +6,12 @@
 # When a second vendor key exists, move the verifier onto it and delete this note.
 separation: vendor
 
+# Free-tier quota is per day and per model, so roles are spread across models rather than
+# pointed at one. Short structured work (labels, drafts) goes to a lite model, which is both
+# the better fit and the cheaper one.
 roles:
-  actor:      { vendor: google, model: gemini-3.8-flash }
-  workhorse:  { vendor: google, model: gemini-3.8-flash }
+  actor:      { vendor: google, model: gemini-2.5-flash }
+  workhorse:  { vendor: google, model: gemini-3.1-flash-lite }
   classifier: { vendor: google, model: gemini-3.1-flash-lite }
   verifier:   { vendor: local,  model: policy-verifier }
   embedder:   { vendor: local,  model: bge-m3 }

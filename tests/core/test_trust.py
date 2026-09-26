@@ -55,11 +55,47 @@ def test_forty_approvals_one_reversal_follows_the_formula(cfg: TrustConfig) -> N
     )
 
 
-def test_no_decisions_means_no_approval_credit(cfg: TrustConfig) -> None:
+def test_a_process_with_no_history_scores_zero(cfg: TrustConfig) -> None:
+    """The bug this replaced: an untested process collected the clean-record terms for free."""
     b = compute_trust([], cfg, now=NOW)
     assert b.approval_rate == 0.0
-    assert b.recency == 1.0  # never errored
-    assert b.trust == pytest.approx(cfg.weights["reversal_rate"] + cfg.weights["recency"])
+    assert b.samples == 0
+    assert b.trust == 0.0
+    assert b.terms["reversal_rate"] == 0.0
+    assert b.terms["recency"] == 0.0
+
+
+def test_credit_is_withheld_just_below_the_threshold(cfg: TrustConfig) -> None:
+    below = compute_trust(
+        [entry("approval") for _ in range(cfg.min_decisions_for_credit - 1)], cfg, now=NOW
+    )
+    at = compute_trust(
+        [entry("approval") for _ in range(cfg.min_decisions_for_credit)], cfg, now=NOW
+    )
+    assert below.terms["recency"] == 0.0
+    assert at.terms["recency"] > 0.0
+    assert at.trust > below.trust
+
+
+def test_a_few_approvals_score_between_nothing_and_everything(cfg: TrustConfig) -> None:
+    b = compute_trust([entry("approval") for _ in range(6)], cfg, now=NOW)
+    assert 0.0 < b.trust < 1.0
+    assert b.approval_rate == 1.0
+
+
+def test_one_reversal_costs_more_than_it_gains(cfg: TrustConfig) -> None:
+    clean = [entry("approval") for _ in range(10)] + [entry("execution") for _ in range(6)]
+    reversed_run = [*clean, entry("reversal", days_ago=0)]
+    assert (
+        compute_trust(reversed_run, cfg, now=NOW).trust < compute_trust(clean, cfg, now=NOW).trust
+    )
+
+
+def test_a_recent_error_suppresses_the_recency_term(cfg: TrustConfig) -> None:
+    entries = [entry("approval") for _ in range(10)]
+    fresh = compute_trust([*entries, entry("reversal", days_ago=0)], cfg, now=NOW)
+    healed = compute_trust([*entries, entry("reversal", days_ago=90)], cfg, now=NOW)
+    assert fresh.terms["recency"] < healed.terms["recency"]
 
 
 def test_blast_radius_reduces_trust(cfg: TrustConfig) -> None:

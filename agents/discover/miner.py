@@ -54,6 +54,16 @@ Metrics = dict[str, float | int | str]
 
 
 @dataclass
+class Bottleneck:
+    """The single longest wait in a process, as the transition it actually is."""
+
+    source: str
+    target: str
+    median_gap_s: float
+    count: int
+
+
+@dataclass
 class DiscoveredProcess:
     process_id: str
     name: str
@@ -62,6 +72,7 @@ class DiscoveredProcess:
     metrics: Metrics
     case_count: int
     variants: list[tuple[tuple[str, ...], int]]
+    bottleneck: Bottleneck | None
 
 
 class UnionFind:
@@ -160,7 +171,12 @@ def mine(cases: list[Case], process_id: str, name: str, min_edge: int = 2) -> Di
 
     durations = [c.duration_s for c in cases if c.duration_s > 0]
     traces = Counter(c.trace for c in cases)
-    bottleneck = max(edges, key=lambda e: e.median_gap_s).target if edges else ""
+    slowest = max(edges, key=lambda e: e.median_gap_s) if edges else None
+    bottleneck = (
+        Bottleneck(slowest.source, slowest.target, slowest.median_gap_s, slowest.count)
+        if slowest
+        else None
+    )
 
     metrics: Metrics = {
         "median_cycle_time_s": round(statistics.median(durations), 1) if durations else 0.0,
@@ -168,7 +184,9 @@ def mine(cases: list[Case], process_id: str, name: str, min_edge: int = 2) -> Di
         "case_count": len(cases),
         "variant_count": len(traces),
         "step_count": len(steps),
-        "bottleneck_step": bottleneck,
+        "bottleneck_from": bottleneck.source if bottleneck else "",
+        "bottleneck_to": bottleneck.target if bottleneck else "",
+        "bottleneck_gap_s": round(bottleneck.median_gap_s, 1) if bottleneck else 0.0,
         "events": sum(verb_count.values()),
     }
 
@@ -180,4 +198,5 @@ def mine(cases: list[Case], process_id: str, name: str, min_edge: int = 2) -> Di
         metrics=metrics,
         case_count=len(cases),
         variants=traces.most_common(8),
+        bottleneck=bottleneck,
     )

@@ -11,8 +11,6 @@ from api.deps import tenant_context
 from core.db.pool import tenant_conn
 from core.graph.store import get_store
 from core.ledger import ledger
-from core.ledger.models import Tier
-from core.ledger.trust import compute_trust, load_config, next_transition
 from core.pii.vault import TokenVault
 from core.tenancy import TenantContext
 
@@ -105,43 +103,6 @@ async def graph_node(
     ctx: TenantContext = Depends(tenant_context),
 ) -> dict[str, Any]:
     return await get_store().neighbourhood(ctx.tenant_id, key, depth)
-
-
-@router.get("/processes")
-async def processes(ctx: TenantContext = Depends(tenant_context)) -> dict[str, Any]:
-    t = ctx.tenant_id
-    cfg = load_config()
-    async with tenant_conn(t) as conn:
-        rows = await conn.fetch(
-            "SELECT p.*, s.tier, s.trust, s.paused FROM processes p"
-            " LEFT JOIN process_state s ON s.tenant_id=p.tenant_id AND s.process_id=p.id"
-            " WHERE p.tenant_id=$1 ORDER BY p.name",
-            t,
-        )
-    out = []
-    for r in rows:
-        entries = await ledger.entries(t, r["id"], limit=cfg.window_n)
-        breakdown = compute_trust(list(reversed(entries)), cfg)
-        tier = Tier.parse(r["tier"] or "OBSERVE")
-        transition = next_transition(tier, breakdown, cfg)
-        out.append(
-            {
-                "id": r["id"],
-                "name": r["name"],
-                "description": r["description"],
-                "steps": _j(r["steps"]),
-                "edges": _j(r["edges"]),
-                "metrics": _j(r["metrics"]),
-                "case_count": r["case_count"],
-                "tier": tier.name,
-                "paused": bool(r["paused"]),
-                "trust": breakdown.model_dump(),
-                "transition": transition.model_dump(),
-                "thresholds": cfg.thresholds,
-                "min_samples": cfg.min_samples,
-            }
-        )
-    return {"processes": out}
 
 
 @router.get("/events")

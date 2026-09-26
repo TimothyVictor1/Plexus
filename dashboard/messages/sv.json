@@ -54,13 +54,91 @@
     }
   },
   "pages": {
-    "ask": { "title": "Fråga", "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån." },
-    "work": { "title": "Ert arbete", "sub": "Plexus hittade dessa på egen hand i era anslutna verktyg. Varje företags lista ser olika ut." },
-    "review": { "title": "Att granska", "sub": "Plexus har förberett dessa. Ingenting händer förrän ni säger till." },
-    "connections": { "title": "Anslutningar", "sub": "Plexus lär sig bara från de verktyg ni ansluter." },
-    "settings": { "title": "Inställningar", "sub": "Er organisation, ert team och de tekniska detaljerna." }
+    "ask": {
+      "title": "Fråga",
+      "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån."
+    },
+    "review": {
+      "title": "Att granska",
+      "sub": "Plexus har förberett dessa. Ingenting händer förrän ni säger till."
+    },
+    "connections": {
+      "title": "Anslutningar",
+      "sub": "Plexus lär sig bara från de verktyg ni ansluter."
+    },
+    "settings": {
+      "title": "Inställningar",
+      "sub": "Er organisation, ert team och de tekniska detaljerna."
+    }
   },
   "placeholder": {
     "body": "Den här skärmen byggs härnäst. Den är medvetet tom i stället för fylld med påhittade siffror."
+  },
+  "work": {
+    "title": "Ert arbete",
+    "sub": "Plexus hittade dessa på egen hand i era anslutna verktyg. Varje företags lista ser olika ut.",
+    "slowTitle": "Tröga ställen",
+    "slowSub": "Platserna där arbetet blir stående. Att åtgärda ett av dem frigör mest tid.",
+    "empty": "Inget här än. När era verktyg är anslutna och teamet arbetar som vanligt dyker sätten arbetet blir gjort upp här av sig själva.",
+    "noSlow": "Inget släpar just nu. Alla sätt att arbeta rör sig i jämn takt.",
+    "takes": "Tar {time}.",
+    "slowest": "Trögast: {what}.",
+    "isPaused": "Plexus är pausat här",
+    "plexusDoes": "Plexus {level}",
+    "level": {
+      "1": "tittar på",
+      "2": "förklarar",
+      "3": "föreslår",
+      "4": "agerar med ert godkännande",
+      "5": "agerar på egen hand"
+    }
+  },
+  "health": {
+    "smooth": "Rullar på bra",
+    "watch": "Kan gå snabbare",
+    "slow": "Har ett trögt steg"
+  },
+  "process": {
+    "allWork": "Allt arbete",
+    "paused": "Pausad",
+    "happened": "Hänt {n} gånger.",
+    "seenIn": "Syns i {tools}.",
+    "howItRuns": "Så går det till",
+    "usuallyTakes": "Tar oftast {time}",
+    "slowest": "Trögast",
+    "whereHelps": "Här kan Plexus hjälpa till",
+    "howMuch": "Så mycket gör Plexus här",
+    "pausedBody": "Plexus är pausat här. Det fortsätter titta på, men gör ingenting förrän ni återupptar det.",
+    "readyTo": "Redo att {what}",
+    "learningBefore": "Lär sig av teamets beslut innan det kan {what}",
+    "ofDecisions": "{have} av {need}",
+    "letPlexus": "Låt Plexus {what}",
+    "resume": "Återuppta Plexus",
+    "pause": "Pausa Plexus",
+    "doLess": "Låt Plexus göra mindre",
+    "controlsComing": "De här kontrollerna börjar fungera i nästa steg av bygget.",
+    "showTech": "Visa de tekniska detaljerna",
+    "hideTech": "Dölj de tekniska detaljerna",
+    "level": {
+      "watches": "Tittar på",
+      "explains": "Förklarar",
+      "suggests": "Föreslår",
+      "actsWithOk": "Agerar med ert godkännande",
+      "actsAlone": "Agerar på egen hand"
+    },
+    "verb": {
+      "watches": "titta på",
+      "explains": "förklara",
+      "suggests": "föreslå",
+      "actsWithOk": "agera med ert godkännande",
+      "actsAlone": "agera på egen hand"
+    },
+    "levelBody": {
+      "watches": "Plexus tittar bara på och lär sig hur arbetet görs. Det gör ingenting än.",
+      "explains": "Plexus förklarar vad som händer och varför, så att alla ser vart tiden tar vägen.",
+      "suggests": "Plexus föreslår nästa steg. En människa bestämmer.",
+      "actsWithOk": "Plexus förbereder arbetet och väntar på ert godkännande innan något skickas.",
+      "actsAlone": "Plexus sköter det på egen hand och berättar efteråt."
+    }
   }
 }

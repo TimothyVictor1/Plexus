@@ -33,6 +33,11 @@ DEFAULT_TIMEOUT = 60.0
 # surfaced as a failure. A 4xx that is not 429 means the request itself is wrong: no retry.
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 MAX_ATTEMPTS = 4
+# Overload clears in seconds. A quota is measured per minute, so it needs a real wait rather
+# than a handful of fast retries, and the server usually says how long.
+BACKOFF_OVERLOAD = 0.8
+BACKOFF_QUOTA = 6.0
+MAX_BACKOFF = 45.0
 
 
 class GoogleProvider:
@@ -105,6 +110,7 @@ class GoogleProvider:
     async def _call(self, body: dict[str, Any]) -> dict[str, Any]:
         url = f"{BASE_URL}/models/{self.model}:generateContent"
         last = "no attempt made"
+        hinted: float | None = None
         for attempt in range(MAX_ATTEMPTS):
             try:
                 async with httpx.AsyncClient(timeout=self._timeout) as client:
@@ -116,6 +122,7 @@ class GoogleProvider:
                     )
             except httpx.HTTPError as exc:
                 last = f"request failed: {type(exc).__name__}"
+                hinted = None
             else:
                 if response.status_code == 200:
                     return dict(response.json())
@@ -123,8 +130,11 @@ class GoogleProvider:
                 last = f"HTTP {response.status_code}"
                 if response.status_code not in RETRY_STATUSES:
                     break
+                hinted = _retry_after(response)
             if attempt < MAX_ATTEMPTS - 1:
-                await asyncio.sleep(0.8 * (2**attempt))
+                base = BACKOFF_QUOTA if last.endswith("429") else BACKOFF_OVERLOAD
+                wait = hinted if hinted is not None else base * (2**attempt)
+                await asyncio.sleep(min(wait, MAX_BACKOFF))
         raise ModelUnavailableError(f"google unavailable after {MAX_ATTEMPTS} attempts: {last}")
 
     async def complete(
@@ -206,3 +216,25 @@ def _strip_fence(text: str) -> str:
         if cleaned.endswith("```"):
             cleaned = cleaned[:-3]
     return cleaned.strip()
+
+
+def _retry_after(response: httpx.Response) -> float | None:
+    """How long the server asked us to wait, from the header or the RetryInfo it returns."""
+    header = response.headers.get("retry-after")
+    if header:
+        try:
+            return float(header)
+        except ValueError:
+            pass
+    try:
+        details = response.json().get("error", {}).get("details", [])
+    except (ValueError, AttributeError):
+        return None
+    for detail in details:
+        delay = detail.get("retryDelay") if isinstance(detail, dict) else None
+        if isinstance(delay, str) and delay.endswith("s"):
+            try:
+                return float(delay[:-1])
+            except ValueError:
+                continue
+    return None

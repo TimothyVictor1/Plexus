@@ -95,3 +95,65 @@ export type OrgStatus = {
   review_count: number;
   ready_min_cases: number;
 };
+
+export type Duration = { seconds: number; text: string };
+export type Health = "smooth" | "watch" | "slow";
+
+export type Slowest = {
+  from_step: string;
+  to_step: string;
+  text: string;
+  duration: Duration | null;
+};
+
+export type ProcessSummary = {
+  id: string;
+  name: string;
+  description: string;
+  total_duration: Duration;
+  health: Health;
+  slowest: Slowest;
+  level: number;
+  paused: boolean;
+  case_count: number;
+  tools: string[];
+  tools_text: string;
+};
+
+export type Step = { label: string; order: number; verb: string };
+export type Wait = {
+  from_step: string;
+  to_step: string;
+  duration: Duration;
+  is_slowest: boolean;
+};
+
+export type Autonomy = {
+  level: number;
+  level_key: string;
+  decisions: number;
+  needed: number;
+  can_promote: boolean;
+  reason: string;
+  paused: boolean;
+};
+
+export type Technical = {
+  cases: number;
+  variants: number;
+  median_gaps: { from: string; to: string; seconds: number; count: number; dependency: number }[];
+  bottleneck_transition: string;
+  trust_score: number;
+  trust_components: Record<string, number>;
+  tier: string;
+};
+
+export type ProcessDetail = ProcessSummary & {
+  steps: Step[];
+  waits: Wait[];
+  help_tip: string;
+  autonomy: Autonomy;
+  technical: Technical;
+};
+
+export const LEVEL_KEYS = ["watches", "explains", "suggests", "actsWithOk", "actsAlone"] as const;

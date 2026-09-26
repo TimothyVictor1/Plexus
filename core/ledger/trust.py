@@ -23,6 +23,7 @@ CONFIG_PATH = Path("config/trust.yaml")
 
 class TrustConfig(BaseModel):
     window_n: int
+    min_decisions_for_credit: int = 5
     weights: dict[str, float]
     recency_tau_days: float
     no_reversal_days_for_promotion: int
@@ -79,11 +80,15 @@ def compute_trust(
     ]
     blast = sum(radii) / len(radii) if radii else 0.0
 
+    # Having no history is not the same as having a clean one, so the two terms that would
+    # otherwise pay out in full to an untested process are withheld until it has a record.
+    earned = decisions >= cfg.min_decisions_for_credit
+
     w = cfg.weights
     terms = {
         "approval_rate": w["approval_rate"] * approval_rate,
-        "reversal_rate": w["reversal_rate"] * (1 - reversal_rate),
-        "recency": w["recency"] * recency,
+        "reversal_rate": w["reversal_rate"] * (1 - reversal_rate) if earned else 0.0,
+        "recency": w["recency"] * recency if earned else 0.0,
         "blast_radius": -w["blast_radius"] * blast,
     }
     trust = min(1.0, max(0.0, sum(terms.values())))

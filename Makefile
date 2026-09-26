@@ -1,4 +1,4 @@
-.PHONY: help up down nuke logs sync migrate seed console api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
+.PHONY: help up down nuke logs sync migrate seed labels console api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
 
 # Use pnpm if installed; otherwise run it through npx (no global install needed).
 PNPM := $(shell command -v pnpm >/dev/null 2>&1 && echo pnpm || echo "npx --yes pnpm@9.15.0")
@@ -49,6 +49,9 @@ seed: sync ## Migrate, ingest the Nordvik fixtures, mine processes
 
 api: sync ## Run the API on :8000 with reload (the compose `api` service also serves it)
 	uv run uvicorn api.main:app --reload --port 8000
+
+labels: sync ## Regenerate plain-language names for every process
+	uv run python -m scripts.refresh_labels
 
 console: ## Run the operator console on :3000
 	cd dashboard && $(PNPM) run dev

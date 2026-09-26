@@ -54,13 +54,91 @@
     }
   },
   "pages": {
-    "ask": { "title": "Ask", "sub": "Answers come from your own tools, and Plexus shows where each one came from." },
-    "work": { "title": "Your work", "sub": "Plexus found these by itself in your connected tools. Every company's list looks different." },
-    "review": { "title": "To review", "sub": "Plexus prepared these. Nothing happens until you say so." },
-    "connections": { "title": "Connections", "sub": "Plexus only learns from the tools you connect." },
-    "settings": { "title": "Settings", "sub": "Your organisation, your team, and the technical details." }
+    "ask": {
+      "title": "Ask",
+      "sub": "Answers come from your own tools, and Plexus shows where each one came from."
+    },
+    "review": {
+      "title": "To review",
+      "sub": "Plexus prepared these. Nothing happens until you say so."
+    },
+    "connections": {
+      "title": "Connections",
+      "sub": "Plexus only learns from the tools you connect."
+    },
+    "settings": {
+      "title": "Settings",
+      "sub": "Your organisation, your team, and the technical details."
+    }
   },
   "placeholder": {
     "body": "This screen is being built next. It is deliberately empty rather than filled with made-up numbers."
+  },
+  "work": {
+    "title": "Your work",
+    "sub": "Plexus found these by itself in your connected tools. Every company's list looks different.",
+    "slowTitle": "Slow spots",
+    "slowSub": "The places where work sits waiting. Fixing one of these frees up the most time.",
+    "empty": "Nothing here yet. Once your tools are connected and your team works as usual, the ways work gets done will show up here on their own.",
+    "noSlow": "Nothing is dragging at the moment. Every way of working is moving at a steady pace.",
+    "takes": "Takes {time}.",
+    "slowest": "Slowest: {what}.",
+    "isPaused": "Plexus is paused here",
+    "plexusDoes": "Plexus {level}",
+    "level": {
+      "1": "watches",
+      "2": "explains",
+      "3": "suggests",
+      "4": "acts with your OK",
+      "5": "acts on its own"
+    }
+  },
+  "health": {
+    "smooth": "Running smoothly",
+    "watch": "Could be faster",
+    "slow": "Has a slow step"
+  },
+  "process": {
+    "allWork": "All work",
+    "paused": "Paused",
+    "happened": "Happened {n} times.",
+    "seenIn": "Seen in {tools}.",
+    "howItRuns": "How it runs",
+    "usuallyTakes": "Usually takes {time}",
+    "slowest": "Slowest",
+    "whereHelps": "Where Plexus can help",
+    "howMuch": "How much Plexus does here",
+    "pausedBody": "Plexus is paused here. It keeps watching, but does nothing until you resume it.",
+    "readyTo": "Ready to {what}",
+    "learningBefore": "Learning from your team's decisions before it can {what}",
+    "ofDecisions": "{have} of {need}",
+    "letPlexus": "Let Plexus {what}",
+    "resume": "Resume Plexus",
+    "pause": "Pause Plexus",
+    "doLess": "Let Plexus do less",
+    "controlsComing": "These controls start working in the next step of the build.",
+    "showTech": "Show the technical details",
+    "hideTech": "Hide the technical details",
+    "level": {
+      "watches": "Watches",
+      "explains": "Explains",
+      "suggests": "Suggests",
+      "actsWithOk": "Acts with your OK",
+      "actsAlone": "Acts on its own"
+    },
+    "verb": {
+      "watches": "watch",
+      "explains": "explain",
+      "suggests": "suggest",
+      "actsWithOk": "act with your OK",
+      "actsAlone": "act on its own"
+    },
+    "levelBody": {
+      "watches": "Plexus only watches and learns how this work is done. It does not do anything yet.",
+      "explains": "Plexus explains what is happening and why, so everyone can see where time goes.",
+      "suggests": "Plexus suggests the next step. A person decides.",
+      "actsWithOk": "Plexus prepares the work and waits for your OK before anything is sent.",
+      "actsAlone": "Plexus handles it on its own and tells you afterwards."
+    }
   }
 }

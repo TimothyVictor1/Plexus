@@ -1,9 +1,12 @@
 # How a process is judged and described (redesign B3).
 # Health compares the slowest single wait against the whole cycle.
+# Health asks whether one step is holding everything up, not whether the work takes a while.
+# Share of the total is the wrong test: a three-step process has two waits, so an evenly paced
+# one already puts 50% into each. Lopsidedness against the other waits is the real signal.
 health:
-  slow_share: 0.45      # one wait is this share of the total cycle or more -> "slow"
-  watch_share: 0.30     # ... or this much -> "could be faster"
-  slow_absolute_days: 14  # any single wait this long is "slow" regardless of share
+  slow_ratio: 4.0         # slowest wait is this many times the rest -> "has a slow step"
+  watch_ratio: 1.8        # ... or this much -> "could be faster"
+  slow_absolute_days: 14  # any single wait this long is slow however balanced the rest is
 
 onboarding:
   ready_min_cases: 5    # a process needs this many cases before the org counts as "ready"
