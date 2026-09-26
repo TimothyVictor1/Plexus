@@ -17,6 +17,7 @@ import yaml
 from pydantic import BaseModel
 
 from core.db.pool import tenant_conn
+from core.models.providers.google import GoogleProvider
 from core.models.providers.local import LocalProvider
 from core.models.types import (
     Completion,
@@ -28,6 +29,17 @@ from core.models.types import (
 from core.settings import Env, Settings, get_settings
 
 CONFIG_PATH = Path("config/models.yaml")
+PRICES_PATH = Path("config/model_prices.yaml")
+
+
+def _prices(vendor: str, model: str) -> tuple[float, float]:
+    """Per-million-token prices. Zero until a real rate is configured."""
+    try:
+        table = yaml.safe_load(PRICES_PATH.read_text(encoding="utf-8")) or {}
+    except OSError:
+        return 0.0, 0.0
+    entry = (table.get(vendor) or {}).get(model) or (table.get(vendor) or {}).get("*") or {}
+    return float(entry.get("input", 0.0)), float(entry.get("output", 0.0))
 
 
 class RoleConfig(BaseModel):
@@ -40,7 +52,13 @@ class Provider(Protocol):
     vendor: str
 
     async def complete(
-        self, messages: list[Message], *, role: str, context: dict[str, Any] | None = None
+        self,
+        messages: list[Message],
+        *,
+        role: str,
+        context: dict[str, Any] | None = None,
+        schema: type[BaseModel] | None = None,
+        max_tokens: int = 4096,
     ) -> Completion: ...
     async def list_models(self) -> list[str]: ...
 
@@ -98,14 +116,31 @@ class Router:
     def provider_for(self, role: Role) -> Provider:
         cfg = self.roles[role]
         key = f"{cfg.vendor}:{cfg.model}"
-        if key not in self._providers:
-            if cfg.vendor == "local":
-                self._providers[key] = LocalProvider(cfg.model)
-            else:
-                # Hosted providers land in Phase 1 proper; until an API key exists the router
-                # refuses rather than silently downgrading to a different vendor.
-                self._providers[key] = LocalProvider(cfg.model)
-        return self._providers[key]
+        if key in self._providers:
+            return self._providers[key]
+
+        settings = get_settings()
+        if cfg.vendor == "google":
+            price_in, price_out = _prices(cfg.vendor, cfg.model)
+            provider: Provider = GoogleProvider(
+                cfg.model, settings.google_api_key, price_in=price_in, price_out=price_out
+            )
+        elif cfg.vendor == "local":
+            provider = LocalProvider(cfg.model)
+        else:
+            msg = (
+                f"role {role.value} is configured for vendor {cfg.vendor!r}, which has no "
+                "provider. Add one under core/models/providers, or change config/models.yaml."
+            )
+            raise ValueError(msg)
+
+        self._providers[key] = provider
+        return provider
+
+    def available(self, role: Role) -> bool:
+        """Whether this role can actually reach its vendor right now."""
+        provider = self.provider_for(role)
+        return bool(getattr(provider, "available", True))
 
     def model_id(self, role: Role) -> ModelId:
         cfg = self.roles[role]
@@ -118,10 +153,14 @@ class Router:
         *,
         tenant_id: str,
         context: dict[str, Any] | None = None,
+        schema: type[BaseModel] | None = None,
+        max_tokens: int = 4096,
         trace_id: str = "",
     ) -> Completion:
         provider = self.provider_for(role)
-        completion = await provider.complete(messages, role=role.value, context=context)
+        completion = await provider.complete(
+            messages, role=role.value, context=context, schema=schema, max_tokens=max_tokens
+        )
         completion.model = self.model_id(role)
         await self._record_cost(tenant_id, role, completion, trace_id)
         return completion

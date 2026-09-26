@@ -1,0 +1,10 @@
+# Cost per million tokens, in USD, used for the per-org cost figures.
+#
+# These default to zero deliberately: inventing a price would put a wrong number in front of a
+# customer. Fill in the rates from the vendor's own pricing page and the cost column becomes
+# real. Token counts are always recorded accurately regardless.
+google:
+  gemini-3.8-flash:      { input: 0.0, output: 0.0 }
+  gemini-3.1-flash-lite: { input: 0.0, output: 0.0 }
+local:
+  "*": { input: 0.0, output: 0.0 }

@@ -25,7 +25,13 @@ class LocalProvider:
         return [self.model]
 
     async def complete(
-        self, messages: list[Message], *, role: str, context: dict[str, Any] | None = None
+        self,
+        messages: list[Message],
+        *,
+        role: str,
+        context: dict[str, Any] | None = None,
+        schema: object | None = None,
+        max_tokens: int = 4096,
     ) -> Completion:
         started = time.perf_counter()
         ctx = context or {}

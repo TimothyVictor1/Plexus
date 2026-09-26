@@ -21,6 +21,16 @@ class Settings(BaseSettings):
     plexus_log_level: str = "INFO"
     plexus_model_profile: str = "default"
 
+    # Vendor credentials. Empty means that vendor is unavailable and the router says so
+    # rather than silently routing somewhere else.
+    google_api_key: str = ""
+    anthropic_api_key: str = ""
+    openai_api_key: str = ""
+
+    # Where model inference physically happens, surfaced in the privacy section so the
+    # product never claims a residency the configured provider does not actually give.
+    model_data_region: str = "global"
+
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_db: str = "plexus"
