@@ -2,62 +2,92 @@
 
 Read this at the start of every session. Update it at the end of every session.
 
-## Current phase: 0 — Skeleton
+## Current phase: 1 (partial) — the system runs end to end on fixtures
 
-### Done (session 1, 2026-09-18)
-- Repo initialised, layout from brief §4 created, `CLAUDE.md` installed.
-- `pyproject.toml` (uv, ruff, mypy strict, pytest, hypothesis), `Makefile`, pre-commit.
-- `docker-compose.yml`: Postgres 16 + pgvector, Neo4j 5, Redis 7, Temporal + UI, Jaeger,
-  Keycloak (realm with viewer/operator/approver/admin), Presidio analyzer + anonymizer, API.
-- All 12 specs drafted under `specs/` with the required sections and open questions.
-- Phase 0 code: settings, tenancy context + RBAC, adapter contract types, `/v1/health` deep
-  checks, executor placeholder (refuses until Phase 3).
-- Architecture tests enforcing: vendor SDKs only in `core/models/providers`, no agent
-  frameworks, PII `restore` only in executor, adapter `write` only in executor, no `eval` in
-  `twin/`, all specs and packages present.
-- CI (GitHub Actions): lint, type-check, tests, compose validation, dashboard lint.
-- Dashboard skeleton: Next.js 15, i18n `sv`/`en`, Overview placeholder.
-- Docs: architecture (Mermaid), ADR-0001 (single write path), compliance stub, questions.
+`make up && make seed && make console` gives a working Plexus against the Nordvik Konsult AB
+fixtures. What follows is what is genuinely implemented, not what is planned.
 
-### Phase 0 Definition of Done
-`make up && make test` green on a clean machine. See the bottom of this file for the latest run.
+### Working end to end (session 2, 2026-09-26)
 
-## Next (Phase 1 — Ingest + Graph + Explain, weeks 1–3)
-1. `core/models/router.py` + Anthropic/OpenAI/local providers, cost table, prompt loader, boot-time
-   model verification (spec 09). Resolve OQ-09-1/2 first.
-2. `core/pii/boundary.py` + recognisers + vault + fuzz suite (spec 06).
-3. Postgres migrations (documents, chunks, ontology_proposals, corrections, model_calls, RLS).
-4. `core/graph/` schema, store abstraction (Neo4j + Kùzu), `apply.py` (spec 01).
-5. Adapter base class with enforced tokenised emission; gmail, clickup, gdrive adapters against
-   fixtures; conformance suite.
-6. Nordvik Konsult AB fixture generator and labels (brief §11).
-7. Extraction agent, Explain agent, eval harness v1, `evals/model_selection.md`.
-8. Dashboard: Overview, Graph, Ask, Adapters pages.
-9. `scripts/demo_phase1.sh`.
+**Ingestion and the graph (pillar 1, partial).** Fixture adapters for gmail, clickup and gdrive
+feed 132 documents through the PII Boundary into Postgres and a Neo4j graph of 174 nodes and
+264 edges, with provenance on every node. Re-seeding is idempotent: event ids are derived from
+the source item, so nothing duplicates.
 
-## Decisions made
-- Flat Python packages at repo root, `uv` with `package = false`; tests run with `pythonpath=.`.
-- Health checks are TCP/HTTP reachability in Phase 0; client-level in Phase 1.
-- Neo4j APOC enabled in compose; Temporal uses the same Postgres instance (separate DBs).
-- Keycloak dev realm ships two users: `dev-admin` / `dev-approver` (passwords equal usernames).
-- Jaeger pinned to `jaegertracing/all-in-one:1.76.0` (the brief did not pin; `1.62` no longer
-  exists on Docker Hub). Jaeger v2 (`jaegertracing/jaeger`) is a Phase 4 consideration.
-- Temporal auto-setup runs with its built-in dynamic config (the image ships no
-  `development-sql.yaml`).
-- ruff 0.16 formats Python code blocks inside Markdown; `*.md` is excluded so specs and the brief
-  stay verbatim.
-- Presidio images are `latest` for Phase 0; Phase 1 pins a digest and builds the Swedish-model
-  analyzer image (docs/QUESTIONS.md concern 2).
-- pnpm is invoked through `npx pnpm@9.15.0` when not on PATH (`corepack enable` needs sudo on
-  this machine); the Makefile handles both.
+**PII Boundary (pillar 6).** Real and complete for the recogniser set in spec 06: email, IBAN,
+Swedish personnummer and org number (both Luhn- and date-validated), phone, bankgiro, street
+address, and person names from a per-tenant gazetteer persisted in Postgres. Tokens are
+HMAC-derived, stable per tenant, format-preserving. The vault encrypts values with a per-tenant
+key from the KMS abstraction. A 300-case hypothesis fuzz asserts no leaks and lossless restore.
 
-## Latest local verification (2026-09-18, macOS, Docker 28.3)
-- `make up`: 10/10 services healthy (postgres, neo4j, redis, temporal, temporal-ui, jaeger,
-  keycloak, presidio-analyzer, presidio-anonymizer, api). First boot pulled all images in roughly
-  25 minutes on a slow connection.
-- `GET /v1/health` from the host: HTTP 200, all six dependencies `ok`, latencies 15–27 ms.
-- `make lint`: ruff clean, ruff format clean, mypy strict clean (49 files), compose config valid,
+**Event log and process mining (pillar 2, partial).** 132 object-centric events; cases are built
+by union-find over shared object ids; a directly-follows graph plus a heuristic dependency
+measure discovers the three ground-truth processes with the correct step order:
+
+| Process | Steps | Cases | Median cycle |
+|---|---|---|---|
+| Enquiry to quote to invoice | 5 | 18 | 31.0 d |
+| New-hire onboarding | 4 | 4 | 10.0 d |
+| Monthly reporting | 3 | 6 | 2.2 d |
+
+**Digital twin and policies (pillar 3, partial).** A safe rule engine over a fixed operator set,
+no `eval`, dotted lookups on plain dicts only. Rules carry a scope, and a rule that cannot be
+evaluated inside its scope fails closed. Blast radius is computed from the diff.
+
+**Autonomy Ledger (pillar 4).** Append-only with a SHA-256 hash chain, a database trigger that
+rejects UPDATE and DELETE, per-process advisory locking so the chain stays linear, and chain
+verification that locates the exact broken row. The trust formula reads every parameter from
+`config/trust.yaml`.
+
+**Actor, verifier and the executor (pillar 5).** The full pipeline runs: plan, simulate, verify,
+gate, record. The executor is the only module that calls an adapter write or restores a token,
+enforced by an AST test over every file, and `executions.verdict_id` is NOT NULL so an execution
+cannot exist without a verdict. Every gate path is covered by integration tests: low tiers never
+write, act-with-approval needs a person, escalate outranks the tier, a blocking policy is
+refused, and the kill switch refuses everything and records the refusal.
+
+**Operator console.** Next.js 15, Swedish and English, seven pages against the live API:
+Overview, Processes, Inbox, Graph, Ledger, PII boundary, Adapters. The role selector is real:
+the API enforces it, so a viewer genuinely cannot approve.
+
+### Verification (2026-09-26, macOS, Docker 28.3)
+- `make lint`: ruff clean, ruff format clean, mypy strict clean (86 files), compose valid,
   dashboard eslint + tsc + i18n parity clean.
-- `make test`: 69 passed (unit + architecture).
-- `pnpm build` (dashboard): succeeds; `/sv` and `/en` prerendered.
-- Not yet exercised: GitHub Actions itself (no remote configured); `pip-audit` step runs in CI only.
+- `make test`: 119 passed (unit, architecture, property-based).
+- `PLEXUS_INTEGRATION=1 uv run pytest -m integration`: 17 passed against the live stack.
+- `make up`: 10/10 services healthy. `make seed`: 132 documents, 31 vault entries, 3 processes.
+
+## Deliberately not built yet
+
+- **Hosted model vendors.** `config/models.yaml` still names anthropic and openai, and the
+  router still refuses to boot in production when they match. Every role currently resolves
+  through `core/models/providers/local.py`, a deterministic rule-based provider, so the pipeline
+  runs with no API key and nothing leaves the laptop. Wiring the Anthropic and OpenAI providers
+  is the next piece of Phase 1 and needs the decisions in QUESTIONS.md answered first.
+- **Extraction by model.** Entities come from adapter structure, not from an extraction agent.
+  Spec 01 step 2 (embedding similarity, LLM adjudication) is not built, so AT-01-1 is unmeasured.
+- **Explain agent, Temporal workflows, OIDC, Redis streams, immune system, adapter generator.**
+  Specified, not implemented. The console's role selector stands in for OIDC.
+- **Presidio containers** run in compose but the boundary does not call them; the local
+  recognisers cover the spec's list and always work. Layering Presidio on additively is a small
+  change in `core/pii/boundary.py`.
+
+## Decisions made this session
+
+- The fixture adapter writes to an `adapter_records` table, so an execution is observable
+  without touching anyone's real Gmail or ClickUp. It satisfies the adapter contract in full.
+- The vault uses a Blake2b keystream rather than AES-GCM, to keep the pilot free of a crypto
+  dependency. The interface (per-tenant data key, nonce, key_version) is the real one, so
+  swapping in AES-256-GCM is a change inside `core/pii/vault.py`. Logged as OQ-06-3.
+- Policy rules carry an explicit scope. Fail-closed on an absent field is correct per spec 03,
+  but only inside the rule's scope; a spending limit must not judge an action with no money.
+- `RoleRequired` and `WritePathNotImplemented` were renamed with an `Error` suffix (ruff N818).
+- Seeded Swedish identity numbers are generated with real Luhn check digits, because the
+  recognisers validate them. An invented number is silently ignored, which would hide a leak.
+
+## Next
+1. Anthropic and OpenAI providers behind the router, with cost accounting and the boot-time
+   model check. Needs OQ-09-1 and OQ-09-2 answered.
+2. The extraction agent and the Explain agent, then measure AT-01-1 and AT-01-2.
+3. Move ingestion and the pipeline into Temporal workflows (principle 7).
+4. OIDC through Keycloak, replacing the console's role selector.

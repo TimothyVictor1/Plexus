@@ -15,6 +15,8 @@ currently built with. Answer inline; decisions move to an ADR.
 | OQ-02-2 | May `pm4py` be a dev-only dependency to validate the pure-Python miner? | Not added yet. | Yes, dev-only. (Open source, no paid dependency.) |
 | OQ-11-1 | IdP at TCL: Keycloak brokering Google Workspace, or Google directly? | Keycloak. | Keycloak brokering Google keeps RBAC in Plexus. |
 | OQ-00-1 | Tenant id as slug or UUID? | Slug, with a `tenants` table. | Slug for the pilot. |
+| OQ-06-3 | The token vault encrypts with a Blake2b keystream rather than AES-256-GCM, to avoid a crypto dependency in the pilot. | Blake2b keystream; the KMS interface and per-tenant data key are the real ones. | Swap to AES-256-GCM via `cryptography` before any customer data. It is a change inside `core/pii/vault.py`. Needs your approval for the dependency. |
+| OQ-09-4 | Every model role currently resolves to the deterministic local provider, so the pipeline runs with no API key. | Local provider for all roles; the vendor-separation check still runs against the configured vendors. | Confirm which hosted vendors to wire first, then the router's provider map is the only change. |
 
 ## Honest concerns about the brief (working method §10.10)
 

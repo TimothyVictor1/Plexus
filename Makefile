@@ -1,4 +1,4 @@
-.PHONY: help up down nuke logs sync test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
+.PHONY: help up down nuke logs sync migrate seed console api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
 
 # Use pnpm if installed; otherwise run it through npx (no global install needed).
 PNPM := $(shell command -v pnpm >/dev/null 2>&1 && echo pnpm || echo "npx --yes pnpm@9.15.0")
@@ -41,8 +41,26 @@ fmt: sync ## Auto-format Python
 typecheck: sync ## mypy strict only
 	uv run mypy
 
-demo: ## Phase 1+: seed fixtures and answer cross-system questions
-	@echo "Demo lands with Phase 1 (scripts/demo_phase1.sh)."; exit 1
+migrate: sync ## Apply database migrations
+	uv run python -m core.db.migrate
+
+seed: sync ## Migrate, ingest the Nordvik fixtures, mine processes
+	uv run python -m scripts.seed
+
+api: sync ## Run the API on :8000 with reload (the compose `api` service also serves it)
+	uv run uvicorn api.main:app --reload --port 8000
+
+console: ## Run the operator console on :3000
+	cd dashboard && $(PNPM) run dev
+
+demo: ## Boot the stack, seed it, and print where to go
+	$(MAKE) up
+	$(MAKE) seed
+	@echo ""
+	@echo "  Console  http://localhost:3000   (make console)"
+	@echo "  API      http://localhost:8000/v1/docs"
+	@echo "  Jaeger   http://localhost:16686"
+	@echo""
 
 evals: ## Phase 1+: run the eval harness
 	@echo "Eval harness lands with Phase 1 (evals/)."; exit 1
