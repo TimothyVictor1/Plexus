@@ -40,5 +40,7 @@ Built for EU hosting, GDPR and the EU AI Act.
 | `dashboard/` | The console. Next.js, Swedish and English |
 | `specs/` | One spec per pillar. Code is written from these |
 
+## Deploying
 
-
+See [DEPLOY.md](DEPLOY.md). The console deploys to Vercel from `dashboard/`; the service needs
+a host that runs containers. The engineering rules are in [ENGINEERING.md](ENGINEERING.md).
