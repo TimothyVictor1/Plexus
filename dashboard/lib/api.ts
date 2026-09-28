@@ -335,3 +335,76 @@ export type Invite = {
   expires_at: string;
   link: string;
 };
+
+export type StepRole = {
+  process_id: string;
+  process_name: string;
+  step: string;
+  verb: string;
+  events: number;
+  share: number;
+  others: number;
+};
+
+export type PersonModel = {
+  token: string;
+  label: string;
+  events: number;
+  processes: string[];
+  roles: StepRole[];
+};
+
+export type StepLoad = {
+  verb: string;
+  label: string;
+  events: number;
+  people: number;
+  per_week: number;
+  top_share: number;
+};
+
+export type TwinProcess = {
+  id: string;
+  name: string;
+  cases: number;
+  people: number;
+  steps: StepLoad[];
+  cycle: Duration;
+};
+
+export type TwinRisk = {
+  kind: "key_person" | "single_point" | "concentration";
+  person: string;
+  process_name: string;
+  step: string;
+  share: number;
+  text: string;
+};
+
+export type OrgModel = {
+  window_days: number;
+  people: PersonModel[];
+  processes: TwinProcess[];
+  external_parties: number;
+  total_events: number;
+  risks: TwinRisk[];
+};
+
+export type TwinEffect = {
+  process_id: string;
+  process_name: string;
+  step: string;
+  severity: "stops" | "slower" | "fine";
+  text: string;
+  before: Duration | null;
+  after: Duration | null;
+};
+
+export type TwinScenario = {
+  kind: string;
+  title: string;
+  summary: string;
+  effects: TwinEffect[];
+  assumptions: string[];
+  cover: string[];
+};

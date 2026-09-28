@@ -29,7 +29,7 @@ from core.language.format import Duration, duration
 # How far back the model looks. Long enough to be representative, short enough to be current.
 WINDOW_DAYS = 120
 # A step this dependent on one person is a risk worth naming.
-KEY_PERSON_SHARE = 0.6
+KEY_PERSON_SHARE = 0.5
 # A wait cannot realistically stretch further than this from losing capacity alone.
 MAX_SLOWDOWN = 5.0
 
@@ -242,7 +242,7 @@ async def build_model(tenant_id: str, window_days: int = WINDOW_DAYS) -> OrgMode
     risks: list[Risk] = []
     for member in people:
         for role in member.roles:
-            if role.others == 0 and role.events >= 3:
+            if role.others == 0 and role.events >= 2:
                 risks.append(
                     Risk(
                         kind="single_point",
@@ -256,7 +256,7 @@ async def build_model(tenant_id: str, window_days: int = WINDOW_DAYS) -> OrgMode
                         ),
                     )
                 )
-            elif role.share >= KEY_PERSON_SHARE and role.events >= 5:
+            elif role.share >= KEY_PERSON_SHARE and role.events >= 3:
                 risks.append(
                     Risk(
                         kind="key_person",
@@ -337,8 +337,8 @@ def person_leaves(model: OrgModel, token: str) -> Scenario:
                     step=role.step,
                     severity="stops",
                     text=(
-                        f"{role.step} would stop. Nobody else has done it in the last "
-                        f"{model.window_days} days."
+                        f"{role.step} in {role.process_name} would stop. Nobody else has "
+                        f"done it in the last {model.window_days} days."
                     ),
                 )
             )
@@ -356,9 +356,10 @@ def person_leaves(model: OrgModel, token: str) -> Scenario:
                 step=role.step,
                 severity="slower",
                 text=(
-                    f"{role.step} would slow down. {person.label} does "
-                    f"{round(role.share * 100)}% of it, and {role.others} "
-                    f"{'other person has' if role.others == 1 else 'others have'} done it before."
+                    f"{role.step} in {role.process_name} would slow down. {person.label} "
+                    f"does {round(role.share * 100)}% of it, and {role.others} "
+                    f"{'other person has' if role.others == 1 else 'others have'} done it "
+                    "before."
                 ),
                 before=before,
                 after=after,
@@ -402,27 +403,39 @@ def person_leaves(model: OrgModel, token: str) -> Scenario:
 
 
 def demand_changes(model: OrgModel, process_id: str, multiplier: float) -> Scenario:
+    """More work arriving, and where it would pile up first.
+
+    Deliberately says nothing about how many people would be needed. Observed throughput is
+    how the work was shared out, not how much anyone could do, and treating one as the other
+    produces confident nonsense. What can honestly be said is how the volume changes and which
+    step already has the longest queue, because that is where extra work lands first.
+    """
     process = next((p for p in model.processes if p.id == process_id), None)
     if process is None:
         return Scenario(
             kind="demand_changes",
             title="Unknown work",
-            summary="That way of working is not in the model.",
+            summary="That way of working is not in the model yet.",
         )
 
     direction = "more" if multiplier > 1 else "less"
+    busiest = max(process.steps, key=lambda s: s.top_share, default=None)
+
     effects: list[Effect] = []
     for step in process.steps:
         needed = step.per_week * multiplier
-        if step.people == 0:
-            continue
-        per_person = step.per_week / step.people
-        people_needed = math.ceil(needed / per_person) if per_person > 0 else step.people
+        concentrated = step.top_share >= KEY_PERSON_SHARE and step.people > 0
         severity: Literal["stops", "slower", "fine"] = (
-            "slower" if people_needed > step.people else "fine"
+            "slower" if multiplier > 1 and concentrated else "fine"
         )
-        if multiplier > 1 and step.top_share >= KEY_PERSON_SHARE:
-            severity = "slower"
+        shared = (
+            f"{step.people} {'person handles' if step.people == 1 else 'people share'} it today"
+            if step.people
+            else "nobody has handled it recently"
+        )
+        concentration = (
+            f", and one of them does {round(step.top_share * 100)}% of it" if concentrated else ""
+        )
         effects.append(
             Effect(
                 process_id=process.id,
@@ -430,34 +443,23 @@ def demand_changes(model: OrgModel, process_id: str, multiplier: float) -> Scena
                 step=step.label,
                 severity=severity,
                 text=(
-                    f"{step.label} goes from {step.per_week:.0f} to {needed:.0f} a week"
-                    + (
-                        f". {step.people} "
-                        f"{'person handles' if step.people == 1 else 'people handle'} that today"
-                        f", and at the same pace it would take {people_needed}."
-                        if severity != "fine"
-                        else f", which the {step.people} doing it today already cover."
-                    )
+                    f"{step.label} goes from about {step.per_week:.0f} to {needed:.0f} a week. "
+                    f"{shared}{concentration}."
                 ),
             )
         )
 
-    pressure = [e for e in effects if e.severity != "fine"]
     if multiplier <= 1:
+        summary = f"At {multiplier:g} times the volume, {process.name} has room to spare."
+    elif busiest is not None and busiest.top_share >= KEY_PERSON_SHARE:
         summary = (
-            f"At {multiplier:g} times the volume, nothing is under pressure. "
-            f"{process.name} has room."
-        )
-    elif pressure:
-        first = pressure[0]
-        summary = (
-            f"At {multiplier:g} times the work, {first.step.lower()} is where it would bite first. "
-            f"{len(pressure)} of {len(effects)} steps would need more hands."
+            f"At {multiplier:g} times the work, {busiest.label.lower()} is the thin spot: "
+            f"one person already does {round(busiest.top_share * 100)}% of it."
         )
     else:
         summary = (
-            f"At {multiplier:g} times the work, {process.name} would keep up with the people "
-            "already doing it."
+            f"At {multiplier:g} times the work, no single step stands out as fragile. "
+            "The work is spread across enough people."
         )
 
     return Scenario(
@@ -467,7 +469,8 @@ def demand_changes(model: OrgModel, process_id: str, multiplier: float) -> Scena
         effects=effects,
         assumptions=[
             f"Based on the last {model.window_days} days of real volume.",
-            "Assumes each person keeps working at the pace they do now.",
+            "Shows how much more work each step would carry, not how many people it needs: "
+            "Plexus can see how work was shared out, not how much anyone could take on.",
             "Assumes the work arrives steadily rather than all at once.",
         ],
     )

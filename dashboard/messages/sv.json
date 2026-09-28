@@ -20,7 +20,8 @@
       "operator": "Får köra saker",
       "approver": "Får godkänna",
       "admin": "Får ändra inställningar"
-    }
+    },
+    "twin": "Tänk om"
   },
   "home": {
     "greeting": {
@@ -241,5 +242,42 @@
       "when": "När",
       "hash": "Fingeravtryck"
     }
+  },
+  "twin": {
+    "title": "Tänk om",
+    "sub": "En levande modell av hur arbetet verkligen rör sig genom ert företag, byggd av det era verktyg redan visar. Prova en förändring här innan ni gör den på riktigt.",
+    "askWhatIf": "Ställ en tänk om-fråga",
+    "question": "Vad undrar ni över?",
+    "kind": {
+      "person": "Någon slutar",
+      "demand": "Mer eller mindre arbete kommer in",
+      "process": "Ett arbetssätt ändras"
+    },
+    "who": "Vem",
+    "whichWork": "Vilket arbete",
+    "howMuch": "{n} gånger arbetet",
+    "cutWait": "Korta den längsta väntan med {n} %",
+    "stepsTouched": "{n} steg",
+    "run": "Se vad som händer",
+    "working": "Räknar ut…",
+    "severity": {
+      "stops": "Skulle stanna",
+      "slower": "Skulle sakta ner",
+      "fine": "Klarar det"
+    },
+    "couldCover": "Kan täcka upp tillsammans: {people}.",
+    "restsOn": "Vad detta bygger på",
+    "fragile": "Var ni är sårbara",
+    "fragileBody": "Steg som vilar på en enda person. Inget är fel med dem idag; de är bara tunna.",
+    "noRisks": "Inget ser tunt ut. Varje steg delas mellan flera personer.",
+    "risk": {
+      "single_point": "Bara en person",
+      "key_person": "Mest en person",
+      "concentration": "Koncentrerat"
+    },
+    "whoDoesWhat": "Vem gör vad",
+    "pseudonyms": "Personer visas som Person A, B och så vidare. Plexus håller aldrig deras namn, bara en platshållare.",
+    "acrossWork": "{n} sorters arbete · {events} saker gjorda",
+    "basedOn": "Byggd av {events} saker som hänt de senaste {days} dagarna, över {people} personer."
   }
 }

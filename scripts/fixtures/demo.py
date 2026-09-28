@@ -103,6 +103,9 @@ class StepSpec:
     source: str          # which connected tool the event comes from
     wait_days: float     # days waited BEFORE this step (0 for the first)
     subject: str         # subject line / title template
+    # Who normally does this step. Real companies specialise, and a demo where everyone does
+    # everything would make the digital twin's answers meaningless.
+    role: str = "any"
 
 
 @dataclass(frozen=True)
@@ -122,56 +125,56 @@ PROCESS_SPECS: tuple[ProcessSpec, ...] = (
     ProcessSpec(
         key="customer_requests", cases=42, every_days=3.2,
         steps=(
-            StepSpec("requested", "email", 0, "Question from {customer}"),
-            StepSpec("replied", "email", 1.5, "Re: question from {customer}"),
-            StepSpec("resolved", "crm", 0.5, "Request from {customer} closed"),
+            StepSpec("requested", "email", 0, "Question from {customer}", role="any"),
+            StepSpec("replied", "email", 1.5, "Re: question from {customer}", role="sales"),
+            StepSpec("resolved", "crm", 0.5, "Request from {customer} closed", role="delivery"),
         ),
     ),
     ProcessSpec(
         key="quote_to_payment", cases=18, every_days=7.5,
         in_flight=3, in_flight_stops_after=3,  # invoiced, never paid
         steps=(
-            StepSpec("offered", "email", 0, "Quote {ref} for {customer}"),
-            StepSpec("accepted", "email", 2, "Re: quote {ref} accepted"),
-            StepSpec("delivered", "crm", 3, "Work finished for {customer}"),
-            StepSpec("invoiced", "accounting", 26, "Invoice {ref}"),
-            StepSpec("paid", "accounting", 5, "Payment received for {ref}"),
+            StepSpec("offered", "email", 0, "Quote {ref} for {customer}", role="sales"),
+            StepSpec("accepted", "email", 2, "Re: quote {ref} accepted", role="sales"),
+            StepSpec("delivered", "crm", 3, "Work finished for {customer}", role="delivery"),
+            StepSpec("invoiced", "accounting", 26, "Invoice {ref}", role="finance"),
+            StepSpec("paid", "accounting", 5, "Payment received for {ref}", role="finance"),
         ),
     ),
     ProcessSpec(
         key="purchasing", cases=31, every_days=4.3,
         in_flight=2, in_flight_stops_after=0,  # requested, never approved
         steps=(
-            StepSpec("requested", "email", 0, "We need {item}"),
-            StepSpec("approved", "email", 3, "Re: {item} approved"),
-            StepSpec("ordered", "accounting", 1, "Order placed with {supplier}"),
-            StepSpec("received", "accounting", 2, "{item} received"),
+            StepSpec("requested", "email", 0, "We need {item}", role="any"),
+            StepSpec("approved", "email", 3, "Re: {item} approved", role="owner"),
+            StepSpec("ordered", "accounting", 1, "Order placed with {supplier}", role="finance"),
+            StepSpec("received", "accounting", 2, "{item} received", role="delivery"),
         ),
     ),
     ProcessSpec(
         key="new_hires", cases=4, every_days=34,
         steps=(
-            StepSpec("signed", "hr", 0, "Contract signed with {person}"),
-            StepSpec("created", "hr", 5, "Accounts ready for {person}"),
-            StepSpec("attached", "files", 2, "Equipment ready for {person}"),
-            StepSpec("started", "hr", 3, "First day for {person}"),
+            StepSpec("signed", "hr", 0, "Contract signed with {person}", role="people"),
+            StepSpec("created", "hr", 5, "Accounts ready for {person}", role="it"),
+            StepSpec("attached", "files", 2, "Equipment ready for {person}", role="it"),
+            StepSpec("started", "hr", 3, "First day for {person}", role="people"),
         ),
     ),
     ProcessSpec(
         key="monthly_reporting", cases=12, every_days=28,
         in_flight=1, in_flight_stops_after=0,  # numbers ready, never sent
         steps=(
-            StepSpec("created", "files", 0, "Monthly numbers {month}"),
-            StepSpec("sent", "email", 1, "Monthly report {month}"),
-            StepSpec("approved", "email", 1, "Re: monthly report {month} approved"),
+            StepSpec("created", "files", 0, "Monthly numbers {month}", role="finance"),
+            StepSpec("sent", "email", 1, "Monthly report {month}", role="finance"),
+            StepSpec("approved", "email", 1, "Re: monthly report {month} approved", role="owner"),
         ),
     ),
     ProcessSpec(
         key="expenses", cases=57, every_days=2.4,
         steps=(
-            StepSpec("submitted", "accounting", 0, "Expense claim from {person}"),
-            StepSpec("approved", "accounting", 2, "Expense claim from {person} checked"),
-            StepSpec("reimbursed", "accounting", 2, "Expense paid back to {person}"),
+            StepSpec("submitted", "accounting", 0, "Expense claim from {person}", role="any"),
+            StepSpec("approved", "accounting", 2, "Expense claim from {person} checked", role="finance"),
+            StepSpec("reimbursed", "accounting", 2, "Expense paid back to {person}", role="finance"),
         ),
     ),
 )
@@ -195,6 +198,22 @@ class Fixture:
     @property
     def total(self) -> int:
         return sum(len(v) for v in self.items.values())
+
+
+def _actor_for(rng: random.Random, role: str, fallback: dict[str, str]) -> dict[str, str]:
+    """Who did this step.
+
+    People specialise, but not absolutely: now and then someone covers for a colleague, which
+    is exactly the difference between a step one person owns and one the team shares.
+    """
+    if role == "any":
+        return rng.choice(PEOPLE)
+    matching = [p for p in PEOPLE if p["role"] == role]
+    if not matching:
+        return fallback
+    if rng.random() < 0.12:  # somebody covered
+        return rng.choice(PEOPLE)
+    return rng.choice(matching)
 
 
 def _body(rng: random.Random, spec: StepSpec, ctx: dict[str, str]) -> str:
@@ -261,7 +280,7 @@ def build(seed: int = 11, now: datetime | None = None) -> Fixture:
                 # Jitter keeps medians honest without hiding the designed bottleneck.
                 jitter = rng.uniform(0.85, 1.15) if spec_step.wait_days else 1.0
                 t = t + timedelta(days=spec_step.wait_days * jitter)
-                actor = person if spec_step.source in {"hr", "files"} else rng.choice(PEOPLE)
+                actor = _actor_for(rng, spec_step.role, person)
                 ctx["actor_name"] = actor["name"]
                 external_id = f"{case_id}-{spec_step.verb}"
                 items.setdefault(spec_step.source, []).append(

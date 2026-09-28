@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { AskIcon, ConnectIcon, ReviewIcon, SlowIcon, WorkIcon } from "./shell/Icons";
+import { AskIcon, ConnectIcon, ReviewIcon, SlowIcon, TwinIcon, WorkIcon } from "./shell/Icons";
 
 type Tile = { href: string; label: string; icon: ReactNode; bg: string; fg: string };
 
@@ -13,7 +13,8 @@ export default function Tiles({ locale, labels }: { locale: string; labels: Reco
     { href: `${base}/work`, label: labels.work, icon: <WorkIcon />, bg: "var(--good-bg)", fg: "var(--good)" },
     { href: `${base}/review`, label: labels.review, icon: <ReviewIcon />, bg: "var(--alert-bg)", fg: "var(--alert)" },
     { href: `${base}/work?filter=slow`, label: labels.slowSpots, icon: <SlowIcon />, bg: "var(--warn-bg)", fg: "var(--warn)" },
-    { href: `${base}/connections`, label: labels.connections, icon: <ConnectIcon />, bg: "var(--violet-bg)", fg: "var(--violet)" },
+    { href: `${base}/twin`, label: labels.twin, icon: <TwinIcon />, bg: "var(--violet-bg)", fg: "var(--violet)" },
+    { href: `${base}/connections`, label: labels.connections, icon: <ConnectIcon />, bg: "var(--info-bg)", fg: "var(--info)" },
   ];
 
   return (

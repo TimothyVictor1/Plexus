@@ -20,7 +20,8 @@
       "operator": "Can run things",
       "approver": "Can approve",
       "admin": "Can change settings"
-    }
+    },
+    "twin": "What if"
   },
   "home": {
     "greeting": {
@@ -241,5 +242,42 @@
       "when": "When",
       "hash": "Fingerprint"
     }
+  },
+  "twin": {
+    "title": "What if",
+    "sub": "A living model of how work really moves through your company, built from what your tools already show. Try a change here before you make it for real.",
+    "askWhatIf": "Ask a what-if",
+    "question": "What are you wondering about?",
+    "kind": {
+      "person": "Someone leaves",
+      "demand": "More or less work comes in",
+      "process": "A way of working changes"
+    },
+    "who": "Who",
+    "whichWork": "Which work",
+    "howMuch": "{n} times the work",
+    "cutWait": "Cut the longest wait by {n}%",
+    "stepsTouched": "{n} steps",
+    "run": "See what happens",
+    "working": "Working it out…",
+    "severity": {
+      "stops": "Would stop",
+      "slower": "Would slow",
+      "fine": "Coping"
+    },
+    "couldCover": "Could cover between them: {people}.",
+    "restsOn": "What this rests on",
+    "fragile": "Where you are exposed",
+    "fragileBody": "Steps that rest on one person. Nothing is wrong with them today; they are just thin.",
+    "noRisks": "Nothing looks thin. Every step is shared between people.",
+    "risk": {
+      "single_point": "Only one person",
+      "key_person": "Mostly one person",
+      "concentration": "Concentrated"
+    },
+    "whoDoesWhat": "Who does what",
+    "pseudonyms": "People are shown as Person A, B and so on. Plexus never holds their names, only a placeholder.",
+    "acrossWork": "{n} kinds of work · {events} things done",
+    "basedOn": "Built from {events} things that happened over the last {days} days, across {people} people."
   }
 }

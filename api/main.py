@@ -21,6 +21,7 @@ from api.routers.pii import router as pii_router
 from api.routers.processes import router as processes_router
 from api.routers.review import router as review_router
 from api.routers.team import router as team_router
+from api.routers.twin import router as twin_router
 from core.db.pool import close_pool
 
 API_VERSION = "0.2.0"
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
         review_router,
         team_router,
         jobs_router,
+        twin_router,
         overview_router,
         pii_router,
         actions_router,

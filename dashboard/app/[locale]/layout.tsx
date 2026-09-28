@@ -39,6 +39,7 @@ export default async function LocaleLayout({
     askPlexus: t("askPlexus"),
     work: t("work"),
     review: t("review"),
+    twin: t("twin"),
     connections: t("connections"),
     settings: t("settings"),
     waitingCount: t.raw("waitingCount") as string,

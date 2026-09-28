@@ -69,6 +69,7 @@ export default function HomePage() {
         labels={{
           ask: nav.raw("ask"), work: nav.raw("work"), review: nav.raw("review"),
           slowSpots: t("slowSpots"), connections: nav.raw("connections"),
+          twin: nav.raw("twin"),
         }}
       />
 

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  AskIcon, ConnectIcon, HomeIcon, PlexusMark, PlusIcon, ReviewIcon, SettingsIcon, WorkIcon,
+  AskIcon, ConnectIcon, HomeIcon, PlexusMark, PlusIcon, ReviewIcon, SettingsIcon, TwinIcon,
+  WorkIcon,
 } from "./Icons";
 
 type Item = { href: string; label: string; icon: React.ReactNode; badge?: number };
@@ -19,6 +20,7 @@ export default function Rail({
     { href: `${base}/ask`, label: labels.ask, icon: <AskIcon /> },
     { href: `${base}/work`, label: labels.work, icon: <WorkIcon /> },
     { href: `${base}/review`, label: labels.review, icon: <ReviewIcon />, badge: reviewCount },
+    { href: `${base}/twin`, label: labels.twin, icon: <TwinIcon /> },
     { href: `${base}/connections`, label: labels.connections, icon: <ConnectIcon /> },
   ];
 

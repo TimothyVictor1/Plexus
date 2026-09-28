@@ -52,3 +52,11 @@ export const SearchIcon = () => (
     <circle cx="11" cy="11" r="6.5" /><path d="m20 20-4-4" />
   </svg>
 );
+
+export const TwinIcon = () => (
+  <svg {...base} aria-hidden="true">
+    <circle cx="12" cy="6" r="2.4" /><circle cx="5.5" cy="17" r="2.4" />
+    <circle cx="18.5" cy="17" r="2.4" />
+    <path d="M10.4 7.8 7 14.6M13.6 7.8 17 14.6M8 17.4h8" />
+  </svg>
+);
