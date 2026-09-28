@@ -20,7 +20,7 @@ from core.db.migrate import migrate
 from core.db.pool import close_pool, tenant_conn
 from core.events.model import read_events
 from core.graph.store import get_store
-from core.org.service import ensure_org
+from core.org.service import ensure_org, get_org
 from core.pii.boundary import get_boundary
 from core.pii.vault import TokenVault
 from core.processes.service import refresh_labels
@@ -66,9 +66,48 @@ POLICIES = [
 ]
 
 
+# The demo is regenerated every run, so it always matches the fixture instead of drifting as
+# old rows accumulate. Guarded by is_demo: a real organisation is never touched by this.
+DEMO_TABLES = (
+    "review_items",
+    "triggers_seen",
+    "executions",
+    "verdicts",
+    "proposed_actions",
+    "label_cache",
+    "label_overrides",
+    "adapter_records",
+    "process_state",
+    "processes",
+    "event_log",
+    "documents",
+    "model_calls",
+)
+
+
+async def reset_demo(tenant_id: str) -> None:
+    org = await get_org(tenant_id)
+    if org is None or not org.is_demo:
+        msg = f"refusing to reset {tenant_id}: it is not a demo organisation"
+        raise RuntimeError(msg)
+    async with tenant_conn(tenant_id) as conn:
+        for table in DEMO_TABLES:
+            await conn.execute(f"DELETE FROM {table} WHERE tenant_id = $1", tenant_id)
+        # The ledger refuses deletes by design, which is the point of it. Regenerating the
+        # demo is the one case where starting from an empty history is correct, so the guard
+        # is lifted deliberately and put straight back.
+        await conn.execute("ALTER TABLE ledger_entries DISABLE TRIGGER ledger_no_update")
+        try:
+            await conn.execute("DELETE FROM ledger_entries WHERE tenant_id = $1", tenant_id)
+        finally:
+            await conn.execute("ALTER TABLE ledger_entries ENABLE TRIGGER ledger_no_update")
+    print(f"cleared previous demo data for {tenant_id}")
+
+
 async def seed_demo() -> None:
     org = await ensure_org(DEMO_TENANT, DEMO_ORG_NAME, locale="en", is_demo=True)
     print(f"org {org.id} ({org.display_name}) is_demo={org.is_demo}")
+    await reset_demo(DEMO_TENANT)
 
     fx = build()
     await seed_gazetteer(DEMO_TENANT, PEOPLE, CUSTOMERS)

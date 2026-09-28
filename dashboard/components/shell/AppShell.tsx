@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { get, type Org, type OrgStatus } from "@/lib/api";
+import { REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
 import Rail from "./Rail";
 import TopBar from "./TopBar";
 
@@ -22,7 +22,11 @@ export default function AppShell({
   useEffect(() => {
     load();
     const id = setInterval(load, POLL_MS);
-    return () => clearInterval(id);
+    window.addEventListener(REFRESH_EVENT, load);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener(REFRESH_EVENT, load);
+    };
   }, [load]);
 
   return (

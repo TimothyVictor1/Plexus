@@ -165,3 +165,37 @@ export type ChangeResult = {
   reason: string;
   process: ProcessDetail;
 };
+
+export type ReviewItem = {
+  id: string;
+  process_id: string;
+  process_name: string;
+  kind: string;
+  title: string;
+  why: string;
+  draft_text: string;
+  draft_fields: Record<string, unknown>;
+  approve_label: string;
+  status: "open" | "approved" | "edited" | "skipped" | "executed" | "failed";
+  result: { outcome?: string; title?: string; message?: string } | null;
+  error: string | null;
+  created_at: string;
+  decided_by: string | null;
+  decided_at: string | null;
+};
+
+export type ReviewDecision = {
+  ok: boolean;
+  status: ReviewItem["status"];
+  title: string;
+  detail: string;
+  executed: boolean;
+};
+
+/** Tell the shell that something which affects its counts has changed, so the nav badge
+ *  updates the moment a decision is made rather than at the next poll. */
+export const REFRESH_EVENT = "plexus:refresh";
+
+export function signalRefresh() {
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(REFRESH_EVENT));
+}

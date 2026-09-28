@@ -17,7 +17,19 @@ from typing import Any
 
 DEMO_TENANT = "demo"
 DEMO_ORG_NAME = "Your company"
-START = datetime(2026, 3, 2, 8, 30, tzinfo=UTC)
+
+# The demo is anchored to today rather than a fixed date, so a company always sees recent
+# work rather than a frozen year. Each process is placed so its most recent case started
+# this many days ago; everything older runs backwards from there at that process's own pace.
+# That keeps every process ending at a believable point instead of some finishing in the
+# future while others stopped months back.
+TAIL_DAYS = 55
+
+
+def timeline_start(now: datetime | None = None) -> datetime:
+    """Midnight-anchored reference point, so one day's data is identical all day."""
+    moment = now or datetime.now(tz=UTC)
+    return moment.replace(hour=8, minute=30, second=0, microsecond=0)
 
 
 # ---------------------------------------------------------------- identity helpers
@@ -99,6 +111,10 @@ class ProcessSpec:
     cases: int
     every_days: float
     steps: tuple[StepSpec, ...]
+    # Work that is still in flight. A real company always has some: invoices not yet paid,
+    # requests not yet approved, reports not yet sent. These are what the review queue is for.
+    in_flight: int = 0
+    in_flight_stops_after: int = 0  # index of the last step that did happen
 
 
 # Durations are the point of the demo: one clearly slow step per process, the rest reasonable.
@@ -113,6 +129,7 @@ PROCESS_SPECS: tuple[ProcessSpec, ...] = (
     ),
     ProcessSpec(
         key="quote_to_payment", cases=18, every_days=7.5,
+        in_flight=3, in_flight_stops_after=3,  # invoiced, never paid
         steps=(
             StepSpec("offered", "email", 0, "Quote {ref} for {customer}"),
             StepSpec("accepted", "email", 2, "Re: quote {ref} accepted"),
@@ -123,6 +140,7 @@ PROCESS_SPECS: tuple[ProcessSpec, ...] = (
     ),
     ProcessSpec(
         key="purchasing", cases=31, every_days=4.3,
+        in_flight=2, in_flight_stops_after=0,  # requested, never approved
         steps=(
             StepSpec("requested", "email", 0, "We need {item}"),
             StepSpec("approved", "email", 3, "Re: {item} approved"),
@@ -141,6 +159,7 @@ PROCESS_SPECS: tuple[ProcessSpec, ...] = (
     ),
     ProcessSpec(
         key="monthly_reporting", cases=12, every_days=28,
+        in_flight=1, in_flight_stops_after=0,  # numbers ready, never sent
         steps=(
             StepSpec("created", "files", 0, "Monthly numbers {month}"),
             StepSpec("sent", "email", 1, "Monthly report {month}"),
@@ -205,9 +224,10 @@ def _body(rng: random.Random, spec: StepSpec, ctx: dict[str, str]) -> str:
     return "\n".join(lines)
 
 
-def build(seed: int = 11) -> Fixture:
+def build(seed: int = 11, now: datetime | None = None) -> Fixture:
     """Generate the full demo dataset, grouped by the source tool it came from."""
     rng = random.Random(seed)
+    anchor = timeline_start(now)
     items: dict[str, list[dict[str, Any]]] = {}
     truths: list[dict[str, Any]] = []
 
@@ -224,11 +244,20 @@ def build(seed: int = 11) -> Fixture:
                 "item": rng.choice(["office supplies", "licences", "spare parts", "packaging"]),
                 "ref": f"{2026}-{400 + n}",
                 "amount": str(rng.choice([2400, 8400, 12400, 18600, 24200, 46000])),
-                "month": (START + timedelta(days=n * spec.every_days)).strftime("%B %Y"),
+                "month": (
+                    anchor - timedelta(days=(spec.cases - 1 - n) * spec.every_days)
+                ).strftime("%B %Y"),
                 "pnr": "19" + pnr("771130239"),
             }
-            t = START + timedelta(days=n * spec.every_days, hours=rng.randint(0, 7))
-            for spec_step in spec.steps:
+            # Count backwards from the most recent case so every process ends recently.
+            age = TAIL_DAYS + (spec.cases - 1 - n) * spec.every_days
+            t = anchor - timedelta(days=age) + timedelta(hours=rng.randint(0, 7))
+            # The last few cases of each process are still open.
+            open_case = spec.in_flight and n >= spec.cases - spec.in_flight
+            last_step = spec.in_flight_stops_after if open_case else len(spec.steps) - 1
+            for step_index, spec_step in enumerate(spec.steps):
+                if step_index > last_step:
+                    break
                 # Jitter keeps medians honest without hiding the designed bottleneck.
                 jitter = rng.uniform(0.85, 1.15) if spec_step.wait_days else 1.0
                 t = t + timedelta(days=spec_step.wait_days * jitter)
@@ -258,8 +287,9 @@ def build(seed: int = 11) -> Fixture:
                 {
                     "process": spec.key,
                     "case": case_id,
-                    "steps": [s.verb for s in spec.steps],
-                    "total_days": sum(s.wait_days for s in spec.steps),
+                    "steps": [s.verb for s in spec.steps[: last_step + 1]],
+                    "total_days": sum(s.wait_days for s in spec.steps[: last_step + 1]),
+                    "open": bool(open_case),
                 }
             )
 
@@ -269,7 +299,7 @@ def build(seed: int = 11) -> Fixture:
             {
                 "external_id": f"injection-{n}",
                 "kind": "file",
-                "ts": START + timedelta(days=40 + n * 11),
+                "ts": anchor - timedelta(days=TAIL_DAYS + n * 11),
                 "from": PEOPLE[0]["email"],
                 "subject": f"Supplier terms v{n + 1}.md",
                 "body": f"Standard terms for subcontractors.\n\n{payload}\n\nEnd of terms.",

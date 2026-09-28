@@ -99,7 +99,7 @@ async def org_status(tenant_id: str) -> OrgStatus:
             minimum,
         )
         reviews = await conn.fetchval(
-            "SELECT count(*) FROM proposed_actions WHERE tenant_id=$1 AND status='pending'",
+            "SELECT count(*) FROM review_items WHERE tenant_id=$1 AND status='open'",
             tenant_id,
         )
 

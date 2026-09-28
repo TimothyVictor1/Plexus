@@ -58,10 +58,6 @@
       "title": "Ask",
       "sub": "Answers come from your own tools, and Plexus shows where each one came from."
     },
-    "review": {
-      "title": "To review",
-      "sub": "Plexus prepared these. Nothing happens until you say so."
-    },
     "connections": {
       "title": "Connections",
       "sub": "Plexus only learns from the tools you connect."
@@ -138,6 +134,25 @@
       "suggests": "Plexus suggests the next step. A person decides.",
       "actsWithOk": "Plexus prepares the work and waits for your OK before anything is sent.",
       "actsAlone": "Plexus handles it on its own and tells you afterwards."
+    }
+  },
+  "review": {
+    "title": "To review",
+    "sub": "Plexus prepared these. Nothing happens until you say so.",
+    "allCaughtUp": "You are all caught up.",
+    "editFirst": "Edit first",
+    "cancelEdit": "Cancel",
+    "approveEdited": "Approve my version",
+    "editLabel": "Edit the message before it is sent",
+    "skip": "Skip",
+    "doneToday": "Done today",
+    "status": {
+      "executed": "Done by Plexus",
+      "approved": "Approved",
+      "edited": "Edited and approved",
+      "skipped": "Skipped",
+      "failed": "Did not go through",
+      "open": "Waiting"
     }
   }
 }

@@ -58,10 +58,6 @@
       "title": "Fråga",
       "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån."
     },
-    "review": {
-      "title": "Att granska",
-      "sub": "Plexus har förberett dessa. Ingenting händer förrän ni säger till."
-    },
     "connections": {
       "title": "Anslutningar",
       "sub": "Plexus lär sig bara från de verktyg ni ansluter."
@@ -138,6 +134,25 @@
       "suggests": "Plexus föreslår nästa steg. En människa bestämmer.",
       "actsWithOk": "Plexus förbereder arbetet och väntar på ert godkännande innan något skickas.",
       "actsAlone": "Plexus sköter det på egen hand och berättar efteråt."
+    }
+  },
+  "review": {
+    "title": "Att granska",
+    "sub": "Plexus har förberett dessa. Ingenting händer förrän ni säger till.",
+    "allCaughtUp": "Ni är ikapp med allt.",
+    "editFirst": "Ändra först",
+    "cancelEdit": "Avbryt",
+    "approveEdited": "Godkänn min version",
+    "editLabel": "Ändra meddelandet innan det skickas",
+    "skip": "Hoppa över",
+    "doneToday": "Klart idag",
+    "status": {
+      "executed": "Gjort av Plexus",
+      "approved": "Godkänt",
+      "edited": "Ändrat och godkänt",
+      "skipped": "Överhoppat",
+      "failed": "Gick inte igenom",
+      "open": "Väntar"
     }
   }
 }
