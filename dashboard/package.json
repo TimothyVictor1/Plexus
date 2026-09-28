@@ -13,7 +13,7 @@
     "build:local": "NEXT_DIST_DIR=.next-build next build"
   },
   "dependencies": {
-    "next": "15.5.2",
+    "next": "15.5.9",
     "next-intl": "^4.3.4",
     "react": "19.1.1",
     "react-dom": "19.1.1"
