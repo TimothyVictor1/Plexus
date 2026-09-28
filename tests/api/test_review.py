@@ -8,6 +8,7 @@ from core.db.pool import tenant_conn
 from core.ledger import ledger
 from core.ledger.models import Tier
 from core.review import (
+    ReviewItem,
     approve,
     count_open,
     create_from_triggers,
@@ -22,7 +23,7 @@ TENANT = "demo"
 SUGGESTING = ("quote_to_payment", "purchasing", "monthly_reporting")
 
 
-async def _fresh_queue() -> list:
+async def _fresh_queue() -> list[ReviewItem]:
     """Clear the queue and rebuild it from whatever is genuinely stuck right now."""
     async with tenant_conn(TENANT) as conn:
         await conn.execute("DELETE FROM review_items WHERE tenant_id=$1", TENANT)
