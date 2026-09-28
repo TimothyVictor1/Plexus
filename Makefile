@@ -1,4 +1,4 @@
-.PHONY: help up down nuke logs sync migrate seed labels console api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
+.PHONY: help up down nuke logs sync migrate seed labels console console-stop console-reset doctor api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
 
 # Use pnpm if installed; otherwise run it through npx (no global install needed).
 PNPM := $(shell command -v pnpm >/dev/null 2>&1 && echo pnpm || echo "npx --yes pnpm@9.15.0")
@@ -55,6 +55,19 @@ labels: sync ## Regenerate plain-language names for every process
 
 console: ## Run the operator console on :3000
 	cd dashboard && $(PNPM) run dev
+
+console-stop: ## Stop the console dev server
+	@pkill -f "next dev" 2>/dev/null || true
+	@pkill -f "next-server" 2>/dev/null || true
+	@echo "console stopped"
+
+console-reset: console-stop ## Stop the console, clear its build cache, and start it again
+	@rm -rf dashboard/.next dashboard/node_modules/.cache
+	@echo "build cache cleared"
+	cd dashboard && $(PNPM) run dev
+
+doctor: ## Check every part of the stack and say what is wrong
+	@bash scripts/doctor.sh
 
 demo: ## Boot the stack, seed it, and print where to go
 	$(MAKE) up
