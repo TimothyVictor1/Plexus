@@ -51,7 +51,16 @@
         "title": "Plexus is up to date",
         "body": "Reading from {connected} tools. It has found {processes} ways your company gets work done, and {reviews} things are waiting for you."
       }
-    }
+    },
+    "learningFrom": "Plexus is learning from {n} of your tools",
+    "worksWithTools": "Plexus works with the tools you already use",
+    "manage": "Manage →",
+    "needsYou": "Needs you",
+    "waiting": "{n} waiting",
+    "review": "Review",
+    "caughtUp": "You're all caught up.",
+    "nothingYet": "When Plexus prepares something for you, it waits here for your OK.",
+    "worthKnowing": "Worth knowing"
   },
   "pages": {
     "ask": {
@@ -154,5 +163,15 @@
       "failed": "Did not go through",
       "open": "Waiting"
     }
+  },
+  "tools": {
+    "email": "Email",
+    "calendar": "Calendar",
+    "crm": "Customer system",
+    "accounting": "Accounting",
+    "files": "Files",
+    "hr": "HR system",
+    "chat": "Team chat",
+    "projects": "Projects and tasks"
   }
 }

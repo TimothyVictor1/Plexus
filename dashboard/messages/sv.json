@@ -51,7 +51,16 @@
         "title": "Plexus är uppdaterat",
         "body": "Läser från {connected} verktyg. Det har hittat {processes} sätt ert företag får arbete gjort, och {reviews} saker väntar på er."
       }
-    }
+    },
+    "learningFrom": "Plexus lär sig från {n} av era verktyg",
+    "worksWithTools": "Plexus fungerar med verktygen ni redan använder",
+    "manage": "Hantera →",
+    "needsYou": "Behöver dig",
+    "waiting": "{n} väntar",
+    "review": "Granska",
+    "caughtUp": "Ni är ikapp med allt.",
+    "nothingYet": "När Plexus förbereder något åt er väntar det här på ert godkännande.",
+    "worthKnowing": "Värt att veta"
   },
   "pages": {
     "ask": {
@@ -154,5 +163,15 @@
       "failed": "Gick inte igenom",
       "open": "Väntar"
     }
+  },
+  "tools": {
+    "email": "E-post",
+    "calendar": "Kalender",
+    "crm": "Kundsystem",
+    "accounting": "Bokföring",
+    "files": "Filer",
+    "hr": "HR-system",
+    "chat": "Teamchatt",
+    "projects": "Projekt och uppgifter"
   }
 }

@@ -199,3 +199,23 @@ export const REFRESH_EVENT = "plexus:refresh";
 export function signalRefresh() {
   if (typeof window !== "undefined") window.dispatchEvent(new Event(REFRESH_EVENT));
 }
+
+export type Insight = {
+  kind: "bottleneck" | "change" | "smooth";
+  text: string;
+  sub: string;
+  health: Health;
+  process_id: string;
+};
+
+export type ConnectedTool = { category: string; connected: boolean };
+
+export type Home = {
+  org_name: string;
+  is_demo: boolean;
+  status: OrgStatus;
+  open_reviews: ReviewItem[];
+  open_review_count: number;
+  insights: Insight[];
+  tools: ConnectedTool[];
+};
