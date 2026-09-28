@@ -26,41 +26,6 @@ Built for EU hosting, GDPR and the EU AI Act.
 | **To review** | What Plexus has prepared and is waiting on you to approve |
 | **Connections** | The tools it reads from, and exactly what each one would see |
 
-## Running it
-
-Requirements: Docker Desktop, Python 3.12, [uv](https://docs.astral.sh/uv/), Node 22, pnpm.
-
-```bash
-cp .env.example .env
-make up          # Postgres, Neo4j, Redis, Temporal, Jaeger, Keycloak, Presidio, the service
-make seed        # a demo organisation with six processes and work in flight
-make worker      # background jobs, in another terminal
-make console     # the console on http://localhost:3000
-```
-
-`make doctor` checks all four and tells you what to fix if something is wrong.
-
-| Service | Address |
-|---|---|
-| Console | http://localhost:3000 |
-| API docs | http://localhost:8000/v1/docs |
-| Temporal | http://localhost:8233 |
-| Neo4j | http://localhost:7474 |
-| Traces | http://localhost:16686 |
-
-Set `GOOGLE_API_KEY` in `.env` for plain-language names and drafted messages. Without it
-everything still works, using built-in rules instead of a model.
-
-A real organisation starts empty:
-
-```bash
-uv run python -m scripts.seed --org yourco --name "Your Company"
-```
-
-## Deploying
-
-See [DEPLOY.md](DEPLOY.md). The console runs on Vercel from `dashboard/`; the service needs
-somewhere that runs containers.
 
 ## How it is built
 
@@ -75,12 +40,7 @@ somewhere that runs containers.
 | `dashboard/` | The console. Next.js, Swedish and English |
 | `specs/` | One spec per pillar. Code is written from these |
 
-## The rules
 
-[ENGINEERING.md](ENGINEERING.md) holds the non-negotiables: a single write path, the PII
-boundary, separation between proposing and approving, tenancy everywhere, an append-only
-ledger, and no agent frameworks. Where they can be enforced by the build rather than by
-review, they are: `tests/architecture/` parses every file and fails on a violation.
 
 ```bash
 make test    # unit, property-based and architecture tests
