@@ -1,0 +1,144 @@
+{
+ "open": [
+  {
+   "id": "e83738ba-759f-4f42-83a5-2dae026619da",
+   "process_id": "purchasing",
+   "process_name": "Purchase Workflow",
+   "action_id": "52341962-e3b7-4893-9f60-35aedf511d41",
+   "kind": "routine_order",
+   "title": "Approve a routine order",
+   "why": "A request has been waiting 55 days. Similar ones have been approved before.",
+   "draft_text": "Hello [customer], we are checking on the status of your order [number] with [supplier]. It has now been eight weeks since the request was placed, and we are working to get an update for you. We will let you know as soon as we have more information. Best regards, [your name].",
+   "draft_fields": {
+    "case": "purchasing-030",
+    "verdict": "approve",
+    "days_waiting": 55
+   },
+   "approve_label": "Approve order",
+   "status": "open",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:13.461812+00:00",
+   "decided_by": null,
+   "decided_at": null
+  },
+  {
+   "id": "3f4713c8-34c4-4c0e-8abe-eb8b2b4f63c9",
+   "process_id": "purchasing",
+   "process_name": "Purchase Workflow",
+   "action_id": "8a770c0f-3a58-4275-9d30-afddabeca589",
+   "kind": "routine_order",
+   "title": "Approve a routine order",
+   "why": "A request has been waiting 59 days. Similar ones have been approved before.",
+   "draft_text": "Hello [customer], we are checking on the status of order [number] with our supplier. It has been eight weeks since the order was placed and we are currently waiting for an update from them. I will notify you as soon as I have more information. Best regards, [your name].",
+   "draft_fields": {
+    "case": "purchasing-029",
+    "verdict": "approve",
+    "days_waiting": 59
+   },
+   "approve_label": "Approve order",
+   "status": "open",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:11.927884+00:00",
+   "decided_by": null,
+   "decided_at": null
+  },
+  {
+   "id": "6af7e756-0840-487c-b48b-d3201022c2c6",
+   "process_id": "quote_to_payment",
+   "process_name": "Customer service billing",
+   "action_id": "416e949f-932a-4417-b7d9-82457b02ef0e",
+   "kind": "payment_reminder",
+   "title": "Send a payment reminder",
+   "why": "An invoice has been open for 25 days. Plexus has written a friendly reminder.",
+   "draft_text": "Hello [customer], we are writing to follow up on the outstanding invoice [number] for [amount] which is now four weeks past due. Please let us know if you have any questions regarding this payment to [supplier]. We would appreciate it if you could arrange for the transfer at your earliest convenience. Thank you, [your name].",
+   "draft_fields": {
+    "case": "quote_to_payment-017",
+    "amount": 24200,
+    "verdict": "approve",
+    "currency": "SEK",
+    "days_waiting": 25
+   },
+   "approve_label": "Approve and send",
+   "status": "open",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:10.372519+00:00",
+   "decided_by": null,
+   "decided_at": null
+  },
+  {
+   "id": "466b1852-5cfc-4dba-b339-6d2e26139ea6",
+   "process_id": "quote_to_payment",
+   "process_name": "Customer service billing",
+   "action_id": "d938c6cd-1a51-4129-ae14-33643ca359f8",
+   "kind": "payment_reminder",
+   "title": "Send a payment reminder",
+   "why": "An invoice has been open for 33 days. Plexus has written a friendly reminder.",
+   "draft_text": "Hello [customer], we are writing to follow up on the outstanding invoice [number] for [amount]. This payment is now five weeks overdue. Please let [supplier] know if there is anything we can do to assist with the process. Best regards, [your name].",
+   "draft_fields": {
+    "case": "quote_to_payment-016",
+    "amount": 24200,
+    "verdict": "approve",
+    "currency": "SEK",
+    "days_waiting": 33
+   },
+   "approve_label": "Approve and send",
+   "status": "open",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:08.942316+00:00",
+   "decided_by": null,
+   "decided_at": null
+  },
+  {
+   "id": "a162b045-dbfb-47ea-9dd1-de41f339d4ca",
+   "process_id": "quote_to_payment",
+   "process_name": "Customer service billing",
+   "action_id": "4ad17381-212a-4659-99de-c95b6530e631",
+   "kind": "payment_reminder",
+   "title": "Send a payment reminder",
+   "why": "An invoice has been open for 38 days. Plexus has written a friendly reminder.",
+   "draft_text": "Dear [customer], our records show that payment for invoice [number] is now five weeks overdue. Please arrange for the transfer of [amount] to [supplier] at your earliest convenience. Thank you for your assistance with this matter. Best regards, [your name].",
+   "draft_fields": {
+    "case": "quote_to_payment-015",
+    "amount": 46000,
+    "verdict": "approve",
+    "currency": "SEK",
+    "days_waiting": 38
+   },
+   "approve_label": "Approve and send",
+   "status": "open",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:07.734581+00:00",
+   "decided_by": null,
+   "decided_at": null
+  }
+ ],
+ "done_today": [
+  {
+   "id": "706ca048-2068-450a-b68d-48a98b2ec5e4",
+   "process_id": "monthly_reporting",
+   "process_name": "Document Approval Workflow",
+   "action_id": "c100da61-eaba-4921-98d6-3ddc03538f0a",
+   "kind": "send_report",
+   "title": "Send the monthly report",
+   "why": "The numbers have been ready for 54 days and nobody has sent them on.",
+   "draft_text": "I am writing to provide the report regarding [number] that has been pending for the last eight weeks. We have received the necessary information from [supplier] to complete this review for [customer]. Please let me know if you have any questions after you have had a chance to look it over. Best regards, [your name].",
+   "draft_fields": {
+    "case": "monthly_reporting-011",
+    "verdict": "approve",
+    "days_waiting": 54
+   },
+   "approve_label": "Approve and send",
+   "status": "skipped",
+   "result": null,
+   "error": null,
+   "created_at": "2026-09-28T08:40:14.779030+00:00",
+   "decided_by": "first",
+   "decided_at": "2026-09-28T08:40:14.872575+00:00"
+  }
+ ]
+}

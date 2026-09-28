@@ -1,0 +1,1700 @@
+{
+ "person_leaves:<EMAIL_da16>": {
+  "kind": "person_leaves",
+  "title": "If Person A leaves",
+  "summary": "Person A leaving would stop created, sent. Nobody else has done that work in the last 120 days.",
+  "effects": [
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Sent",
+    "severity": "stops",
+    "text": "Sent in Document Approval Workflow would stop. Nobody else has done it in the last 120 days.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Created",
+    "severity": "stops",
+    "text": "Created in Document Approval Workflow would stop. Nobody else has done it in the last 120 days.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "slower",
+    "text": "Order placed in Purchase Workflow would slow down. Person A does 87% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 2307513.3,
+     "text": "about 4 weeks"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved in Expense Reimbursement would slow down. Person A does 86% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 1524380.2,
+     "text": "about 3 weeks"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Invoice sent",
+    "severity": "slower",
+    "text": "Invoice sent in Customer service billing would slow down. Person A does 85% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 13344567.6,
+     "text": "about 5 months"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "slower",
+    "text": "Paid in Customer service billing would slow down. Person A does 82% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 13003648.0,
+     "text": "about 5 months"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Paid back",
+    "severity": "slower",
+    "text": "Paid back in Expense Reimbursement would slow down. Person A does 79% of it, and 5 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 1390090.8,
+     "text": "about 2 weeks"
+    }
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created in New Hire Onboarding would slow down. Person A does 33% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 860233.1,
+     "text": "about 10 days"
+    },
+    "after": {
+     "seconds": 1003247.2,
+     "text": "about 11.5 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person A does 24% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 187433.5,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "slower",
+    "text": "Handed in in Expense Reimbursement would slow down. Person A does 21% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 364317.4,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person A does 19% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 538933.0,
+     "text": "about 6 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive in Purchase Workflow would slow down. Person A does 7% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518938.1,
+     "text": "about 6 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "slower",
+    "text": "First reply in Customer Support Tickets would slow down. Person A does 5% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 174886.7,
+     "text": "about 2 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person B",
+   "Person C",
+   "Person D",
+   "Person E",
+   "Person F",
+   "Person G"
+  ]
+ },
+ "person_leaves:<EMAIL_8ede>": {
+  "kind": "person_leaves",
+  "title": "If Person B leaves",
+  "summary": "Person B leaving would stop quote sent. Nobody else has done that work in the last 120 days.",
+  "effects": [
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Quote sent",
+    "severity": "stops",
+    "text": "Quote sent in Customer service billing would stop. Nobody else has done it in the last 120 days.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "slower",
+    "text": "First reply in Customer Support Tickets would slow down. Person B does 86% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 772528.8,
+     "text": "about 9 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Accepted",
+    "severity": "slower",
+    "text": "Accepted in Customer service billing would slow down. Person B does 78% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 11343200.6,
+     "text": "about 4 months"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "slower",
+    "text": "Handed in in Expense Reimbursement would slow down. Person B does 18% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 357694.6,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person B does 14% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 178627.4,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "slower",
+    "text": "Solved in Customer Support Tickets would slow down. Person B does 10% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 176204.3,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved in Expense Reimbursement would slow down. Person B does 7% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 346127.3,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive in Purchase Workflow would slow down. Person B does 7% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518938.1,
+     "text": "about 6 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person B does 6% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518569.8,
+     "text": "about 6 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person A",
+   "Person C",
+   "Person D",
+   "Person E",
+   "Person F",
+   "Person G"
+  ]
+ },
+ "person_leaves:<EMAIL_06b8>": {
+  "kind": "person_leaves",
+  "title": "If Person C leaves",
+  "summary": "Person C leaving would slow down 9 steps, but nothing would stop.",
+  "effects": [
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "slower",
+    "text": "Solved in Customer Support Tickets would slow down. Person C does 57% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 307057.9,
+     "text": "about 3.5 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive in Purchase Workflow would slow down. Person C does 53% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 830626.1,
+     "text": "about 9.5 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Work done",
+    "severity": "slower",
+    "text": "Work done in Customer service billing would slow down. Person C does 50% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 4565887.7,
+     "text": "about 8 weeks"
+    }
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Document added",
+    "severity": "slower",
+    "text": "Document added in New Hire Onboarding would slow down. Person C does 33% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 860233.1,
+     "text": "about 10 days"
+    },
+    "after": {
+     "seconds": 1003247.2,
+     "text": "about 11.5 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person C does 14% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 178627.4,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person C does 12% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 525675.7,
+     "text": "about 6 days"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "slower",
+    "text": "Handed in in Expense Reimbursement would slow down. Person C does 11% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 348673.0,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "slower",
+    "text": "Paid in Customer service billing would slow down. Person C does 9% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 3071655.3,
+     "text": "about 5 weeks"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "slower",
+    "text": "Order placed in Purchase Workflow would slow down. Person C does 7% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518938.1,
+     "text": "about 6 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person A",
+   "Person B",
+   "Person D",
+   "Person E",
+   "Person F",
+   "Person G"
+  ]
+ },
+ "person_leaves:<EMAIL_2cbb>": {
+  "kind": "person_leaves",
+  "title": "If Person D leaves",
+  "summary": "Person D leaving would slow down 8 steps, but nothing would stop.",
+  "effects": [
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Work done",
+    "severity": "slower",
+    "text": "Work done in Customer service billing would slow down. Person D does 50% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 4565887.7,
+     "text": "about 8 weeks"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive in Purchase Workflow would slow down. Person D does 33% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 602313.9,
+     "text": "about 7 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "slower",
+    "text": "Solved in Customer Support Tickets would slow down. Person D does 33% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 203469.3,
+     "text": "about 2.5 days"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "slower",
+    "text": "Handed in in Expense Reimbursement would slow down. Person D does 21% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 364317.4,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person D does 14% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 178627.4,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person D does 12% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 525675.7,
+     "text": "about 6 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Accepted",
+    "severity": "slower",
+    "text": "Accepted in Customer service billing would slow down. Person D does 11% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 3086112.1,
+     "text": "about 5 weeks"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "slower",
+    "text": "First reply in Customer Support Tickets would slow down. Person D does 5% of it, and 3 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 174886.7,
+     "text": "about 2 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person A",
+   "Person B",
+   "Person C",
+   "Person E",
+   "Person F",
+   "Person G"
+  ]
+ },
+ "person_leaves:<EMAIL_634d>": {
+  "kind": "person_leaves",
+  "title": "If Person E leaves",
+  "summary": "Person E leaving would stop approved. Nobody else has done that work in the last 120 days.",
+  "effects": [
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Approved",
+    "severity": "stops",
+    "text": "Approved in Purchase Workflow would stop. Nobody else has done it in the last 120 days.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved in Document Approval Workflow would slow down. Person E does 50% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 173433.3,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 260149.9,
+     "text": "about 3 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person E does 10% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 176204.3,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person E does 6% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518569.8,
+     "text": "about 6 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person A",
+   "Person B",
+   "Person C",
+   "Person D",
+   "Person F",
+   "Person G"
+  ]
+ },
+ "person_leaves:<EMAIL_4e64>": {
+  "kind": "person_leaves",
+  "title": "If Person F leaves",
+  "summary": "Person F leaving would slow down 9 steps, but nothing would stop.",
+  "effects": [
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created in New Hire Onboarding would slow down. Person F does 67% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 860233.1,
+     "text": "about 10 days"
+    },
+    "after": {
+     "seconds": 2009507.1,
+     "text": "about 3 weeks"
+    }
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Document added",
+    "severity": "slower",
+    "text": "Document added in New Hire Onboarding would slow down. Person F does 67% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 860233.1,
+     "text": "about 10 days"
+    },
+    "after": {
+     "seconds": 2009507.1,
+     "text": "about 3 weeks"
+    }
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "First day",
+    "severity": "slower",
+    "text": "First day in New Hire Onboarding would slow down. Person F does 33% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 860233.1,
+     "text": "about 10 days"
+    },
+    "after": {
+     "seconds": 1003247.2,
+     "text": "about 11.5 days"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Purchase Workflow would slow down. Person F does 31% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 589525.4,
+     "text": "about 7 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Invoice sent",
+    "severity": "slower",
+    "text": "Invoice sent in Customer service billing would slow down. Person F does 15% of it, and 1 other person has done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 3129255.7,
+     "text": "about 5 weeks"
+    }
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "slower",
+    "text": "Handed in in Expense Reimbursement would slow down. Person F does 14% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 344259.3,
+     "text": "about 4 days"
+    },
+    "after": {
+     "seconds": 352473.7,
+     "text": "about 4 days"
+    }
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "slower",
+    "text": "Request comes in in Customer Support Tickets would slow down. Person F does 14% of it, and 6 others have done it before.",
+    "before": {
+     "seconds": 174464.5,
+     "text": "about 2 days"
+    },
+    "after": {
+     "seconds": 178627.4,
+     "text": "about 2 days"
+    }
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "slower",
+    "text": "Paid in Customer service billing would slow down. Person F does 9% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 3043925.1,
+     "text": "about 5 weeks"
+    },
+    "after": {
+     "seconds": 3071655.3,
+     "text": "about 5 weeks"
+    }
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "slower",
+    "text": "Order placed in Purchase Workflow would slow down. Person F does 7% of it, and 2 others have done it before.",
+    "before": {
+     "seconds": 516453.3,
+     "text": "about 6 days"
+    },
+    "after": {
+     "seconds": 518938.1,
+     "text": "about 6 days"
+    }
+   }
+  ],
+  "assumptions": [
+   "Based on what actually happened in the last 120 days.",
+   "Assumes nobody new is hired and the work still has to be done."
+  ],
+  "cover": [
+   "Person A",
+   "Person B",
+   "Person C",
+   "Person D",
+   "Person E",
+   "Person G"
+  ]
+ },
+ "demand_changes:quote_to_payment:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, Customer service billing has room to spare.",
+  "effects": [
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Invoice sent",
+    "severity": "fine",
+    "text": "Invoice sent goes from about 1 to 0 a week. 2 people share it today, and one of them does 85% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "fine",
+    "text": "Paid goes from about 1 to 0 a week. 3 people share it today, and one of them does 82% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Work done",
+    "severity": "fine",
+    "text": "Work done goes from about 1 to 0 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Quote sent",
+    "severity": "fine",
+    "text": "Quote sent goes from about 1 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Accepted",
+    "severity": "fine",
+    "text": "Accepted goes from about 1 to 0 a week. 3 people share it today, and one of them does 78% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:quote_to_payment:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, quote sent is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Invoice sent",
+    "severity": "slower",
+    "text": "Invoice sent goes from about 1 to 2 a week. 2 people share it today, and one of them does 85% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "slower",
+    "text": "Paid goes from about 1 to 1 a week. 3 people share it today, and one of them does 82% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Work done",
+    "severity": "slower",
+    "text": "Work done goes from about 1 to 1 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Quote sent",
+    "severity": "slower",
+    "text": "Quote sent goes from about 1 to 1 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Accepted",
+    "severity": "slower",
+    "text": "Accepted goes from about 1 to 1 a week. 3 people share it today, and one of them does 78% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:quote_to_payment:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, quote sent is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Invoice sent",
+    "severity": "slower",
+    "text": "Invoice sent goes from about 1 to 2 a week. 2 people share it today, and one of them does 85% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Paid",
+    "severity": "slower",
+    "text": "Paid goes from about 1 to 2 a week. 3 people share it today, and one of them does 82% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Work done",
+    "severity": "slower",
+    "text": "Work done goes from about 1 to 2 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Quote sent",
+    "severity": "slower",
+    "text": "Quote sent goes from about 1 to 2 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "quote_to_payment",
+    "process_name": "Customer service billing",
+    "step": "Accepted",
+    "severity": "slower",
+    "text": "Accepted goes from about 1 to 2 a week. 3 people share it today, and one of them does 78% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:new_hires:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, New Hire Onboarding has room to spare.",
+  "effects": [
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Created",
+    "severity": "fine",
+    "text": "Created goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "First day",
+    "severity": "fine",
+    "text": "First day goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Document added",
+    "severity": "fine",
+    "text": "Document added goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Contract signed",
+    "severity": "fine",
+    "text": "Contract signed goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:new_hires:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, contract signed is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "First day",
+    "severity": "slower",
+    "text": "First day goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Document added",
+    "severity": "slower",
+    "text": "Document added goes from about 0 to 0 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Contract signed",
+    "severity": "slower",
+    "text": "Contract signed goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:new_hires:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, contract signed is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created goes from about 0 to 1 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "First day",
+    "severity": "slower",
+    "text": "First day goes from about 0 to 1 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Document added",
+    "severity": "slower",
+    "text": "Document added goes from about 0 to 1 a week. 2 people share it today, and one of them does 67% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "new_hires",
+    "process_name": "New Hire Onboarding",
+    "step": "Contract signed",
+    "severity": "slower",
+    "text": "Contract signed goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:purchasing:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, Purchase Workflow has room to spare.",
+  "effects": [
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 0 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "fine",
+    "text": "Order placed goes from about 1 to 0 a week. 3 people share it today, and one of them does 87% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "fine",
+    "text": "Goods arrive goes from about 1 to 0 a week. 4 people share it today, and one of them does 53% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Approved",
+    "severity": "fine",
+    "text": "Approved goes from about 1 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:purchasing:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, approved is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 2 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "slower",
+    "text": "Order placed goes from about 1 to 2 a week. 3 people share it today, and one of them does 87% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive goes from about 1 to 2 a week. 4 people share it today, and one of them does 53% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 1 to 2 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:purchasing:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, approved is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 3 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Order placed",
+    "severity": "slower",
+    "text": "Order placed goes from about 1 to 3 a week. 3 people share it today, and one of them does 87% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Goods arrive",
+    "severity": "slower",
+    "text": "Goods arrive goes from about 1 to 3 a week. 4 people share it today, and one of them does 53% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "purchasing",
+    "process_name": "Purchase Workflow",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 1 to 2 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:customer_requests:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, Customer Support Tickets has room to spare.",
+  "effects": [
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "fine",
+    "text": "Solved goes from about 1 to 1 a week. 3 people share it today, and one of them does 57% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 1 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "fine",
+    "text": "First reply goes from about 1 to 1 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:customer_requests:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, first reply is the thin spot: one person already does 86% of it.",
+  "effects": [
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "slower",
+    "text": "Solved goes from about 1 to 2 a week. 3 people share it today, and one of them does 57% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 2 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "slower",
+    "text": "First reply goes from about 1 to 2 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:customer_requests:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, first reply is the thin spot: one person already does 86% of it.",
+  "effects": [
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Solved",
+    "severity": "slower",
+    "text": "Solved goes from about 1 to 4 a week. 3 people share it today, and one of them does 57% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "Request comes in",
+    "severity": "fine",
+    "text": "Request comes in goes from about 1 to 4 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "customer_requests",
+    "process_name": "Customer Support Tickets",
+    "step": "First reply",
+    "severity": "slower",
+    "text": "First reply goes from about 1 to 4 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:expenses:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, Expense Reimbursement has room to spare.",
+  "effects": [
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Paid back",
+    "severity": "fine",
+    "text": "Paid back goes from about 2 to 1 a week. 6 people share it today, and one of them does 79% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "fine",
+    "text": "Handed in goes from about 2 to 1 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Approved",
+    "severity": "fine",
+    "text": "Approved goes from about 2 to 1 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:expenses:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, approved is the thin spot: one person already does 86% of it.",
+  "effects": [
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Paid back",
+    "severity": "slower",
+    "text": "Paid back goes from about 2 to 3 a week. 6 people share it today, and one of them does 79% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "fine",
+    "text": "Handed in goes from about 2 to 3 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 2 to 3 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:expenses:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, approved is the thin spot: one person already does 86% of it.",
+  "effects": [
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Paid back",
+    "severity": "slower",
+    "text": "Paid back goes from about 2 to 5 a week. 6 people share it today, and one of them does 79% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Handed in",
+    "severity": "fine",
+    "text": "Handed in goes from about 2 to 5 a week. 7 people share it today.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "expenses",
+    "process_name": "Expense Reimbursement",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 2 to 5 a week. 4 people share it today, and one of them does 86% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:monthly_reporting:0.5": {
+  "kind": "demand_changes",
+  "title": "If less work comes in",
+  "summary": "At 0.5 times the volume, Document Approval Workflow has room to spare.",
+  "effects": [
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Created",
+    "severity": "fine",
+    "text": "Created goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Sent",
+    "severity": "fine",
+    "text": "Sent goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Approved",
+    "severity": "fine",
+    "text": "Approved goes from about 0 to 0 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:monthly_reporting:2.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 2 times the work, created is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Sent",
+    "severity": "slower",
+    "text": "Sent goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 0 to 0 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ },
+ "demand_changes:monthly_reporting:3.0": {
+  "kind": "demand_changes",
+  "title": "If more work comes in",
+  "summary": "At 3 times the work, created is the thin spot: one person already does 100% of it.",
+  "effects": [
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Created",
+    "severity": "slower",
+    "text": "Created goes from about 0 to 1 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Sent",
+    "severity": "slower",
+    "text": "Sent goes from about 0 to 0 a week. 1 person handles it today, and one of them does 100% of it.",
+    "before": null,
+    "after": null
+   },
+   {
+    "process_id": "monthly_reporting",
+    "process_name": "Document Approval Workflow",
+    "step": "Approved",
+    "severity": "slower",
+    "text": "Approved goes from about 0 to 0 a week. 2 people share it today, and one of them does 50% of it.",
+    "before": null,
+    "after": null
+   }
+  ],
+  "assumptions": [
+   "Based on the last 120 days of real volume.",
+   "Shows how much more work each step would carry, not how many people it needs: Plexus can see how work was shared out, not how much anyone could take on.",
+   "Assumes the work arrives steadily rather than all at once."
+  ],
+  "cover": []
+ }
+}

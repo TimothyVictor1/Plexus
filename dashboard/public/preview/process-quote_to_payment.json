@@ -1,0 +1,146 @@
+{
+ "id": "quote_to_payment",
+ "name": "Customer service billing",
+ "description": "Starts when we offer a service and ends when we get paid",
+ "total_duration": {
+  "seconds": 3043925.1,
+  "text": "about 5 weeks"
+ },
+ "health": "slow",
+ "slowest": {
+  "from_step": "Service delivered",
+  "to_step": "Invoice sent",
+  "text": "waiting to send the invoice after finishing the work",
+  "duration": {
+   "seconds": 2227719.7,
+   "text": "about 4 weeks"
+  }
+ },
+ "level": 3,
+ "paused": false,
+ "case_count": 18,
+ "tools": [
+  "accounting",
+  "crm",
+  "email"
+ ],
+ "tools_text": "Accounting, Customer system and Email",
+ "steps": [
+  {
+   "label": "Service offered",
+   "order": 1,
+   "verb": "offered"
+  },
+  {
+   "label": "Service accepted",
+   "order": 2,
+   "verb": "accepted"
+  },
+  {
+   "label": "Service delivered",
+   "order": 3,
+   "verb": "delivered"
+  },
+  {
+   "label": "Invoice sent",
+   "order": 4,
+   "verb": "invoiced"
+  },
+  {
+   "label": "Payment received",
+   "order": 5,
+   "verb": "paid"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "Service offered",
+   "to_step": "Service accepted",
+   "duration": {
+    "seconds": 178670.4,
+    "text": "about 2 days"
+   },
+   "is_slowest": false
+  },
+  {
+   "from_step": "Service accepted",
+   "to_step": "Service delivered",
+   "duration": {
+    "seconds": 263750.8,
+    "text": "about 3 days"
+   },
+   "is_slowest": false
+  },
+  {
+   "from_step": "Service delivered",
+   "to_step": "Invoice sent",
+   "duration": {
+    "seconds": 2227719.7,
+    "text": "about 4 weeks"
+   },
+   "is_slowest": true
+  },
+  {
+   "from_step": "Invoice sent",
+   "to_step": "Payment received",
+   "duration": {
+    "seconds": 423185.7,
+    "text": "about 5 days"
+   },
+   "is_slowest": false
+  }
+ ],
+ "help_tip": "Plexus can alert you when a service is marked as finished so you can generate the invoice immediately.",
+ "autonomy": {
+  "level": 3,
+  "level_key": "suggests",
+  "decisions": 6,
+  "needed": 30,
+  "can_promote": false,
+  "reason": "trust 0.49 below 0.75; 6 decisions, needs 30",
+  "paused": false
+ },
+ "technical": {
+  "cases": 18,
+  "variants": 2,
+  "median_gaps": [
+   {
+    "from": "offered",
+    "to": "accepted",
+    "seconds": 178670.424741,
+    "count": 18,
+    "dependency": 0.947
+   },
+   {
+    "from": "accepted",
+    "to": "delivered",
+    "seconds": 263750.82999,
+    "count": 18,
+    "dependency": 0.947
+   },
+   {
+    "from": "delivered",
+    "to": "invoiced",
+    "seconds": 2227719.6963045,
+    "count": 18,
+    "dependency": 0.947
+   },
+   {
+    "from": "invoiced",
+    "to": "paid",
+    "seconds": 423185.701462,
+    "count": 15,
+    "dependency": 0.938
+   }
+  ],
+  "bottleneck_transition": "delivered -> invoiced",
+  "trust_score": 0.486,
+  "trust_components": {
+   "approval_rate": 0.2667,
+   "reversal_rate": 0.225,
+   "recency": 0.0019,
+   "blast_radius": -0.0071
+  },
+  "tier": "SUGGEST"
+ }
+}

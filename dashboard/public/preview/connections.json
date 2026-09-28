@@ -1,0 +1,95 @@
+{
+ "connections": [
+  {
+   "category": "email",
+   "label": "Email",
+   "examples": "Gmail, Outlook",
+   "status": "connected",
+   "provider": "demo-email",
+   "detail": "",
+   "document_count": 202
+  },
+  {
+   "category": "calendar",
+   "label": "Calendar",
+   "examples": "Google, Outlook",
+   "status": "connected",
+   "provider": "demo-calendar",
+   "detail": "",
+   "document_count": 0
+  },
+  {
+   "category": "crm",
+   "label": "Customer system",
+   "examples": "HubSpot, Salesforce, Lime",
+   "status": "connected",
+   "provider": "demo-crm",
+   "detail": "",
+   "document_count": 60
+  },
+  {
+   "category": "accounting",
+   "label": "Accounting",
+   "examples": "Fortnox, Visma",
+   "status": "connected",
+   "provider": "demo-accounting",
+   "detail": "",
+   "document_count": 262
+  },
+  {
+   "category": "files",
+   "label": "Files",
+   "examples": "Google Drive, SharePoint",
+   "status": "connected",
+   "provider": "demo-files",
+   "detail": "",
+   "document_count": 20
+  },
+  {
+   "category": "hr",
+   "label": "HR system",
+   "examples": "Any HR tool",
+   "status": "connected",
+   "provider": "demo-hr",
+   "detail": "",
+   "document_count": 12
+  },
+  {
+   "category": "chat",
+   "label": "Team chat",
+   "examples": "Slack, Teams",
+   "status": "not_configured",
+   "provider": "slack",
+   "detail": "Plexus can read this kind of tool, but this installation has no credentials for it yet.",
+   "document_count": 0
+  },
+  {
+   "category": "projects",
+   "label": "Projects and tasks",
+   "examples": "ClickUp, Jira, Asana",
+   "status": "not_configured",
+   "provider": "clickup",
+   "detail": "Plexus can read this kind of tool, but this installation has no credentials for it yet.",
+   "document_count": 0
+  }
+ ],
+ "connected_count": 6,
+ "total": 8,
+ "privacy": [
+  {
+   "key": "residency",
+   "ok": "false",
+   "region": "global"
+  },
+  {
+   "key": "masking",
+   "ok": "true",
+   "region": ""
+  },
+  {
+   "key": "control",
+   "ok": "true",
+   "region": ""
+  }
+ ]
+}

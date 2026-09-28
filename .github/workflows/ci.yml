@@ -53,6 +53,8 @@ jobs:
           cache: pnpm
           cache-dependency-path: dashboard/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: dependency audit
+        run: pnpm audit --audit-level moderate
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm i18n:check

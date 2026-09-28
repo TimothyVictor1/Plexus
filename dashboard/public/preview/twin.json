@@ -1,0 +1,1060 @@
+{
+ "window_days": 120,
+ "people": [
+  {
+   "token": "<EMAIL_da16>",
+   "label": "Person A",
+   "events": 102,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Document Approval Workflow",
+    "Expense Reimbursement",
+    "New Hire Onboarding",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "monthly_reporting",
+     "process_name": "Document Approval Workflow",
+     "step": "Sent",
+     "verb": "sent",
+     "events": 2,
+     "share": 1.0,
+     "others": 0
+    },
+    {
+     "process_id": "monthly_reporting",
+     "process_name": "Document Approval Workflow",
+     "step": "Created",
+     "verb": "created",
+     "events": 3,
+     "share": 1.0,
+     "others": 0
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Order placed",
+     "verb": "ordered",
+     "events": 13,
+     "share": 0.867,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 24,
+     "share": 0.857,
+     "others": 3
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Invoice sent",
+     "verb": "invoiced",
+     "events": 11,
+     "share": 0.846,
+     "others": 1
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Paid",
+     "verb": "paid",
+     "events": 9,
+     "share": 0.818,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 23,
+     "share": 0.793,
+     "others": 5
+    },
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "Created",
+     "verb": "created",
+     "events": 1,
+     "share": 0.333,
+     "others": 1
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 5,
+     "share": 0.238,
+     "others": 6
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 6,
+     "share": 0.214,
+     "others": 6
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 3,
+     "share": 0.188,
+     "others": 6
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Goods arrive",
+     "verb": "received",
+     "events": 1,
+     "share": 0.067,
+     "others": 3
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "First reply",
+     "verb": "replied",
+     "events": 1,
+     "share": 0.048,
+     "others": 3
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_8ede>",
+   "label": "Person B",
+   "events": 48,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Expense Reimbursement",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Quote sent",
+     "verb": "offered",
+     "events": 9,
+     "share": 1.0,
+     "others": 0
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "First reply",
+     "verb": "replied",
+     "events": 18,
+     "share": 0.857,
+     "others": 3
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Accepted",
+     "verb": "accepted",
+     "events": 7,
+     "share": 0.778,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 5,
+     "share": 0.179,
+     "others": 6
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 3,
+     "share": 0.143,
+     "others": 6
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Solved",
+     "verb": "resolved",
+     "events": 2,
+     "share": 0.095,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 2,
+     "share": 0.071,
+     "others": 3
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Goods arrive",
+     "verb": "received",
+     "events": 1,
+     "share": 0.067,
+     "others": 3
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 1,
+     "share": 0.062,
+     "others": 6
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_06b8>",
+   "label": "Person C",
+   "events": 37,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Expense Reimbursement",
+    "New Hire Onboarding",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Solved",
+     "verb": "resolved",
+     "events": 12,
+     "share": 0.571,
+     "others": 2
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Goods arrive",
+     "verb": "received",
+     "events": 8,
+     "share": 0.533,
+     "others": 3
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Work done",
+     "verb": "delivered",
+     "events": 5,
+     "share": 0.5,
+     "others": 1
+    },
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "Document added",
+     "verb": "attached",
+     "events": 1,
+     "share": 0.333,
+     "others": 1
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 3,
+     "share": 0.143,
+     "others": 6
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 2,
+     "share": 0.125,
+     "others": 6
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 3,
+     "share": 0.107,
+     "others": 6
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Paid",
+     "verb": "paid",
+     "events": 1,
+     "share": 0.091,
+     "others": 2
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Order placed",
+     "verb": "ordered",
+     "events": 1,
+     "share": 0.067,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 1,
+     "share": 0.034,
+     "others": 5
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_2cbb>",
+   "label": "Person D",
+   "events": 31,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Expense Reimbursement",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Work done",
+     "verb": "delivered",
+     "events": 5,
+     "share": 0.5,
+     "others": 1
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Goods arrive",
+     "verb": "received",
+     "events": 5,
+     "share": 0.333,
+     "others": 3
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Solved",
+     "verb": "resolved",
+     "events": 7,
+     "share": 0.333,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 6,
+     "share": 0.214,
+     "others": 6
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 3,
+     "share": 0.143,
+     "others": 6
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 2,
+     "share": 0.125,
+     "others": 6
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Accepted",
+     "verb": "accepted",
+     "events": 1,
+     "share": 0.111,
+     "others": 2
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "First reply",
+     "verb": "replied",
+     "events": 1,
+     "share": 0.048,
+     "others": 3
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 1,
+     "share": 0.034,
+     "others": 5
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_634d>",
+   "label": "Person E",
+   "events": 25,
+   "processes": [
+    "Customer Support Tickets",
+    "Document Approval Workflow",
+    "Expense Reimbursement",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 14,
+     "share": 1.0,
+     "others": 0
+    },
+    {
+     "process_id": "monthly_reporting",
+     "process_name": "Document Approval Workflow",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 1,
+     "share": 0.5,
+     "others": 1
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 2,
+     "share": 0.095,
+     "others": 6
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 1,
+     "share": 0.062,
+     "others": 6
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 1,
+     "share": 0.036,
+     "others": 3
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 1,
+     "share": 0.036,
+     "others": 6
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 1,
+     "share": 0.034,
+     "others": 5
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_4e64>",
+   "label": "Person F",
+   "events": 23,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Expense Reimbursement",
+    "New Hire Onboarding",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "Created",
+     "verb": "created",
+     "events": 2,
+     "share": 0.667,
+     "others": 1
+    },
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "Document added",
+     "verb": "attached",
+     "events": 2,
+     "share": 0.667,
+     "others": 1
+    },
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "First day",
+     "verb": "started",
+     "events": 1,
+     "share": 0.333,
+     "others": 1
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 5,
+     "share": 0.312,
+     "others": 6
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Invoice sent",
+     "verb": "invoiced",
+     "events": 2,
+     "share": 0.154,
+     "others": 1
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 4,
+     "share": 0.143,
+     "others": 6
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 3,
+     "share": 0.143,
+     "others": 6
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Paid",
+     "verb": "paid",
+     "events": 1,
+     "share": 0.091,
+     "others": 2
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Order placed",
+     "verb": "ordered",
+     "events": 1,
+     "share": 0.067,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 1,
+     "share": 0.036,
+     "others": 3
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 1,
+     "share": 0.034,
+     "others": 5
+    }
+   ]
+  },
+  {
+   "token": "<EMAIL_9468>",
+   "label": "Person G",
+   "events": 16,
+   "processes": [
+    "Customer Support Tickets",
+    "Customer service billing",
+    "Document Approval Workflow",
+    "Expense Reimbursement",
+    "New Hire Onboarding",
+    "Purchase Workflow"
+   ],
+   "roles": [
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "Contract signed",
+     "verb": "signed",
+     "events": 2,
+     "share": 1.0,
+     "others": 0
+    },
+    {
+     "process_id": "new_hires",
+     "process_name": "New Hire Onboarding",
+     "step": "First day",
+     "verb": "started",
+     "events": 2,
+     "share": 0.667,
+     "others": 1
+    },
+    {
+     "process_id": "monthly_reporting",
+     "process_name": "Document Approval Workflow",
+     "step": "Approved",
+     "verb": "approved",
+     "events": 1,
+     "share": 0.5,
+     "others": 1
+    },
+    {
+     "process_id": "purchasing",
+     "process_name": "Purchase Workflow",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 2,
+     "share": 0.125,
+     "others": 6
+    },
+    {
+     "process_id": "quote_to_payment",
+     "process_name": "Customer service billing",
+     "step": "Accepted",
+     "verb": "accepted",
+     "events": 1,
+     "share": 0.111,
+     "others": 2
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Handed in",
+     "verb": "submitted",
+     "events": 3,
+     "share": 0.107,
+     "others": 6
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "Request comes in",
+     "verb": "requested",
+     "events": 2,
+     "share": 0.095,
+     "others": 6
+    },
+    {
+     "process_id": "expenses",
+     "process_name": "Expense Reimbursement",
+     "step": "Paid back",
+     "verb": "reimbursed",
+     "events": 2,
+     "share": 0.069,
+     "others": 5
+    },
+    {
+     "process_id": "customer_requests",
+     "process_name": "Customer Support Tickets",
+     "step": "First reply",
+     "verb": "replied",
+     "events": 1,
+     "share": 0.048,
+     "others": 3
+    }
+   ]
+  }
+ ],
+ "processes": [
+  {
+   "id": "quote_to_payment",
+   "name": "Customer service billing",
+   "cases": 14,
+   "people": 6,
+   "steps": [
+    {
+     "verb": "invoiced",
+     "label": "Invoice sent",
+     "events": 13,
+     "people": 2,
+     "per_week": 0.76,
+     "wait": null,
+     "top_share": 0.846
+    },
+    {
+     "verb": "paid",
+     "label": "Paid",
+     "events": 11,
+     "people": 3,
+     "per_week": 0.64,
+     "wait": null,
+     "top_share": 0.818
+    },
+    {
+     "verb": "delivered",
+     "label": "Work done",
+     "events": 10,
+     "people": 2,
+     "per_week": 0.58,
+     "wait": null,
+     "top_share": 0.5
+    },
+    {
+     "verb": "offered",
+     "label": "Quote sent",
+     "events": 9,
+     "people": 1,
+     "per_week": 0.53,
+     "wait": null,
+     "top_share": 1.0
+    },
+    {
+     "verb": "accepted",
+     "label": "Accepted",
+     "events": 9,
+     "people": 3,
+     "per_week": 0.53,
+     "wait": null,
+     "top_share": 0.778
+    }
+   ],
+   "cycle": {
+    "seconds": 3043925.1,
+    "text": "about 5 weeks"
+   },
+   "slowest_verb": ""
+  },
+  {
+   "id": "new_hires",
+   "name": "New Hire Onboarding",
+   "cases": 3,
+   "people": 4,
+   "steps": [
+    {
+     "verb": "created",
+     "label": "Created",
+     "events": 3,
+     "people": 2,
+     "per_week": 0.18,
+     "wait": null,
+     "top_share": 0.667
+    },
+    {
+     "verb": "started",
+     "label": "First day",
+     "events": 3,
+     "people": 2,
+     "per_week": 0.18,
+     "wait": null,
+     "top_share": 0.667
+    },
+    {
+     "verb": "attached",
+     "label": "Document added",
+     "events": 3,
+     "people": 2,
+     "per_week": 0.18,
+     "wait": null,
+     "top_share": 0.667
+    },
+    {
+     "verb": "signed",
+     "label": "Contract signed",
+     "events": 2,
+     "people": 1,
+     "per_week": 0.12,
+     "wait": null,
+     "top_share": 1.0
+    }
+   ],
+   "cycle": {
+    "seconds": 860233.1,
+    "text": "about 10 days"
+   },
+   "slowest_verb": ""
+  },
+  {
+   "id": "purchasing",
+   "name": "Purchase Workflow",
+   "cases": 17,
+   "people": 7,
+   "steps": [
+    {
+     "verb": "requested",
+     "label": "Request comes in",
+     "events": 16,
+     "people": 7,
+     "per_week": 0.93,
+     "wait": null,
+     "top_share": 0.312
+    },
+    {
+     "verb": "ordered",
+     "label": "Order placed",
+     "events": 15,
+     "people": 3,
+     "per_week": 0.88,
+     "wait": null,
+     "top_share": 0.867
+    },
+    {
+     "verb": "received",
+     "label": "Goods arrive",
+     "events": 15,
+     "people": 4,
+     "per_week": 0.88,
+     "wait": null,
+     "top_share": 0.533
+    },
+    {
+     "verb": "approved",
+     "label": "Approved",
+     "events": 14,
+     "people": 1,
+     "per_week": 0.82,
+     "wait": null,
+     "top_share": 1.0
+    }
+   ],
+   "cycle": {
+    "seconds": 516453.3,
+    "text": "about 6 days"
+   },
+   "slowest_verb": ""
+  },
+  {
+   "id": "customer_requests",
+   "name": "Customer Support Tickets",
+   "cases": 21,
+   "people": 7,
+   "steps": [
+    {
+     "verb": "resolved",
+     "label": "Solved",
+     "events": 21,
+     "people": 3,
+     "per_week": 1.23,
+     "wait": null,
+     "top_share": 0.571
+    },
+    {
+     "verb": "requested",
+     "label": "Request comes in",
+     "events": 21,
+     "people": 7,
+     "per_week": 1.23,
+     "wait": null,
+     "top_share": 0.238
+    },
+    {
+     "verb": "replied",
+     "label": "First reply",
+     "events": 21,
+     "people": 4,
+     "per_week": 1.23,
+     "wait": null,
+     "top_share": 0.857
+    }
+   ],
+   "cycle": {
+    "seconds": 174464.5,
+    "text": "about 2 days"
+   },
+   "slowest_verb": ""
+  },
+  {
+   "id": "expenses",
+   "name": "Expense Reimbursement",
+   "cases": 29,
+   "people": 7,
+   "steps": [
+    {
+     "verb": "reimbursed",
+     "label": "Paid back",
+     "events": 29,
+     "people": 6,
+     "per_week": 1.69,
+     "wait": null,
+     "top_share": 0.793
+    },
+    {
+     "verb": "submitted",
+     "label": "Handed in",
+     "events": 28,
+     "people": 7,
+     "per_week": 1.63,
+     "wait": null,
+     "top_share": 0.214
+    },
+    {
+     "verb": "approved",
+     "label": "Approved",
+     "events": 28,
+     "people": 4,
+     "per_week": 1.63,
+     "wait": null,
+     "top_share": 0.857
+    }
+   ],
+   "cycle": {
+    "seconds": 344259.3,
+    "text": "about 4 days"
+   },
+   "slowest_verb": ""
+  },
+  {
+   "id": "monthly_reporting",
+   "name": "Document Approval Workflow",
+   "cases": 3,
+   "people": 3,
+   "steps": [
+    {
+     "verb": "created",
+     "label": "Created",
+     "events": 3,
+     "people": 1,
+     "per_week": 0.18,
+     "wait": null,
+     "top_share": 1.0
+    },
+    {
+     "verb": "sent",
+     "label": "Sent",
+     "events": 2,
+     "people": 1,
+     "per_week": 0.12,
+     "wait": null,
+     "top_share": 1.0
+    },
+    {
+     "verb": "approved",
+     "label": "Approved",
+     "events": 2,
+     "people": 2,
+     "per_week": 0.12,
+     "wait": null,
+     "top_share": 0.5
+    }
+   ],
+   "cycle": {
+    "seconds": 173433.3,
+    "text": "about 2 days"
+   },
+   "slowest_verb": ""
+  }
+ ],
+ "external_parties": 0,
+ "total_events": 282,
+ "risks": [
+  {
+   "kind": "single_point",
+   "person": "Person A",
+   "process_name": "Document Approval Workflow",
+   "step": "Sent",
+   "share": 1.0,
+   "text": "Person A is the only person who has done sent in Document Approval Workflow."
+  },
+  {
+   "kind": "single_point",
+   "person": "Person A",
+   "process_name": "Document Approval Workflow",
+   "step": "Created",
+   "share": 1.0,
+   "text": "Person A is the only person who has done created in Document Approval Workflow."
+  },
+  {
+   "kind": "single_point",
+   "person": "Person B",
+   "process_name": "Customer service billing",
+   "step": "Quote sent",
+   "share": 1.0,
+   "text": "Person B is the only person who has done quote sent in Customer service billing."
+  },
+  {
+   "kind": "single_point",
+   "person": "Person E",
+   "process_name": "Purchase Workflow",
+   "step": "Approved",
+   "share": 1.0,
+   "text": "Person E is the only person who has done approved in Purchase Workflow."
+  },
+  {
+   "kind": "single_point",
+   "person": "Person G",
+   "process_name": "New Hire Onboarding",
+   "step": "Contract signed",
+   "share": 1.0,
+   "text": "Person G is the only person who has done contract signed in New Hire Onboarding."
+  },
+  {
+   "kind": "key_person",
+   "person": "Person A",
+   "process_name": "Purchase Workflow",
+   "step": "Order placed",
+   "share": 0.867,
+   "text": "Person A handles 87% of order placed in Purchase Workflow."
+  },
+  {
+   "kind": "key_person",
+   "person": "Person A",
+   "process_name": "Expense Reimbursement",
+   "step": "Approved",
+   "share": 0.857,
+   "text": "Person A handles 86% of approved in Expense Reimbursement."
+  },
+  {
+   "kind": "key_person",
+   "person": "Person B",
+   "process_name": "Customer Support Tickets",
+   "step": "First reply",
+   "share": 0.857,
+   "text": "Person B handles 86% of first reply in Customer Support Tickets."
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "id": "customer_requests",
+ "name": "Customer Support Tickets",
+ "description": "Starts when a customer sends a request and ends when the team marks it as resolved",
+ "total_duration": {
+  "seconds": 174464.5,
+  "text": "about 2 days"
+ },
+ "health": "watch",
+ "slowest": {
+  "from_step": "Receive request",
+  "to_step": "Send reply",
+  "text": "waiting for a reply to the initial inquiry",
+  "duration": {
+   "seconds": 131212.9,
+   "text": "about a day and a half"
+  }
+ },
+ "level": 1,
+ "paused": false,
+ "case_count": 42,
+ "tools": [
+  "crm",
+  "email"
+ ],
+ "tools_text": "Customer system and Email",
+ "steps": [
+  {
+   "label": "Receive request",
+   "order": 1,
+   "verb": "requested"
+  },
+  {
+   "label": "Send reply",
+   "order": 2,
+   "verb": "replied"
+  },
+  {
+   "label": "Mark resolved",
+   "order": 3,
+   "verb": "resolved"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "Receive request",
+   "to_step": "Send reply",
+   "duration": {
+    "seconds": 131212.9,
+    "text": "about a day and a half"
+   },
+   "is_slowest": true
+  },
+  {
+   "from_step": "Send reply",
+   "to_step": "Mark resolved",
+   "duration": {
+    "seconds": 44196.5,
+    "text": "about 12 hours"
+   },
+   "is_slowest": false
+  }
+ ],
+ "help_tip": "Highlight requests that have gone unanswered for more than twenty-four hours.",
+ "autonomy": {
+  "level": 1,
+  "level_key": "watches",
+  "decisions": 0,
+  "needed": 10,
+  "can_promote": false,
+  "reason": "0 decisions, needs 10",
+  "paused": false
+ },
+ "technical": {
+  "cases": 42,
+  "variants": 1,
+  "median_gaps": [
+   {
+    "from": "requested",
+    "to": "replied",
+    "seconds": 131212.856935,
+    "count": 42,
+    "dependency": 0.977
+   },
+   {
+    "from": "replied",
+    "to": "resolved",
+    "seconds": 44196.5363395,
+    "count": 42,
+    "dependency": 0.977
+   }
+  ],
+  "bottleneck_transition": "requested -> replied",
+  "trust_score": 0.0,
+  "trust_components": {
+   "approval_rate": 0.0,
+   "reversal_rate": 0.0,
+   "recency": 0.0,
+   "blast_radius": -0.0
+  },
+  "tier": "OBSERVE"
+ }
+}

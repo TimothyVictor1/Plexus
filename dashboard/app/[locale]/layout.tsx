@@ -55,6 +55,8 @@ export default async function LocaleLayout({
     loadingOrg: t("loadingOrg"),
     offlineTitle: t("offlineTitle"),
     offlineBody: t("offlineBody"),
+    previewTitle: t("previewTitle"),
+    previewBody: t("previewBody"),
   };
 
   return (

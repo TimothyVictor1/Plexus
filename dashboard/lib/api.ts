@@ -1,6 +1,60 @@
 "use client";
 
-export const API_BASE = process.env.NEXT_PUBLIC_PLEXUS_API ?? "http://localhost:8000";
+const CONFIGURED_API = process.env.NEXT_PUBLIC_PLEXUS_API ?? "";
+
+export const API_BASE = CONFIGURED_API || "http://localhost:8000";
+
+/** Preview mode.
+ *
+ *  The console is a thin client: every screen reads from the Plexus service. That is the right
+ *  architecture and the wrong one for a link someone opens to see what the product is, because
+ *  a console with nothing to talk to shows nothing at all.
+ *
+ *  So when no service address is configured and a captured snapshot is present, the console
+ *  serves that instead. The snapshot is the real output of a real running system, written by
+ *  `scripts/export_snapshot.py`. It is labelled everywhere it is used and it is read-only:
+ *  anything that would change something needs the service that is not there.
+ */
+export const PREVIEW = CONFIGURED_API === "";
+
+export class PreviewError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+const previewCache = new Map<string, unknown>();
+
+async function preview<T>(file: string): Promise<T> {
+  const cached = previewCache.get(file);
+  if (cached !== undefined) return cached as T;
+  const res = await fetch(`/preview/${file}.json`, { cache: "force-cache" });
+  if (!res.ok) throw new ApiError(0, OFFLINE_MESSAGE, true);
+  const body = (await res.json()) as T;
+  previewCache.set(file, body);
+  return body;
+}
+
+/** Which captured file answers a given request, if any. */
+function previewFileFor(path: string): string | null {
+  const clean = path.split("?")[0];
+  const map: Record<string, string> = {
+    "/org": "org",
+    "/org/status": "org-status",
+    "/home": "home",
+    "/processes": "processes",
+    "/review": "review",
+    "/connections": "connections",
+    "/connections/catalogue": "connections-catalogue",
+    "/ask/suggestions": "ask-suggestions",
+    "/twin": "twin",
+    "/insights": "home",
+  };
+  if (map[clean]) return map[clean];
+  const process = clean.match(/^\/processes\/([\w-]+)$/);
+  if (process) return `process-${process[1]}`;
+  return null;
+}
 
 export type Role = "viewer" | "operator" | "approver" | "admin";
 
@@ -68,6 +122,18 @@ async function handle<T>(res: Response): Promise<T> {
 }
 
 export async function get<T>(path: string): Promise<T> {
+  if (PREVIEW) {
+    const file = previewFileFor(path);
+    if (file) {
+      const body = await preview<T>(file);
+      // The insights screen asks for a list; the captured home holds it alongside the rest.
+      if (path.startsWith("/insights")) {
+        return (body as { insights: unknown }).insights as T;
+      }
+      return body;
+    }
+  }
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/v1${path}`, { headers: headersFor(), cache: "no-store" });
@@ -77,7 +143,32 @@ export async function get<T>(path: string): Promise<T> {
   return handle<T>(res);
 }
 
+/** Answers the what-if screen from the worked scenarios captured with the snapshot. */
+async function previewScenario(body: unknown): Promise<unknown> {
+  const ask = body as {
+    kind: string; person?: string | null; process_id?: string | null; multiplier?: number;
+  };
+  const key =
+    ask.kind === "person_leaves"
+      ? `person_leaves:${ask.person}`
+      : `demand_changes:${ask.process_id}:${ask.multiplier ?? 2}`;
+  const all = await preview<Record<string, unknown>>("twin-scenarios");
+  const found = all[key];
+  if (found) return found;
+  throw new PreviewError(
+    "This preview holds a set of worked examples. Connect a Plexus service to ask anything.",
+  );
+}
+
 export async function post<T>(path: string, body?: unknown): Promise<T> {
+  if (PREVIEW) {
+    if (path === "/twin/what-if") return (await previewScenario(body)) as T;
+    throw new PreviewError(
+      "This is a preview of an example company, so nothing here can be changed. " +
+        "Connect a Plexus service to use it for real.",
+    );
+  }
+
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/v1${path}`, {
@@ -252,6 +343,17 @@ export async function askStream(
   conversationId: string | null,
   onDelta: (chunk: string) => void,
 ): Promise<{ sources: Source[]; conversationId: string | null; grounded: boolean }> {
+  if (PREVIEW) {
+    // Every answer is computed against a company's own records, which a static preview does
+    // not have. Saying so is better than returning something that reads like an answer.
+    onDelta(
+      "Answers are worked out from your company's own records, so this needs a running " +
+        "Plexus service rather than a preview. Everything else on this page is real output " +
+        "from an example company.",
+    );
+    return { sources: [], conversationId: null, grounded: false };
+  }
+
   const res = await fetch(`${API_BASE}/v1/ask/stream`, {
     method: "POST",
     headers: headersFor(),

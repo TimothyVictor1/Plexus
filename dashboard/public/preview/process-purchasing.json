@@ -1,0 +1,124 @@
+{
+ "id": "purchasing",
+ "name": "Purchase Workflow",
+ "description": "The cycle starts when an item is requested and ends when the shipment is received",
+ "total_duration": {
+  "seconds": 516453.3,
+  "text": "about 6 days"
+ },
+ "health": "watch",
+ "slowest": {
+  "from_step": "Item requested",
+  "to_step": "Approval granted",
+  "text": "getting approval for a new request",
+  "duration": {
+   "seconds": 254561.1,
+   "text": "about 3 days"
+  }
+ },
+ "level": 3,
+ "paused": false,
+ "case_count": 29,
+ "tools": [
+  "accounting",
+  "email"
+ ],
+ "tools_text": "Accounting and Email",
+ "steps": [
+  {
+   "label": "Item requested",
+   "order": 1,
+   "verb": "requested"
+  },
+  {
+   "label": "Approval granted",
+   "order": 2,
+   "verb": "approved"
+  },
+  {
+   "label": "Order placed",
+   "order": 3,
+   "verb": "ordered"
+  },
+  {
+   "label": "Shipment received",
+   "order": 4,
+   "verb": "received"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "Item requested",
+   "to_step": "Approval granted",
+   "duration": {
+    "seconds": 254561.1,
+    "text": "about 3 days"
+   },
+   "is_slowest": true
+  },
+  {
+   "from_step": "Approval granted",
+   "to_step": "Order placed",
+   "duration": {
+    "seconds": 86962.1,
+    "text": "about a day"
+   },
+   "is_slowest": false
+  },
+  {
+   "from_step": "Order placed",
+   "to_step": "Shipment received",
+   "duration": {
+    "seconds": 168725.5,
+    "text": "about 2 days"
+   },
+   "is_slowest": false
+  }
+ ],
+ "help_tip": "Plexus can send an automatic reminder email to the manager if a request has not been approved after two days.",
+ "autonomy": {
+  "level": 3,
+  "level_key": "suggests",
+  "decisions": 0,
+  "needed": 30,
+  "can_promote": false,
+  "reason": "trust 0.00 below 0.75; 0 decisions, needs 30",
+  "paused": false
+ },
+ "technical": {
+  "cases": 29,
+  "variants": 1,
+  "median_gaps": [
+   {
+    "from": "requested",
+    "to": "approved",
+    "seconds": 254561.111028,
+    "count": 29,
+    "dependency": 0.967
+   },
+   {
+    "from": "approved",
+    "to": "ordered",
+    "seconds": 86962.099787,
+    "count": 29,
+    "dependency": 0.967
+   },
+   {
+    "from": "ordered",
+    "to": "received",
+    "seconds": 168725.512336,
+    "count": 29,
+    "dependency": 0.967
+   }
+  ],
+  "bottleneck_transition": "requested -> approved",
+  "trust_score": 0.0,
+  "trust_components": {
+   "approval_rate": 0.0,
+   "reversal_rate": 0.0,
+   "recency": 0.0,
+   "blast_radius": -0.0
+  },
+  "tier": "SUGGEST"
+ }
+}

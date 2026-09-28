@@ -1,0 +1,166 @@
+{
+ "processes": [
+  {
+   "id": "quote_to_payment",
+   "name": "Customer service billing",
+   "description": "Starts when we offer a service and ends when we get paid",
+   "total_duration": {
+    "seconds": 3043925.1,
+    "text": "about 5 weeks"
+   },
+   "health": "slow",
+   "slowest": {
+    "from_step": "Service delivered",
+    "to_step": "Invoice sent",
+    "text": "waiting to send the invoice after finishing the work",
+    "duration": {
+     "seconds": 2227719.7,
+     "text": "about 4 weeks"
+    }
+   },
+   "level": 3,
+   "paused": false,
+   "case_count": 18,
+   "tools": [
+    "accounting",
+    "crm",
+    "email"
+   ],
+   "tools_text": "Accounting, Customer system and Email"
+  },
+  {
+   "id": "new_hires",
+   "name": "New Hire Onboarding",
+   "description": "Starts when an offer is signed and ends when the employee work begins",
+   "total_duration": {
+    "seconds": 860233.1,
+    "text": "about 10 days"
+   },
+   "health": "watch",
+   "slowest": {
+    "from_step": "Sign document",
+    "to_step": "Create record",
+    "text": "getting the document ready after signature",
+    "duration": {
+     "seconds": 428602.6,
+     "text": "about 5 days"
+    }
+   },
+   "level": 1,
+   "paused": false,
+   "case_count": 4,
+   "tools": [
+    "files",
+    "hr"
+   ],
+   "tools_text": "Files and HR system"
+  },
+  {
+   "id": "purchasing",
+   "name": "Purchase Workflow",
+   "description": "The cycle starts when an item is requested and ends when the shipment is received",
+   "total_duration": {
+    "seconds": 516453.3,
+    "text": "about 6 days"
+   },
+   "health": "watch",
+   "slowest": {
+    "from_step": "Item requested",
+    "to_step": "Approval granted",
+    "text": "getting approval for a new request",
+    "duration": {
+     "seconds": 254561.1,
+     "text": "about 3 days"
+    }
+   },
+   "level": 3,
+   "paused": false,
+   "case_count": 29,
+   "tools": [
+    "accounting",
+    "email"
+   ],
+   "tools_text": "Accounting and Email"
+  },
+  {
+   "id": "customer_requests",
+   "name": "Customer Support Tickets",
+   "description": "Starts when a customer sends a request and ends when the team marks it as resolved",
+   "total_duration": {
+    "seconds": 174464.5,
+    "text": "about 2 days"
+   },
+   "health": "watch",
+   "slowest": {
+    "from_step": "Receive request",
+    "to_step": "Send reply",
+    "text": "waiting for a reply to the initial inquiry",
+    "duration": {
+     "seconds": 131212.9,
+     "text": "about a day and a half"
+    }
+   },
+   "level": 1,
+   "paused": false,
+   "case_count": 42,
+   "tools": [
+    "crm",
+    "email"
+   ],
+   "tools_text": "Customer system and Email"
+  },
+  {
+   "id": "expenses",
+   "name": "Expense Reimbursement",
+   "description": "Starts when an employee submits a receipt and ends when the money is paid back",
+   "total_duration": {
+    "seconds": 344259.3,
+    "text": "about 4 days"
+   },
+   "health": "smooth",
+   "slowest": {
+    "from_step": "Submit receipt",
+    "to_step": "Approve request",
+    "text": "getting the manager to sign off on the initial submission",
+    "duration": {
+     "seconds": 173397.2,
+     "text": "about 2 days"
+    }
+   },
+   "level": 1,
+   "paused": false,
+   "case_count": 57,
+   "tools": [
+    "accounting"
+   ],
+   "tools_text": "Accounting"
+  },
+  {
+   "id": "monthly_reporting",
+   "name": "Document Approval Workflow",
+   "description": "Starts when a file is created and ends when it is officially approved",
+   "total_duration": {
+    "seconds": 173433.3,
+    "text": "about 2 days"
+   },
+   "health": "smooth",
+   "slowest": {
+    "from_step": "Email delivery",
+    "to_step": "Manager approval",
+    "text": "waiting for a manager to review the sent file",
+    "duration": {
+     "seconds": 87677.4,
+     "text": "about a day"
+    }
+   },
+   "level": 3,
+   "paused": false,
+   "case_count": 11,
+   "tools": [
+    "email",
+    "files"
+   ],
+   "tools_text": "Email and Files"
+  }
+ ]
+}

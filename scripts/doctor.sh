@@ -7,8 +7,30 @@ bad()  { printf '  \033[31m✗\033[0m %s\n' "$1"; FAILED=1; }
 note() { printf '      %s\n' "$1"; }
 FAILED=0
 
+# Docker Desktop's control socket can wedge while its containers keep serving, and then every
+# docker command hangs forever. Bound the check so this script always finishes and says so.
+docker_ok() {
+  ( docker info >/dev/null 2>&1 ) &
+  local pid=$!
+  local waited=0
+  while kill -0 "$pid" 2>/dev/null && [ "$waited" -lt 10 ]; do
+    sleep 1
+    waited=$((waited + 1))
+  done
+  if kill -0 "$pid" 2>/dev/null; then
+    kill -9 "$pid" 2>/dev/null
+    return 2
+  fi
+  wait "$pid"
+}
+
 echo "Docker"
-if docker info >/dev/null 2>&1; then
+docker_ok
+case "$?" in
+  2) bad "Docker is not answering (its containers may still be running)"
+     note "fix: quit and reopen Docker Desktop, then 'make up'" ;;
+esac
+if docker_ok; then
   ok "daemon running"
   unhealthy=$(docker compose ps --format '{{.Service}} {{.Status}}' 2>/dev/null | grep -v 'Up' || true)
   if [ -z "$unhealthy" ]; then
@@ -17,7 +39,7 @@ if docker info >/dev/null 2>&1; then
     bad "some services are down:"; echo "$unhealthy" | sed 's/^/      /'
     note "fix: make up"
   fi
-else
+elif [ "$?" -ne 2 ]; then
   bad "Docker is not running"; note "fix: open Docker Desktop, then make up"
 fi
 

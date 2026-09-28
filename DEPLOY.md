@@ -1,52 +1,69 @@
 # Deploying Plexus
 
-Plexus is two pieces: a console (Next.js) and a service (FastAPI, with Postgres, Neo4j, Redis
-and Temporal behind it). The console is a thin client; every screen reads from the service.
+Plexus is two pieces:
 
-That split matters for hosting. Vercel runs the console beautifully and cannot run the service,
-so the service needs a home of its own before a hosted console shows anything.
+- **the console** — Next.js, in `dashboard/`. A thin client. It holds no data.
+- **the service** — FastAPI, with Postgres, Neo4j, Redis and Temporal behind it. Everything
+  real happens here.
 
-## The console on Vercel
+That split decides how it is hosted. Vercel runs the console very well and cannot run the
+service, because the service needs databases and a worker that stay running.
 
-1. Import the repository at vercel.com/new.
+## Putting the console on Vercel
+
+1. Import the repository at [vercel.com/new](https://vercel.com/new).
 2. **Set Root Directory to `dashboard`.** The console lives there, not at the repository root.
-   Nothing else builds without this.
-3. Add one environment variable:
+   Nothing builds without this.
+3. Deploy.
 
-   | Name | Value |
-   |---|---|
-   | `NEXT_PUBLIC_PLEXUS_API` | the public address of your Plexus service, for example `https://api.yourcompany.com` |
+That alone gives you a working link, in **preview mode**: the console serves a captured
+snapshot of an example company and says so at the top of every screen. It is read-only,
+because the writes it would otherwise make belong to a service that is not there.
 
-4. Deploy. The framework, build and install commands come from `dashboard/vercel.json`.
+To make it your own company's console, add one environment variable and redeploy:
 
-Without that variable the console still builds and loads, and says plainly that it cannot
-reach its service rather than showing a broken page.
+| Name | Value |
+|---|---|
+| `NEXT_PUBLIC_PLEXUS_API` | the public address of your Plexus service, e.g. `https://api.yourcompany.com` |
 
-## The service
+The moment that is set, preview mode switches off and every screen reads live.
 
-It needs Postgres, Neo4j, Redis and Temporal, so it belongs on something that runs containers:
-Railway, Render, Fly, or a VM with Docker. `docker-compose.yml` describes the whole stack.
+## Putting the service somewhere
 
-Once it is up:
+It needs Postgres, Neo4j, Redis and Temporal, so it wants a host that runs containers:
+Railway, Render, Fly, or any VM with Docker. `docker-compose.yml` describes the whole stack.
 
 ```bash
-docker compose up -d --wait        # the stack
-uv run python -m scripts.seed      # the demo organisation, or --org yourco --name "Your Co"
-uv run python -m workflows.worker  # the background jobs
+docker compose up -d --wait          # the stack
+uv run python -m scripts.seed        # a demo org, or --org yourco --name "Your Co"
+uv run python -m workflows.worker    # the background jobs
 ```
 
-Set `GOOGLE_API_KEY` for the service so it can write plain-language names and drafts. Without
-it everything still works, using the built-in rules instead of a model.
+Two settings matter once it is public:
 
-The service must allow the console's origin. `api/main.py` currently allows `localhost:3000`;
-add your Vercel domain there before deploying.
+| Variable | Why |
+|---|---|
+| `PLEXUS_CONSOLE_ORIGINS` | your Vercel domain, so the browser is allowed to call the service |
+| `GOOGLE_API_KEY` | plain-language names and drafted messages. Without it everything still works, using built-in rules |
 
-## Running it all locally
+## Refreshing the preview snapshot
+
+The snapshot in `dashboard/public/preview/` is real output from a real running system, written
+once by a script. Regenerate it whenever the demo data or the screens change:
+
+```bash
+make up && make seed
+uv run python -m scripts.export_snapshot
+```
+
+Commit the result. Nothing in it is invented; it is the same JSON the service returns.
+
+## Running everything locally
 
 ```bash
 make up        # the stack
 make seed      # the demo organisation
 make worker    # background jobs, in another terminal
 make console   # the console on :3000
-make doctor    # checks all four and says what is wrong
+make doctor    # checks all four and says what to fix
 ```

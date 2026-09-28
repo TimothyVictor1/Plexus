@@ -1,0 +1,102 @@
+{
+ "id": "expenses",
+ "name": "Expense Reimbursement",
+ "description": "Starts when an employee submits a receipt and ends when the money is paid back",
+ "total_duration": {
+  "seconds": 344259.3,
+  "text": "about 4 days"
+ },
+ "health": "smooth",
+ "slowest": {
+  "from_step": "Submit receipt",
+  "to_step": "Approve request",
+  "text": "getting the manager to sign off on the initial submission",
+  "duration": {
+   "seconds": 173397.2,
+   "text": "about 2 days"
+  }
+ },
+ "level": 1,
+ "paused": false,
+ "case_count": 57,
+ "tools": [
+  "accounting"
+ ],
+ "tools_text": "Accounting",
+ "steps": [
+  {
+   "label": "Submit receipt",
+   "order": 1,
+   "verb": "submitted"
+  },
+  {
+   "label": "Approve request",
+   "order": 2,
+   "verb": "approved"
+  },
+  {
+   "label": "Pay back",
+   "order": 3,
+   "verb": "reimbursed"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "Submit receipt",
+   "to_step": "Approve request",
+   "duration": {
+    "seconds": 173397.2,
+    "text": "about 2 days"
+   },
+   "is_slowest": true
+  },
+  {
+   "from_step": "Approve request",
+   "to_step": "Pay back",
+   "duration": {
+    "seconds": 169831.4,
+    "text": "about 2 days"
+   },
+   "is_slowest": false
+  }
+ ],
+ "help_tip": "Plexus can send an automated email reminder to managers if a request has been sitting for more than 24 hours.",
+ "autonomy": {
+  "level": 1,
+  "level_key": "watches",
+  "decisions": 0,
+  "needed": 10,
+  "can_promote": false,
+  "reason": "0 decisions, needs 10",
+  "paused": false
+ },
+ "technical": {
+  "cases": 57,
+  "variants": 1,
+  "median_gaps": [
+   {
+    "from": "submitted",
+    "to": "approved",
+    "seconds": 173397.184654,
+    "count": 57,
+    "dependency": 0.983
+   },
+   {
+    "from": "approved",
+    "to": "reimbursed",
+    "seconds": 169831.422663,
+    "count": 57,
+    "dependency": 0.983
+   }
+  ],
+  "bottleneck_transition": "submitted -> approved",
+  "trust_score": 0.0,
+  "trust_components": {
+   "approval_rate": 0.0,
+   "reversal_rate": 0.0,
+   "recency": 0.0,
+   "blast_radius": -0.0
+  },
+  "tier": "OBSERVE"
+ }
+}

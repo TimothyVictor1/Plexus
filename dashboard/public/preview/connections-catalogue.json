@@ -1,0 +1,267 @@
+[
+ {
+  "category": "email",
+  "label": "Email",
+  "blurb": "Where most decisions actually get made.",
+  "examples": "Gmail, Outlook",
+  "options": [
+   {
+    "key": "gmail",
+    "name": "Gmail",
+    "category": "email",
+    "available": false,
+    "reads": [
+     "Who emailed whom and when",
+     "Subject lines and message text"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "GMAIL_CLIENT_ID"
+   },
+   {
+    "key": "outlook",
+    "name": "Outlook",
+    "category": "email",
+    "available": false,
+    "reads": [
+     "Who emailed whom and when",
+     "Subject lines and message text"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "MS_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "calendar",
+  "label": "Calendar",
+  "blurb": "Who met whom, and when things were agreed.",
+  "examples": "Google, Outlook",
+  "options": [
+   {
+    "key": "google_calendar",
+    "name": "Google Calendar",
+    "category": "calendar",
+    "available": false,
+    "reads": [
+     "Meeting times and who attended"
+    ],
+    "can_write": false,
+    "transport": "mcp",
+    "needs": "GOOGLE_OAUTH_CLIENT_ID"
+   },
+   {
+    "key": "outlook_calendar",
+    "name": "Outlook Calendar",
+    "category": "calendar",
+    "available": false,
+    "reads": [
+     "Meeting times and who attended"
+    ],
+    "can_write": false,
+    "transport": "mcp",
+    "needs": "MS_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "crm",
+  "label": "Customer system",
+  "blurb": "Customers, deals and what was promised.",
+  "examples": "HubSpot, Salesforce, Lime",
+  "options": [
+   {
+    "key": "hubspot",
+    "name": "HubSpot",
+    "category": "crm",
+    "available": false,
+    "reads": [
+     "Customers and deals",
+     "Notes and status changes"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "HUBSPOT_CLIENT_ID"
+   },
+   {
+    "key": "salesforce",
+    "name": "Salesforce",
+    "category": "crm",
+    "available": false,
+    "reads": [
+     "Customers and deals",
+     "Notes and status changes"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "SALESFORCE_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "accounting",
+  "label": "Accounting",
+  "blurb": "Money in, money out, and what is still open.",
+  "examples": "Fortnox, Visma",
+  "options": [
+   {
+    "key": "fortnox",
+    "name": "Fortnox",
+    "category": "accounting",
+    "available": false,
+    "reads": [
+     "Invoices and payments",
+     "Suppliers and expenses"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "FORTNOX_CLIENT_ID"
+   },
+   {
+    "key": "visma",
+    "name": "Visma",
+    "category": "accounting",
+    "available": false,
+    "reads": [
+     "Invoices and payments",
+     "Suppliers and expenses"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "VISMA_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "files",
+  "label": "Files",
+  "blurb": "Documents, and who changed them.",
+  "examples": "Google Drive, SharePoint",
+  "options": [
+   {
+    "key": "gdrive",
+    "name": "Google Drive",
+    "category": "files",
+    "available": false,
+    "reads": [
+     "File names and who changed them",
+     "Document text"
+    ],
+    "can_write": false,
+    "transport": "mcp",
+    "needs": "GOOGLE_OAUTH_CLIENT_ID"
+   },
+   {
+    "key": "sharepoint",
+    "name": "SharePoint",
+    "category": "files",
+    "available": false,
+    "reads": [
+     "File names and who changed them",
+     "Document text"
+    ],
+    "can_write": false,
+    "transport": "mcp",
+    "needs": "MS_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "hr",
+  "label": "HR system",
+  "blurb": "Joiners, leavers and onboarding.",
+  "examples": "Any HR tool",
+  "options": [
+   {
+    "key": "hr_generic",
+    "name": "HR system",
+    "category": "hr",
+    "available": false,
+    "reads": [
+     "Start dates and roles",
+     "Onboarding steps"
+    ],
+    "can_write": false,
+    "transport": "mcp",
+    "needs": "HR_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "chat",
+  "label": "Team chat",
+  "blurb": "The quick back and forth that never reaches email.",
+  "examples": "Slack, Teams",
+  "options": [
+   {
+    "key": "slack",
+    "name": "Slack",
+    "category": "chat",
+    "available": false,
+    "reads": [
+     "Messages in channels Plexus is invited to"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "SLACK_CLIENT_ID"
+   },
+   {
+    "key": "teams",
+    "name": "Microsoft Teams",
+    "category": "chat",
+    "available": false,
+    "reads": [
+     "Messages in channels Plexus is invited to"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "MS_CLIENT_ID"
+   }
+  ]
+ },
+ {
+  "category": "projects",
+  "label": "Projects and tasks",
+  "blurb": "Tasks and how work moves along.",
+  "examples": "ClickUp, Jira, Asana",
+  "options": [
+   {
+    "key": "clickup",
+    "name": "ClickUp",
+    "category": "projects",
+    "available": false,
+    "reads": [
+     "Tasks, who they are for, and status changes"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "CLICKUP_CLIENT_ID"
+   },
+   {
+    "key": "jira",
+    "name": "Jira",
+    "category": "projects",
+    "available": false,
+    "reads": [
+     "Issues, who they are for, and status changes"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "JIRA_CLIENT_ID"
+   },
+   {
+    "key": "asana",
+    "name": "Asana",
+    "category": "projects",
+    "available": false,
+    "reads": [
+     "Tasks, who they are for, and status changes"
+    ],
+    "can_write": true,
+    "transport": "mcp",
+    "needs": "ASANA_CLIENT_ID"
+   }
+  ]
+ }
+]

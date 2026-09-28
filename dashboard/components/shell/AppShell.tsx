@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { ApiError, REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
+import { ApiError, PREVIEW, REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
 import Rail from "./Rail";
 import TopBar from "./TopBar";
 
@@ -41,7 +41,20 @@ export default function AppShell({
           isDemo={org?.is_demo ?? false}
           labels={labels}
         />
-        {offline && (
+        {PREVIEW && (
+          <div
+            role="status"
+            style={{
+              marginTop: 14, padding: "12px 18px", borderRadius: "var(--radius-ctl)",
+              background: "var(--accent-deep)", border: "1px solid var(--accent-edge)",
+              display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "2px 8px",
+            }}
+          >
+            <strong style={{ color: "var(--accent)" }}>{labels.previewTitle}</strong>
+            <span className="small" style={{ lineHeight: 1.5 }}>{labels.previewBody}</span>
+          </div>
+        )}
+        {!PREVIEW && offline && (
           <div
             role="status"
             style={{

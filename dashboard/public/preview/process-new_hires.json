@@ -1,0 +1,124 @@
+{
+ "id": "new_hires",
+ "name": "New Hire Onboarding",
+ "description": "Starts when an offer is signed and ends when the employee work begins",
+ "total_duration": {
+  "seconds": 860233.1,
+  "text": "about 10 days"
+ },
+ "health": "watch",
+ "slowest": {
+  "from_step": "Sign document",
+  "to_step": "Create record",
+  "text": "getting the document ready after signature",
+  "duration": {
+   "seconds": 428602.6,
+   "text": "about 5 days"
+  }
+ },
+ "level": 1,
+ "paused": false,
+ "case_count": 4,
+ "tools": [
+  "files",
+  "hr"
+ ],
+ "tools_text": "Files and HR system",
+ "steps": [
+  {
+   "label": "Sign document",
+   "order": 1,
+   "verb": "signed"
+  },
+  {
+   "label": "Create record",
+   "order": 2,
+   "verb": "created"
+  },
+  {
+   "label": "Attach file",
+   "order": 3,
+   "verb": "attached"
+  },
+  {
+   "label": "Start work",
+   "order": 4,
+   "verb": "started"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "Sign document",
+   "to_step": "Create record",
+   "duration": {
+    "seconds": 428602.6,
+    "text": "about 5 days"
+   },
+   "is_slowest": true
+  },
+  {
+   "from_step": "Create record",
+   "to_step": "Attach file",
+   "duration": {
+    "seconds": 162756.8,
+    "text": "about 2 days"
+   },
+   "is_slowest": false
+  },
+  {
+   "from_step": "Attach file",
+   "to_step": "Start work",
+   "duration": {
+    "seconds": 258373.4,
+    "text": "about 3 days"
+   },
+   "is_slowest": false
+  }
+ ],
+ "help_tip": "Plexus can send an automatic alert to the team once a document is signed.",
+ "autonomy": {
+  "level": 1,
+  "level_key": "watches",
+  "decisions": 0,
+  "needed": 10,
+  "can_promote": false,
+  "reason": "0 decisions, needs 10",
+  "paused": false
+ },
+ "technical": {
+  "cases": 4,
+  "variants": 1,
+  "median_gaps": [
+   {
+    "from": "signed",
+    "to": "created",
+    "seconds": 428602.604114,
+    "count": 4,
+    "dependency": 0.8
+   },
+   {
+    "from": "created",
+    "to": "attached",
+    "seconds": 162756.7928895,
+    "count": 4,
+    "dependency": 0.8
+   },
+   {
+    "from": "attached",
+    "to": "started",
+    "seconds": 258373.40151999998,
+    "count": 4,
+    "dependency": 0.8
+   }
+  ],
+  "bottleneck_transition": "signed -> created",
+  "trust_score": 0.0,
+  "trust_components": {
+   "approval_rate": 0.0,
+   "reversal_rate": 0.0,
+   "recency": 0.0,
+   "blast_radius": -0.0
+  },
+  "tier": "OBSERVE"
+ }
+}

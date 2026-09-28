@@ -1,0 +1,103 @@
+{
+ "id": "monthly_reporting",
+ "name": "Document Approval Workflow",
+ "description": "Starts when a file is created and ends when it is officially approved",
+ "total_duration": {
+  "seconds": 173433.3,
+  "text": "about 2 days"
+ },
+ "health": "smooth",
+ "slowest": {
+  "from_step": "Email delivery",
+  "to_step": "Manager approval",
+  "text": "waiting for a manager to review the sent file",
+  "duration": {
+   "seconds": 87677.4,
+   "text": "about a day"
+  }
+ },
+ "level": 3,
+ "paused": false,
+ "case_count": 11,
+ "tools": [
+  "email",
+  "files"
+ ],
+ "tools_text": "Email and Files",
+ "steps": [
+  {
+   "label": "File creation",
+   "order": 1,
+   "verb": "created"
+  },
+  {
+   "label": "Email delivery",
+   "order": 2,
+   "verb": "sent"
+  },
+  {
+   "label": "Manager approval",
+   "order": 3,
+   "verb": "approved"
+  }
+ ],
+ "waits": [
+  {
+   "from_step": "File creation",
+   "to_step": "Email delivery",
+   "duration": {
+    "seconds": 81774.1,
+    "text": "about a day"
+   },
+   "is_slowest": false
+  },
+  {
+   "from_step": "Email delivery",
+   "to_step": "Manager approval",
+   "duration": {
+    "seconds": 87677.4,
+    "text": "about a day"
+   },
+   "is_slowest": true
+  }
+ ],
+ "help_tip": "Plexus could send a reminder notification to the manager once the file has been sent.",
+ "autonomy": {
+  "level": 3,
+  "level_key": "suggests",
+  "decisions": 6,
+  "needed": 30,
+  "can_promote": false,
+  "reason": "trust 0.63 below 0.75; 6 decisions, needs 30",
+  "paused": false
+ },
+ "technical": {
+  "cases": 11,
+  "variants": 1,
+  "median_gaps": [
+   {
+    "from": "created",
+    "to": "sent",
+    "seconds": 81774.076593,
+    "count": 11,
+    "dependency": 0.917
+   },
+   {
+    "from": "sent",
+    "to": "approved",
+    "seconds": 87677.397725,
+    "count": 11,
+    "dependency": 0.917
+   }
+  ],
+  "bottleneck_transition": "sent -> approved",
+  "trust_score": 0.627,
+  "trust_components": {
+   "approval_rate": 0.1333,
+   "reversal_rate": 0.3,
+   "recency": 0.2,
+   "blast_radius": -0.006
+  },
+  "tier": "SUGGEST"
+ }
+}
