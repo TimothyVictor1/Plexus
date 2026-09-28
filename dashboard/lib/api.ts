@@ -32,7 +32,7 @@ export function setRole(role: Role) {
   }
 }
 
-function headers(): HeadersInit {
+export function headersFor(): HeadersInit {
   return {
     "content-type": "application/json",
     "x-plexus-tenant": currentTenant(),
@@ -62,14 +62,14 @@ async function handle<T>(res: Response): Promise<T> {
 }
 
 export async function get<T>(path: string): Promise<T> {
-  return handle<T>(await fetch(`${API_BASE}/v1${path}`, { headers: headers(), cache: "no-store" }));
+  return handle<T>(await fetch(`${API_BASE}/v1${path}`, { headers: headersFor(), cache: "no-store" }));
 }
 
 export async function post<T>(path: string, body?: unknown): Promise<T> {
   return handle<T>(
     await fetch(`${API_BASE}/v1${path}`, {
       method: "POST",
-      headers: headers(),
+      headers: headersFor(),
       body: body === undefined ? undefined : JSON.stringify(body),
     }),
   );
@@ -219,3 +219,64 @@ export type Home = {
   insights: Insight[];
   tools: ConnectedTool[];
 };
+
+export type Source = { tool: string; title: string; reference: string; kind: string };
+
+export type AskMessage = {
+  role: "user" | "assistant";
+  text: string;
+  sources?: Source[];
+  streaming?: boolean;
+};
+
+/** Ask a question and receive the answer as it is written. Falls back to a single
+ *  response if the browser or the network cannot stream. */
+export async function askStream(
+  question: string,
+  conversationId: string | null,
+  onDelta: (chunk: string) => void,
+): Promise<{ sources: Source[]; conversationId: string | null; grounded: boolean }> {
+  const res = await fetch(`${API_BASE}/v1/ask/stream`, {
+    method: "POST",
+    headers: headersFor(),
+    body: JSON.stringify({ question, conversation_id: conversationId }),
+  });
+
+  if (!res.ok || !res.body) {
+    const fallback = await post<{
+      text: string; sources: Source[]; conversation_id: string | null; grounded: boolean;
+    }>("/ask", { question, conversation_id: conversationId });
+    onDelta(fallback.text);
+    return {
+      sources: fallback.sources,
+      conversationId: fallback.conversation_id,
+      grounded: fallback.grounded,
+    };
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let sources: Source[] = [];
+  let conversation = conversationId;
+  let grounded = true;
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n\n");
+    buffer = lines.pop() ?? "";
+    for (const line of lines) {
+      if (!line.startsWith("data: ")) continue;
+      const payload = JSON.parse(line.slice(6));
+      if (payload.delta) onDelta(payload.delta);
+      if (payload.done) {
+        sources = payload.sources ?? [];
+        conversation = payload.conversation_id ?? conversation;
+        grounded = payload.grounded ?? true;
+      }
+    }
+  }
+  return { sources, conversationId: conversation, grounded };
+}

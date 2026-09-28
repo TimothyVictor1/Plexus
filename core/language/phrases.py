@@ -6,6 +6,8 @@ unplugged and nothing cached.
 
 from __future__ import annotations
 
+import re
+
 # What each recorded verb means in a sentence an office manager would use.
 VERB_LABEL: dict[str, str] = {
     "requested": "Request comes in",
@@ -120,3 +122,25 @@ def tool_list(source_ids: list[str]) -> str:
     if len(names) == 1:
         return names[0]
     return f"{', '.join(names[:-1])} and {names[-1]}"
+
+
+# A token is the right thing to store and the wrong thing to show. These are what a person
+# would say instead.
+TOKEN_WORDS: dict[str, str] = {
+    "PERSON": "someone",
+    "ORG": "a company",
+    "ORGNR": "a company number",
+    "EMAIL": "an email address",
+    "PHONE": "a phone number",
+    "PNR": "an ID number",
+    "IBAN": "a bank account",
+    "BANKGIRO": "a bank account",
+    "ADDRESS": "an address",
+}
+
+_TOKEN_RE = re.compile(r"<([A-Z]+)_[0-9a-f]+>")
+
+
+def humanise_tokens(text: str) -> str:
+    """Replace placeholders with ordinary words, for anything a person reads."""
+    return _TOKEN_RE.sub(lambda m: TOKEN_WORDS.get(m.group(1), "something"), text)

@@ -63,10 +63,6 @@
     "worthKnowing": "Värt att veta"
   },
   "pages": {
-    "ask": {
-      "title": "Fråga",
-      "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån."
-    },
     "connections": {
       "title": "Anslutningar",
       "sub": "Plexus lär sig bara från de verktyg ni ansluter."
@@ -173,5 +169,14 @@
     "hr": "HR-system",
     "chat": "Teamchatt",
     "projects": "Projekt och uppgifter"
+  },
+  "ask": {
+    "title": "Fråga",
+    "sub": "Svaren kommer från era egna verktyg, och Plexus visar var varje svar kommer ifrån.",
+    "placeholder": "Ställ en fråga…",
+    "yourQuestion": "Din fråga",
+    "askButton": "Fråga",
+    "thinking": "Tänker…",
+    "from": "Från: {sources}"
   }
 }

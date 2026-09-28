@@ -63,10 +63,6 @@
     "worthKnowing": "Worth knowing"
   },
   "pages": {
-    "ask": {
-      "title": "Ask",
-      "sub": "Answers come from your own tools, and Plexus shows where each one came from."
-    },
     "connections": {
       "title": "Connections",
       "sub": "Plexus only learns from the tools you connect."
@@ -173,5 +169,14 @@
     "hr": "HR system",
     "chat": "Team chat",
     "projects": "Projects and tasks"
+  },
+  "ask": {
+    "title": "Ask",
+    "sub": "Answers come from your own tools, and Plexus shows where each one came from.",
+    "placeholder": "Ask a question…",
+    "yourQuestion": "Your question",
+    "askButton": "Ask",
+    "thinking": "Thinking…",
+    "from": "From: {sources}"
   }
 }
