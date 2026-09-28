@@ -1,8 +1,6 @@
 "use client";
 
-const CONFIGURED_API = process.env.NEXT_PUBLIC_PLEXUS_API ?? "";
-
-export const API_BASE = CONFIGURED_API || "http://localhost:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_PLEXUS_API || "http://localhost:8000";
 
 /** Preview mode.
  *
@@ -10,12 +8,38 @@ export const API_BASE = CONFIGURED_API || "http://localhost:8000";
  *  architecture and the wrong one for a link someone opens to see what the product is, because
  *  a console with nothing to talk to shows nothing at all.
  *
- *  So when no service address is configured and a captured snapshot is present, the console
- *  serves that instead. The snapshot is the real output of a real running system, written by
- *  `scripts/export_snapshot.py`. It is labelled everywhere it is used and it is read-only:
- *  anything that would change something needs the service that is not there.
+ *  So preview is a **fallback**, never a default. The console always tries the real service
+ *  first. Only when it cannot be reached does it fall back to a captured snapshot, which is
+ *  the real output of a real running system written by `scripts/export_snapshot.py`. It is
+ *  labelled on every screen and read-only, because anything that changes something needs the
+ *  service that is not there.
+ *
+ *  Making it a fallback rather than a default is what keeps local development working: with
+ *  the stack running, the console talks to it, whether or not an address is configured.
  */
-export const PREVIEW = CONFIGURED_API === "";
+let previewMode = false;
+let previewChecked: Promise<boolean> | null = null;
+
+export function isPreview(): boolean {
+  return previewMode;
+}
+
+/** Is a snapshot actually shipped with this build? Asked once. */
+async function snapshotAvailable(): Promise<boolean> {
+  previewChecked ??= fetch("/preview/org.json", { cache: "force-cache" })
+    .then((r) => r.ok)
+    .catch(() => false);
+  return previewChecked;
+}
+
+/** The service could not be reached. Fall back to the snapshot if there is one. */
+async function fallBackToPreview(): Promise<boolean> {
+  if (previewMode) return true;
+  if (!(await snapshotAvailable())) return false;
+  previewMode = true;
+  if (typeof window !== "undefined") window.dispatchEvent(new Event(REFRESH_EVENT));
+  return true;
+}
 
 export class PreviewError extends Error {
   constructor(message: string) {
@@ -121,23 +145,23 @@ async function handle<T>(res: Response): Promise<T> {
   return (await res.json()) as T;
 }
 
+async function fromSnapshot<T>(path: string): Promise<T> {
+  const file = previewFileFor(path);
+  if (!file) throw new ApiError(0, OFFLINE_MESSAGE, true);
+  const body = await preview<T>(file);
+  // The insights screen asks for a list; the captured home holds it alongside the rest.
+  if (path.startsWith("/insights")) return (body as { insights: unknown }).insights as T;
+  return body;
+}
+
 export async function get<T>(path: string): Promise<T> {
-  if (PREVIEW) {
-    const file = previewFileFor(path);
-    if (file) {
-      const body = await preview<T>(file);
-      // The insights screen asks for a list; the captured home holds it alongside the rest.
-      if (path.startsWith("/insights")) {
-        return (body as { insights: unknown }).insights as T;
-      }
-      return body;
-    }
-  }
+  if (previewMode) return fromSnapshot<T>(path);
 
   let res: Response;
   try {
     res = await fetch(`${API_BASE}/v1${path}`, { headers: headersFor(), cache: "no-store" });
   } catch {
+    if (await fallBackToPreview()) return fromSnapshot<T>(path);
     throw new ApiError(0, OFFLINE_MESSAGE, true);
   }
   return handle<T>(res);
@@ -160,13 +184,17 @@ async function previewScenario(body: unknown): Promise<unknown> {
   );
 }
 
+function previewRefusal(): PreviewError {
+  return new PreviewError(
+    "This is a preview of an example company, so nothing here can be changed. " +
+      "Connect a Plexus service to use it for real.",
+  );
+}
+
 export async function post<T>(path: string, body?: unknown): Promise<T> {
-  if (PREVIEW) {
+  if (previewMode) {
     if (path === "/twin/what-if") return (await previewScenario(body)) as T;
-    throw new PreviewError(
-      "This is a preview of an example company, so nothing here can be changed. " +
-        "Connect a Plexus service to use it for real.",
-    );
+    throw previewRefusal();
   }
 
   let res: Response;
@@ -177,6 +205,10 @@ export async function post<T>(path: string, body?: unknown): Promise<T> {
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
+    if (await fallBackToPreview()) {
+      if (path === "/twin/what-if") return (await previewScenario(body)) as T;
+      throw previewRefusal();
+    }
     throw new ApiError(0, OFFLINE_MESSAGE, true);
   }
   return handle<T>(res);
@@ -343,22 +375,30 @@ export async function askStream(
   conversationId: string | null,
   onDelta: (chunk: string) => void,
 ): Promise<{ sources: Source[]; conversationId: string | null; grounded: boolean }> {
-  if (PREVIEW) {
-    // Every answer is computed against a company's own records, which a static preview does
-    // not have. Saying so is better than returning something that reads like an answer.
+  // Every answer is computed against a company's own records, which a static snapshot does
+  // not have. Saying so is better than returning something that reads like an answer.
+  const cannotAnswerHere = () => {
     onDelta(
       "Answers are worked out from your company's own records, so this needs a running " +
         "Plexus service rather than a preview. Everything else on this page is real output " +
         "from an example company.",
     );
-    return { sources: [], conversationId: null, grounded: false };
-  }
+    return { sources: [] as Source[], conversationId: null, grounded: false };
+  };
 
-  const res = await fetch(`${API_BASE}/v1/ask/stream`, {
-    method: "POST",
-    headers: headersFor(),
-    body: JSON.stringify({ question, conversation_id: conversationId }),
-  });
+  if (previewMode) return cannotAnswerHere();
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/v1/ask/stream`, {
+      method: "POST",
+      headers: headersFor(),
+      body: JSON.stringify({ question, conversation_id: conversationId }),
+    });
+  } catch {
+    if (await fallBackToPreview()) return cannotAnswerHere();
+    throw new ApiError(0, OFFLINE_MESSAGE, true);
+  }
 
   if (!res.ok || !res.body) {
     const fallback = await post<{

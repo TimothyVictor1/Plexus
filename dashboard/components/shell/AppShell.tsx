@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { ApiError, PREVIEW, REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
+import { ApiError, REFRESH_EVENT, get, isPreview, type Org, type OrgStatus } from "@/lib/api";
 import Rail from "./Rail";
 import TopBar from "./TopBar";
 
@@ -14,11 +14,15 @@ export default function AppShell({
   const [org, setOrg] = useState<Org | null>(null);
   const [status, setStatus] = useState<OrgStatus | null>(null);
   const [offline, setOffline] = useState(false);
+  // Preview is decided at runtime, not at build time: the console tries the real service
+  // first and only falls back when it cannot be reached.
+  const [preview, setPreview] = useState(false);
 
   const load = useCallback(() => {
     get<Org>("/org")
       .then((o) => { setOrg(o); setOffline(false); })
-      .catch((e) => { setOrg(null); setOffline(e instanceof ApiError && e.offline); });
+      .catch((e) => { setOrg(null); setOffline(e instanceof ApiError && e.offline); })
+      .finally(() => setPreview(isPreview()));
     get<OrgStatus>("/org/status").then(setStatus).catch(() => setStatus(null));
   }, []);
 
@@ -41,7 +45,7 @@ export default function AppShell({
           isDemo={org?.is_demo ?? false}
           labels={labels}
         />
-        {PREVIEW && (
+        {preview && (
           <div
             role="status"
             style={{
@@ -54,7 +58,7 @@ export default function AppShell({
             <span className="small" style={{ lineHeight: 1.5 }}>{labels.previewBody}</span>
           </div>
         )}
-        {!PREVIEW && offline && (
+        {!preview && offline && (
           <div
             role="status"
             style={{

@@ -16,17 +16,21 @@ service, because the service needs databases and a worker that stay running.
    Nothing builds without this.
 3. Deploy.
 
-That alone gives you a working link, in **preview mode**: the console serves a captured
-snapshot of an example company and says so at the top of every screen. It is read-only,
-because the writes it would otherwise make belong to a service that is not there.
+That alone gives you a working link, in **preview mode**: the console tries to reach a service,
+finds none, and falls back to a captured snapshot of an example company, saying so at the top of
+every screen. It is read-only, because the writes it would otherwise make belong to a service
+that is not there.
 
-To make it your own company's console, add one environment variable and redeploy:
+Preview is always a fallback, never a default. The console tries the real service first, every
+time. Locally that means it talks to `http://localhost:8000` with nothing configured at all.
+
+To point it at your own service, add one environment variable and redeploy:
 
 | Name | Value |
 |---|---|
 | `NEXT_PUBLIC_PLEXUS_API` | the public address of your Plexus service, e.g. `https://api.yourcompany.com` |
 
-The moment that is set, preview mode switches off and every screen reads live.
+As soon as that address answers, every screen reads live and the preview banner disappears.
 
 ## Putting the service somewhere
 
