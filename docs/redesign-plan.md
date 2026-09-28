@@ -103,7 +103,7 @@ Temporal is already in compose and unused. A worker process (`workflows/worker.p
 | `check_triggers` | every 10 min | evaluate triggers, create review items for processes at level ≥ 3 |
 | `recompute_insights` | hourly and after mining | refresh the insights table |
 
-This satisfies CLAUDE.md principle 7 and B10. The action pipeline's wait-for-approval becomes a Temporal signal in slice (d).
+This satisfies ENGINEERING.md principle 7 and B10. The action pipeline's wait-for-approval becomes a Temporal signal in slice (d).
 
 ## 6. Frontend
 

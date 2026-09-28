@@ -69,7 +69,7 @@ Local endpoints once `make up` is green:
 
 ## Engineering rules
 
-Read [CLAUDE.md](CLAUDE.md). The non-negotiable principles (single write path, PII boundary,
+Read [ENGINEERING.md](ENGINEERING.md). The non-negotiable principles (single write path, PII boundary,
 two-vendor separation, full tracing, append-only ledger, tenancy everywhere, Temporal for anything
 that waits, no agent frameworks) are enforced structurally where possible; see
 `tests/architecture/`.

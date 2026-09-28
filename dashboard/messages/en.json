@@ -25,9 +25,9 @@
   },
   "home": {
     "greeting": {
-      "morning": "Good morning, what needs doing?",
-      "afternoon": "Good afternoon, what needs doing?",
-      "evening": "Good evening, what needs doing?"
+      "morning": "Good morning. What would you like to know?",
+      "afternoon": "Good afternoon. What would you like to know?",
+      "evening": "Good evening. What would you like to know?"
     },
     "welcome": {
       "morning": "Good morning, welcome to Plexus",

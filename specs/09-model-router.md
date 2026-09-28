@@ -26,11 +26,11 @@ tracing. No file outside `core/models/` imports a vendor SDK.
 ```yaml
 # config/models.yaml
 roles:
-  actor:      { vendor: anthropic, model: claude-fable-5-1, effort: high }
-  workhorse:  { vendor: anthropic, model: claude-sonnet-5 }
-  classifier: { vendor: anthropic, model: claude-haiku-4-5 }
-  verifier:   { vendor: openai,    model: gpt-5.5 }        # MUST differ from actor vendor
-  embedder:   { vendor: local,     model: bge-m3 }
+  actor:      { vendor: google, model: gemini-2.5-flash }
+  workhorse:  { vendor: google, model: gemini-3.1-flash-lite }
+  classifier: { vendor: google, model: gemini-3.1-flash-lite }
+  verifier:   { vendor: local,  model: policy-verifier }   # MUST differ from the actor
+  embedder:   { vendor: local,  model: bge-m3 }
 profiles:
   sovereign:
     actor:     { vendor: local, model: qwen3.6-plus }

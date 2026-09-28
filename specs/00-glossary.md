@@ -1,6 +1,6 @@
 # Spec 00 — Glossary and shared conventions
 
-Status: draft (Phase 0) · Owner: core · Source: PLEXUS_BUILD_PROMPT.md §1–§3, §7
+Status: draft (Phase 0) · Owner: core · Source: docs/product-brief.md §1–§3, §7
 
 ## Purpose
 

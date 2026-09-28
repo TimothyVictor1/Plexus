@@ -1,7 +1,7 @@
 # Prompts
 
 Every prompt the system sends to a model lives here as Markdown with a YAML version header.
-Prompts are never written inline in Python (CLAUDE.md). The loader in `core/models/prompts.py`
+Prompts are never written inline in Python (ENGINEERING.md). The loader in `core/models/prompts.py`
 (Phase 1) refuses a file without the header.
 
 ```markdown

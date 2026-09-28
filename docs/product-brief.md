@@ -1,20 +1,21 @@
-# PLEXUS — Build Brief for Claude Code
+# Plexus — product brief
 
-You are the lead engineer building **Plexus**, an organisational nervous system: a system-agnostic intelligence layer that plugs into a company's existing tools, learns how the company actually works, and gradually earns the right to act inside those tools as an autonomous agent.
+**Plexus** is an organisational nervous system: a system-agnostic intelligence layer that plugs into a company's existing tools, learns how the company actually works, and gradually earns the right to act inside those tools as an autonomous agent.
 
-Read this entire document before writing a single line of code. Then follow the **Working Method** section. This brief is the source of truth. When the brief is silent, choose the option that is simplest, most auditable, and most reversible.
+This brief is the source of truth for what Plexus is and how it must behave. Where it is silent, choose the option that is simplest, most auditable, and most reversible.
 
 ---
 
 ## 0. How to use this brief
 
-1. On first run: copy the section **"CLAUDE.md contents"** at the bottom into `./CLAUDE.md` so every future session starts with the rules loaded.
-2. Create the repo skeleton described in section 4.
-3. Turn each pillar in section 5 into a file under `specs/` before implementing it. Specs are written first, reviewed, then implemented. Never implement from memory of this brief; implement from the spec file.
-4. Build in the phase order in section 9. Do not start a phase until the previous phase's Definition of Done passes in CI.
-5. Ask me before any decision that (a) adds a paid external dependency, (b) changes the graph schema after Phase 1, (c) touches the write path to customer systems, or (d) changes the Autonomy Ledger formula.
-
----
+1. The engineering rules live in `ENGINEERING.md`. They are non-negotiable.
+2. Each pillar in section 5 has a spec under `specs/`, written before it is built. Code is
+   implemented from the spec, never from a recollection of this brief.
+3. Build in the phase order in section 9. A phase does not start until the previous phase's
+   Definition of Done passes in CI.
+4. Sign-off is required before: adding a paid external dependency, changing the graph schema
+   after Phase 1, touching the write path to customer systems, or changing the Autonomy Ledger
+   formula.
 
 ## 1. Product vision
 
@@ -57,7 +58,7 @@ These are rules, not preferences. Violating one is a bug.
 | Queue / cache / sessions | Redis 7 | Streams for events, plain keys for sessions |
 | PII | Microsoft Presidio (analyzer + anonymizer) | custom recognisers for Swedish personnummer, org-nr, IBAN, phone |
 | Adapters | MCP (Python SDK), one server per integration | stdio for local, streamable HTTP for deployed |
-| Models | Anthropic (actor/workhorse), OpenAI or Google (verifier), Ollama/vLLM (sovereign open-weight option) | see section 6 |
+| Models | Any vendor behind one router; a local rule engine for the verifier, and an open-weight option for customers whose data cannot leave the building | see section 6 |
 | Embeddings | configurable; default to the Anthropic-recommended provider, fallback to `bge-m3` locally | multilingual required (Swedish + English) |
 | Tracing | OpenTelemetry → Jaeger (dev), OTLP exporter (prod) | every span tagged with tenant, process, tier |
 | Dashboard | Next.js 15, React, Tailwind, shadcn/ui, React Flow (graph and process views) | server components where possible |
@@ -74,7 +75,7 @@ Do not add LangChain, LlamaIndex, CrewAI, or similar frameworks. Write the agent
 
 ```
 plexus/
-├── CLAUDE.md
+├── ENGINEERING.md
 ├── README.md
 ├── docker-compose.yml
 ├── pyproject.toml
@@ -311,10 +312,10 @@ blast_radius = f(records_touched, money_touched, external_parties_touched), norm
 
 ```yaml
 roles:
-  actor:      { vendor: anthropic, model: claude-fable-5-1, effort: high }
-  workhorse:  { vendor: anthropic, model: claude-sonnet-5 }
-  classifier: { vendor: anthropic, model: claude-haiku-4-5 }
-  verifier:   { vendor: openai,    model: gpt-5.5 }        # MUST differ from actor vendor
+  actor:      { vendor: google, model: gemini-2.5-flash }
+  workhorse:  { vendor: google, model: gemini-3.1-flash-lite }
+  classifier: { vendor: google, model: gemini-3.1-flash-lite }
+  verifier:   { vendor: local,  model: policy-verifier }   # MUST differ from the actor
   embedder:   { vendor: local,     model: bge-m3 }
 profiles:
   sovereign:                                                # for customers that cannot send data out
@@ -355,7 +356,7 @@ Design: calm, dense, professional; no marketing gradients. Accessibility AA. Mob
 
 ## 9. Build phases and Definition of Done
 
-**Phase 0 — Skeleton (days 1–2).** Repo layout, compose stack boots, CI runs lint/type/tests, `CLAUDE.md`, all 12 spec files drafted (can contain open questions). DoD: `make up && make test` green on a clean machine.
+**Phase 0 — Skeleton (days 1–2).** Repo layout, compose stack boots, CI runs lint/type/tests, `ENGINEERING.md`, all 12 spec files drafted (can contain open questions). DoD: `make up && make test` green on a clean machine.
 
 **Phase 1 — Ingest + Graph + Explain (weeks 1–3).** Pillars 1 and 6; adapters gmail, clickup, gdrive; router with cost tracking; eval harness v1; Overview, Graph, Ask, Adapters pages. DoD: Pillar 1 and 6 acceptance tests pass; demo script `scripts/demo_phase1.sh` seeds fixtures and answers three cross-system questions with citations.
 
@@ -369,20 +370,25 @@ Do not reorder phases. Do not build Pillar 8 before Pillar 1 exists.
 
 ---
 
-## 10. Working method (how you, Claude Code, should operate)
+## 10. Working method
 
-1. **Plan first, every session.** Start by reading `CLAUDE.md`, the relevant `specs/` file, and `docs/STATUS.md`. State the plan for the session in ≤ 10 bullets. Then execute.
-2. **Spec-driven.** If the spec is missing or ambiguous, write or amend the spec, list the open questions in `docs/QUESTIONS.md` addressed to me, and proceed with the most conservative interpretation.
-3. **Tests with every change.** Acceptance tests derived from the spec, unit tests for logic, property-based tests for the ledger and PII boundary. No PR without tests.
-4. **Small, reviewable commits.** Conventional commits (`feat(ledger): ...`). One pillar per branch. Update `docs/STATUS.md` at the end of every session with what is done, what is next, and any decisions made.
-5. **Never mock the safety path.** You may mock external vendors in tests, but the executor, verifier gate, PII boundary, and pause flag must be exercised for real in integration tests.
-6. **Ask before**: adding paid dependencies, changing the graph schema post-Phase 1, changing the trust formula, enabling any write capability, or touching production config.
-7. **Prefer boring.** Plain Python, explicit data classes, readable Cypher. No clever metaprogramming. Optimise only with a benchmark in hand.
-8. **Document as you go.** `docs/architecture.md` (with Mermaid diagrams), `docs/adr/` for every significant decision (ADR format), `docs/compliance.md`, `docs/pilot-runbook.md`.
-9. **Language.** Code and docs in English. All user-facing strings go through i18n with `sv` and `en`.
-10. **Report honestly.** If something in this brief is wrong, infeasible, or a worse idea than an alternative, say so in `docs/QUESTIONS.md` with your reasoning and your recommendation. Do not silently deviate.
-
----
+1. **Spec-driven.** If a spec is missing or ambiguous, write or amend it, record the open
+   question in `docs/QUESTIONS.md`, and proceed with the most conservative interpretation.
+2. **Tests with every change.** Acceptance tests derived from the spec, unit tests for logic,
+   property-based tests for the ledger and the PII boundary. No change without tests.
+3. **Small, reviewable commits.** Conventional commits (`feat(ledger): ...`). One pillar per
+   branch. Update `docs/STATUS.md` with what is done, what is next, and any decisions made.
+4. **Never mock the safety path.** External vendors may be mocked in tests, but the executor,
+   the verifier gate, the PII boundary and the pause flag are exercised for real in
+   integration tests.
+5. **Prefer boring.** Plain Python, explicit data classes, readable Cypher. No clever
+   metaprogramming. Optimise only with a benchmark in hand.
+6. **Document as you go.** `docs/architecture.md` with diagrams, `docs/adr/` for every
+   significant decision, `docs/compliance.md`, `docs/pilot-runbook.md`.
+7. **Language.** Code and docs in English. All user-facing strings go through i18n with `sv`
+   and `en`.
+8. **Report honestly.** If something in this brief is wrong or infeasible, record it in
+   `docs/QUESTIONS.md` with the reasoning and a recommendation. Never silently deviate.
 
 ## 11. Seed fixtures and demo scenario
 
@@ -402,41 +408,9 @@ Design every early decision toward those four outcomes.
 
 ---
 
-## CLAUDE.md contents (copy into ./CLAUDE.md)
+## Engineering rules
 
-```markdown
-# Plexus — engineering rules
-
-You are building Plexus, an organisational nervous system. Read specs/ before coding.
-
-## Hard rules
-- Only core/action/executor.py may call adapter write methods.
-- All model calls go through core/models/router.py. No vendor SDK imports elsewhere.
-- Actor and verifier vendors must differ in production; router refuses to boot otherwise.
-- Every byte leaving an adapter passes core/pii/boundary.py. Restore only in executor.
-- Every graph node/edge and every table row has tenant_id. Store abstraction enforces it.
-- Ledger is append-only with a hash chain. Never update or delete ledger rows.
-- Long-running or waiting work runs in Temporal workflows. No bare loops.
-- No LangChain/LlamaIndex/CrewAI. Agent loops are explicit Python.
-- Prompts live in prompts/*.md with a version header, never inline.
-- Specs before code; tests with every change; update docs/STATUS.md every session.
-
-## Stack
-Python 3.12 + FastAPI + Temporal + Neo4j + Postgres/pgvector + Redis + Presidio + MCP;
-Next.js 15 dashboard; OpenTelemetry; Docker Compose. uv + pnpm. ruff, mypy strict.
-
-## Commands
-make up / make down / make test / make lint / make demo / make evals
-
-## Ask before
-Paid dependencies, graph schema changes after Phase 1, trust formula changes,
-enabling any adapter write capability, production config.
-
-## When unsure
-Choose the simplest, most auditable, most reversible option and log the question
-in docs/QUESTIONS.md.
-```
+They live in [`ENGINEERING.md`](../ENGINEERING.md).
 
 ---
 
-*Begin with Phase 0. Confirm the plan for the session, then start.*

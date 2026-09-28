@@ -1,6 +1,7 @@
 # Plexus — engineering rules
 
-You are building Plexus, an organisational nervous system. Read specs/ before coding.
+These are rules, not preferences. Violating one is a bug. Read `specs/` before changing
+anything they cover.
 
 ## Hard rules
 - Only core/action/executor.py may call adapter write methods.
@@ -29,8 +30,7 @@ enabling any adapter write capability, production config.
 Choose the simplest, most auditable, most reversible option and log the question
 in docs/QUESTIONS.md.
 
-## Session start
-Read this file, docs/STATUS.md, docs/QUESTIONS.md, and the spec for the pillar you
-are working on. State the session plan in at most 10 bullets, then execute.
-The full build brief lives in PLEXUS_BUILD_PROMPT.md; specs/ are derived from it and
-are what you implement from.
+## Before you start
+Read this file, `docs/STATUS.md`, `docs/QUESTIONS.md`, and the spec for the area you are
+working on. The product brief lives in `docs/product-brief.md`; `specs/` are derived from it
+and are what the code is implemented from.

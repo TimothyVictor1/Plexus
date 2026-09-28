@@ -25,9 +25,9 @@
   },
   "home": {
     "greeting": {
-      "morning": "God morgon, vad behöver göras?",
-      "afternoon": "God eftermiddag, vad behöver göras?",
-      "evening": "God kväll, vad behöver göras?"
+      "morning": "God morgon. Vad vill ni veta?",
+      "afternoon": "God eftermiddag. Vad vill ni veta?",
+      "evening": "God kväll. Vad vill ni veta?"
     },
     "welcome": {
       "morning": "God morgon, välkommen till Plexus",

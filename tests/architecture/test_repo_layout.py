@@ -85,7 +85,7 @@ def test_docs_exist(repo_root: Path) -> None:
     assert any((repo_root / "docs" / "adr").glob("*.md")), "at least one ADR expected"
 
 
-def test_claude_md_has_hard_rules(repo_root: Path) -> None:
-    text = (repo_root / "CLAUDE.md").read_text(encoding="utf-8")
+def test_engineering_rules_are_written_down(repo_root: Path) -> None:
+    text = (repo_root / "ENGINEERING.md").read_text(encoding="utf-8")
     assert "Only core/action/executor.py may call adapter write methods." in text
     assert "core/models/router.py" in text
