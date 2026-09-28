@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from agents.extract.ingest import load_all_gazetteers
 from api.routers.actions import router as actions_router
 from api.routers.ask import router as ask_router
+from api.routers.connections import router as connections_router
 from api.routers.health import router as health_router
 from api.routers.home import router as home_router
 from api.routers.org import router as org_router
@@ -54,6 +55,7 @@ def create_app() -> FastAPI:
         org_router,
         home_router,
         ask_router,
+        connections_router,
         processes_router,
         review_router,
         overview_router,

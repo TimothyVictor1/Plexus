@@ -62,19 +62,6 @@
     "nothingYet": "When Plexus prepares something for you, it waits here for your OK.",
     "worthKnowing": "Worth knowing"
   },
-  "pages": {
-    "connections": {
-      "title": "Connections",
-      "sub": "Plexus only learns from the tools you connect."
-    },
-    "settings": {
-      "title": "Settings",
-      "sub": "Your organisation, your team, and the technical details."
-    }
-  },
-  "placeholder": {
-    "body": "This screen is being built next. It is deliberately empty rather than filled with made-up numbers."
-  },
   "work": {
     "title": "Your work",
     "sub": "Plexus found these by itself in your connected tools. Every company's list looks different.",
@@ -178,5 +165,63 @@
     "askButton": "Ask",
     "thinking": "Thinking…",
     "from": "From: {sources}"
+  },
+  "connections": {
+    "title": "Connections",
+    "sub": "Plexus only learns from the tools you connect.",
+    "countOf": "{n} of {total} connected.",
+    "connect": "Connect",
+    "disconnect": "Connected · Disconnect",
+    "unavailable": "Not available yet",
+    "notAvailable": "No sign-in has been set up for this kind of tool yet.",
+    "readingFrom": "Reading {n} items",
+    "privacy": {
+      "residencyTitle": "Stays in Europe",
+      "residencyBody": "Your company's data is stored and processed in the EU.",
+      "residencyOffTitle": "Where your data is processed",
+      "residencyOffBody": "Your records are stored here, on your own machines. The AI that writes the wording currently runs in the {region} region, so that part is not EU-only yet.",
+      "maskingTitle": "Personal details hidden",
+      "maskingBody": "Names, emails and phone numbers are replaced before the AI sees them, and only put back at the last moment.",
+      "controlTitle": "You stay in control",
+      "controlBody": "Disconnect any tool at any time. What Plexus already learned is kept, and it never does more than you allow."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sub": "Your organisation, and the technical details.",
+    "organisation": "Organisation",
+    "name": "Name",
+    "language": "Language",
+    "dataset": "Data",
+    "exampleData": "Example data",
+    "realData": "Your own data",
+    "toolsConnected": "Tools connected",
+    "advanced": "Advanced",
+    "openAdvanced": "Open advanced",
+    "advancedBody": "The system's own record: every decision Plexus made, and the map it built. Useful for an audit, not needed day to day."
+  },
+  "advanced": {
+    "title": "Advanced",
+    "sub": "The system's own record. Nothing here is needed day to day.",
+    "backToSettings": "Settings",
+    "ledger": "Decision record",
+    "ledgerBody": "Every entry is linked to the one before it, so an edit to any row would show up. Nothing is ever changed or removed; a correction is a new entry.",
+    "chainIntact": "Record intact",
+    "chainBroken": "Record altered",
+    "noEntries": "Nothing recorded yet.",
+    "graph": "What Plexus has mapped",
+    "noNodes": "Nothing mapped yet.",
+    "graphBody": "The people, companies and documents Plexus has connected together. Personal details appear as placeholders.",
+    "api": "Developer interface",
+    "apiBody": "Every screen here is built on the same documented interface.",
+    "openApi": "Open the API docs",
+    "column": {
+      "seq": "No.",
+      "type": "What happened",
+      "process": "Work",
+      "actor": "Who",
+      "when": "When",
+      "hash": "Fingerprint"
+    }
   }
 }

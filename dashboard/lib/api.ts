@@ -280,3 +280,20 @@ export async function askStream(
   }
   return { sources, conversationId: conversation, grounded };
 }
+
+export type ConnectorInfo = {
+  category: string;
+  label: string;
+  examples: string;
+  status: "connected" | "error" | "not_connected" | "not_configured";
+  provider: string;
+  detail: string;
+  document_count: number;
+};
+
+export type ConnectionsView = {
+  connections: ConnectorInfo[];
+  connected_count: number;
+  total: number;
+  privacy: { key: string; ok: string; region: string }[];
+};

@@ -62,19 +62,6 @@
     "nothingYet": "När Plexus förbereder något åt er väntar det här på ert godkännande.",
     "worthKnowing": "Värt att veta"
   },
-  "pages": {
-    "connections": {
-      "title": "Anslutningar",
-      "sub": "Plexus lär sig bara från de verktyg ni ansluter."
-    },
-    "settings": {
-      "title": "Inställningar",
-      "sub": "Er organisation, ert team och de tekniska detaljerna."
-    }
-  },
-  "placeholder": {
-    "body": "Den här skärmen byggs härnäst. Den är medvetet tom i stället för fylld med påhittade siffror."
-  },
   "work": {
     "title": "Ert arbete",
     "sub": "Plexus hittade dessa på egen hand i era anslutna verktyg. Varje företags lista ser olika ut.",
@@ -178,5 +165,63 @@
     "askButton": "Fråga",
     "thinking": "Tänker…",
     "from": "Från: {sources}"
+  },
+  "connections": {
+    "title": "Anslutningar",
+    "sub": "Plexus lär sig bara från de verktyg ni ansluter.",
+    "countOf": "{n} av {total} anslutna.",
+    "connect": "Anslut",
+    "disconnect": "Ansluten · Koppla från",
+    "unavailable": "Inte tillgängligt än",
+    "notAvailable": "Ingen inloggning är uppsatt för den här sortens verktyg än.",
+    "readingFrom": "Läser {n} poster",
+    "privacy": {
+      "residencyTitle": "Stannar i Europa",
+      "residencyBody": "Ert företags data lagras och behandlas inom EU.",
+      "residencyOffTitle": "Var er data behandlas",
+      "residencyOffBody": "Era uppgifter lagras här, på era egna maskiner. Den AI som skriver formuleringarna körs just nu i regionen {region}, så den delen är inte enbart EU än.",
+      "maskingTitle": "Personuppgifter dolda",
+      "maskingBody": "Namn, e-post och telefonnummer byts ut innan AI:n ser dem, och sätts tillbaka först i sista stund.",
+      "controlTitle": "Ni har kontrollen",
+      "controlBody": "Koppla från vilket verktyg som helst när som helst. Det Plexus redan lärt sig behålls, och det gör aldrig mer än ni tillåter."
+    }
+  },
+  "settings": {
+    "title": "Inställningar",
+    "sub": "Er organisation och de tekniska detaljerna.",
+    "organisation": "Organisation",
+    "name": "Namn",
+    "language": "Språk",
+    "dataset": "Data",
+    "exampleData": "Exempeldata",
+    "realData": "Er egen data",
+    "toolsConnected": "Anslutna verktyg",
+    "advanced": "Avancerat",
+    "openAdvanced": "Öppna avancerat",
+    "advancedBody": "Systemets egen logg: varje beslut Plexus fattat, och kartan det byggt. Bra vid revision, behövs inte till vardags."
+  },
+  "advanced": {
+    "title": "Avancerat",
+    "sub": "Systemets egen logg. Inget här behövs till vardags.",
+    "backToSettings": "Inställningar",
+    "ledger": "Beslutslogg",
+    "ledgerBody": "Varje post är länkad till den föregående, så en ändring i någon rad skulle synas. Inget ändras eller tas bort; en rättelse är en ny post.",
+    "chainIntact": "Loggen är intakt",
+    "chainBroken": "Loggen är ändrad",
+    "noEntries": "Inget registrerat än.",
+    "graph": "Vad Plexus kartlagt",
+    "noNodes": "Inget kartlagt än.",
+    "graphBody": "Personerna, företagen och dokumenten Plexus kopplat ihop. Personuppgifter visas som platshållare.",
+    "api": "Utvecklargränssnitt",
+    "apiBody": "Varje skärm här är byggd på samma dokumenterade gränssnitt.",
+    "openApi": "Öppna API-dokumentationen",
+    "column": {
+      "seq": "Nr",
+      "type": "Vad hände",
+      "process": "Arbete",
+      "actor": "Vem",
+      "when": "När",
+      "hash": "Fingeravtryck"
+    }
   }
 }
