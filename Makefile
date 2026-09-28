@@ -1,4 +1,4 @@
-.PHONY: help up down nuke logs sync migrate seed labels triggers console console-stop console-reset doctor api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
+.PHONY: help up down nuke logs sync migrate seed labels triggers worker console console-stop console-reset doctor api test test-integration lint fmt typecheck demo evals ci dashboard-install dashboard-lint dashboard-build
 
 # Use pnpm if installed; otherwise run it through npx (no global install needed).
 PNPM := $(shell command -v pnpm >/dev/null 2>&1 && echo pnpm || echo "npx --yes pnpm@9.15.0")
@@ -52,6 +52,9 @@ api: sync ## Run the API on :8000 with reload (the compose `api` service also se
 
 labels: sync ## Regenerate plain-language names for every process
 	uv run python -m scripts.refresh_labels
+
+worker: sync ## Run the background worker (naming, triggers, insights, syncing)
+	uv run python -m workflows.worker
 
 triggers: sync ## Look for stuck work and prepare things for someone to approve
 	uv run python -m scripts.check_triggers

@@ -297,3 +297,41 @@ export type ConnectionsView = {
   total: number;
   privacy: { key: string; ok: string; region: string }[];
 };
+
+export type ProviderOption = {
+  key: string;
+  name: string;
+  category: string;
+  available: boolean;
+  reads: string[];
+  can_write: boolean;
+  transport: string;
+  needs: string;
+};
+
+export type Catalogue = {
+  category: string;
+  label: string;
+  blurb: string;
+  examples: string;
+  options: ProviderOption[];
+};
+
+export type JobRun = {
+  job: string;
+  description: string;
+  status: string;
+  detail: string;
+  started_at: string | null;
+};
+
+export type Invite = {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  invited_by: string;
+  created_at: string;
+  expires_at: string;
+  link: string;
+};

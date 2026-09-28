@@ -14,11 +14,13 @@ from api.routers.ask import router as ask_router
 from api.routers.connections import router as connections_router
 from api.routers.health import router as health_router
 from api.routers.home import router as home_router
+from api.routers.jobs import router as jobs_router
 from api.routers.org import router as org_router
 from api.routers.overview import router as overview_router
 from api.routers.pii import router as pii_router
 from api.routers.processes import router as processes_router
 from api.routers.review import router as review_router
+from api.routers.team import router as team_router
 from core.db.pool import close_pool
 
 API_VERSION = "0.2.0"
@@ -58,6 +60,8 @@ def create_app() -> FastAPI:
         connections_router,
         processes_router,
         review_router,
+        team_router,
+        jobs_router,
         overview_router,
         pii_router,
         actions_router,

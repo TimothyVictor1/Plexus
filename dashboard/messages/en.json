@@ -184,7 +184,25 @@
       "maskingBody": "Names, emails and phone numbers are replaced before the AI sees them, and only put back at the last moment.",
       "controlTitle": "You stay in control",
       "controlBody": "Disconnect any tool at any time. What Plexus already learned is kept, and it never does more than you allow."
-    }
+    },
+    "add": "Add connection",
+    "addTitle": "Add a connection",
+    "addBody": "Plexus speaks one protocol to every tool, so anything here plugs in the same way. Pick one to see exactly what it would read before you agree to anything.",
+    "search": "Search tools…",
+    "noMatch": "Nothing matches that.",
+    "allTools": "All tools",
+    "wouldRead": "What Plexus would read",
+    "canWriteLater": "Read-only for now. It can only ever write once a process has earned the right, and you approve it.",
+    "readOnlyAlways": "Read-only. Plexus never writes to this kind of tool.",
+    "needsSetup": "This installation has no sign-in set up for it yet. An administrator needs to set {name}.",
+    "connectNamed": "Connect {name}",
+    "cancel": "Cancel",
+    "readyToConnect": "Ready to connect",
+    "setupNeeded": "Needs setting up first",
+    "connectedHeading": "Connected · {n}",
+    "availableHeading": "Available to connect",
+    "disconnectShort": "Disconnect",
+    "nothingYet": "Nothing read from it yet"
   },
   "settings": {
     "title": "Settings",

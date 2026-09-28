@@ -184,7 +184,25 @@
       "maskingBody": "Namn, e-post och telefonnummer byts ut innan AI:n ser dem, och sätts tillbaka först i sista stund.",
       "controlTitle": "Ni har kontrollen",
       "controlBody": "Koppla från vilket verktyg som helst när som helst. Det Plexus redan lärt sig behålls, och det gör aldrig mer än ni tillåter."
-    }
+    },
+    "add": "Lägg till anslutning",
+    "addTitle": "Lägg till en anslutning",
+    "addBody": "Plexus talar samma protokoll med alla verktyg, så allt här kopplas in på samma sätt. Välj ett för att se exakt vad det skulle läsa innan ni godkänner något.",
+    "search": "Sök verktyg…",
+    "noMatch": "Inget matchar det.",
+    "allTools": "Alla verktyg",
+    "wouldRead": "Vad Plexus skulle läsa",
+    "canWriteLater": "Endast läsning tills vidare. Det kan bara skriva när en process har förtjänat rätten, och ni godkänner det.",
+    "readOnlyAlways": "Endast läsning. Plexus skriver aldrig till den här sortens verktyg.",
+    "needsSetup": "Den här installationen har ingen inloggning uppsatt än. En administratör behöver sätta {name}.",
+    "connectNamed": "Anslut {name}",
+    "cancel": "Avbryt",
+    "readyToConnect": "Redo att anslutas",
+    "setupNeeded": "Behöver sättas upp först",
+    "connectedHeading": "Anslutna · {n}",
+    "availableHeading": "Kan anslutas",
+    "disconnectShort": "Koppla från",
+    "nothingYet": "Inget läst från det än"
   },
   "settings": {
     "title": "Inställningar",

@@ -27,13 +27,22 @@ Status = Literal["connected", "error", "not_connected", "not_configured"]
 
 @dataclass(frozen=True)
 class Provider:
-    """One vendor Plexus can read from."""
+    """One vendor Plexus can read from.
+
+    A connector is an MCP server: Plexus speaks one protocol to every tool, whether that
+    server is one we ship or one a company runs itself.
+    """
 
     key: str
     name: str
     category: Category
     # Which credential must exist before this can be offered at all.
     requires_env: str | None = None
+    # What connecting it would let Plexus read. Shown before anyone agrees to anything.
+    reads: tuple[str, ...] = ()
+    # Whether it can ever write back. Read-only until a process earns the right to act.
+    can_write: bool = False
+    transport: str = "mcp"
 
 
 # The eight categories, with the products people actually name when asked.
@@ -49,15 +58,142 @@ CATEGORIES: tuple[tuple[Category, str], ...] = (
 )
 
 PROVIDERS: tuple[Provider, ...] = (
-    Provider("gmail", "Gmail", "email", "GMAIL_CLIENT_ID"),
-    Provider("outlook_calendar", "Outlook Calendar", "calendar", "MS_CLIENT_ID"),
-    Provider("hubspot", "HubSpot", "crm", "HUBSPOT_CLIENT_ID"),
-    Provider("fortnox", "Fortnox", "accounting", "FORTNOX_CLIENT_ID"),
-    Provider("gdrive", "Google Drive", "files", "GOOGLE_OAUTH_CLIENT_ID"),
-    Provider("bamboo", "HR system", "hr", "HR_CLIENT_ID"),
-    Provider("slack", "Slack", "chat", "SLACK_CLIENT_ID"),
-    Provider("clickup", "ClickUp", "projects", "CLICKUP_CLIENT_ID"),
+    Provider(
+        "gmail",
+        "Gmail",
+        "email",
+        "GMAIL_CLIENT_ID",
+        reads=("Who emailed whom and when", "Subject lines and message text"),
+        can_write=True,
+    ),
+    Provider(
+        "outlook",
+        "Outlook",
+        "email",
+        "MS_CLIENT_ID",
+        reads=("Who emailed whom and when", "Subject lines and message text"),
+        can_write=True,
+    ),
+    Provider(
+        "google_calendar",
+        "Google Calendar",
+        "calendar",
+        "GOOGLE_OAUTH_CLIENT_ID",
+        reads=("Meeting times and who attended",),
+    ),
+    Provider(
+        "outlook_calendar",
+        "Outlook Calendar",
+        "calendar",
+        "MS_CLIENT_ID",
+        reads=("Meeting times and who attended",),
+    ),
+    Provider(
+        "hubspot",
+        "HubSpot",
+        "crm",
+        "HUBSPOT_CLIENT_ID",
+        reads=("Customers and deals", "Notes and status changes"),
+        can_write=True,
+    ),
+    Provider(
+        "salesforce",
+        "Salesforce",
+        "crm",
+        "SALESFORCE_CLIENT_ID",
+        reads=("Customers and deals", "Notes and status changes"),
+        can_write=True,
+    ),
+    Provider(
+        "fortnox",
+        "Fortnox",
+        "accounting",
+        "FORTNOX_CLIENT_ID",
+        reads=("Invoices and payments", "Suppliers and expenses"),
+        can_write=True,
+    ),
+    Provider(
+        "visma",
+        "Visma",
+        "accounting",
+        "VISMA_CLIENT_ID",
+        reads=("Invoices and payments", "Suppliers and expenses"),
+        can_write=True,
+    ),
+    Provider(
+        "gdrive",
+        "Google Drive",
+        "files",
+        "GOOGLE_OAUTH_CLIENT_ID",
+        reads=("File names and who changed them", "Document text"),
+    ),
+    Provider(
+        "sharepoint",
+        "SharePoint",
+        "files",
+        "MS_CLIENT_ID",
+        reads=("File names and who changed them", "Document text"),
+    ),
+    Provider(
+        "hr_generic",
+        "HR system",
+        "hr",
+        "HR_CLIENT_ID",
+        reads=("Start dates and roles", "Onboarding steps"),
+    ),
+    Provider(
+        "slack",
+        "Slack",
+        "chat",
+        "SLACK_CLIENT_ID",
+        reads=("Messages in channels Plexus is invited to",),
+        can_write=True,
+    ),
+    Provider(
+        "teams",
+        "Microsoft Teams",
+        "chat",
+        "MS_CLIENT_ID",
+        reads=("Messages in channels Plexus is invited to",),
+        can_write=True,
+    ),
+    Provider(
+        "clickup",
+        "ClickUp",
+        "projects",
+        "CLICKUP_CLIENT_ID",
+        reads=("Tasks, who they are for, and status changes",),
+        can_write=True,
+    ),
+    Provider(
+        "jira",
+        "Jira",
+        "projects",
+        "JIRA_CLIENT_ID",
+        reads=("Issues, who they are for, and status changes",),
+        can_write=True,
+    ),
+    Provider(
+        "asana",
+        "Asana",
+        "projects",
+        "ASANA_CLIENT_ID",
+        reads=("Tasks, who they are for, and status changes",),
+        can_write=True,
+    ),
 )
+
+
+CATEGORY_BLURB: dict[Category, str] = {
+    "email": "Where most decisions actually get made.",
+    "calendar": "Who met whom, and when things were agreed.",
+    "crm": "Customers, deals and what was promised.",
+    "accounting": "Money in, money out, and what is still open.",
+    "files": "Documents, and who changed them.",
+    "hr": "Joiners, leavers and onboarding.",
+    "chat": "The quick back and forth that never reaches email.",
+    "projects": "Tasks and how work moves along.",
+}
 
 
 class ConnectorInfo(BaseModel):
@@ -134,7 +270,9 @@ class NotConfiguredError(RuntimeError):
     """This installation has no credentials for that vendor yet."""
 
 
-async def connect(tenant_id: str, category: str) -> ConnectorInfo:
+async def connect(
+    tenant_id: str, category: str, provider_choice: str | None = None
+) -> ConnectorInfo:
     # Reconnecting something this organisation already had uses the provider it was set up
     # with, rather than insisting on the credentials of whichever vendor ships by default.
     async with tenant_conn(tenant_id) as conn:
@@ -144,7 +282,18 @@ async def connect(tenant_id: str, category: str) -> ConnectorInfo:
             category,
         )
 
-    provider_key = str(existing) if existing else None
+    provider_key = provider_choice or (str(existing) if existing else None)
+    if provider_choice is not None:
+        chosen = next((p for p in PROVIDERS if p.key == provider_choice), None)
+        if chosen is None:
+            msg = f"no connector called {provider_choice}"
+            raise NotConfiguredError(msg)
+        if not _configured(chosen):
+            msg = (
+                f"{chosen.name} needs credentials that this installation does not have. "
+                f"Set {chosen.requires_env} and restart to enable it."
+            )
+            raise NotConfiguredError(msg)
     if provider_key is None:
         provider = next((p for p in PROVIDERS if p.category == category), None)
         if provider is None:
@@ -210,3 +359,59 @@ def privacy_facts() -> list[dict[str, str]]:
         {"key": "masking", "ok": "true", "region": ""},
         {"key": "control", "ok": "true", "region": ""},
     ]
+
+
+class ProviderOption(BaseModel):
+    """One choice inside a category, as the connect panel shows it."""
+
+    key: str
+    name: str
+    category: str
+    available: bool
+    reads: list[str] = []
+    can_write: bool = False
+    transport: str = "mcp"
+    needs: str = ""
+
+
+class Catalogue(BaseModel):
+    category: str
+    label: str
+    blurb: str
+    examples: str
+    options: list[ProviderOption] = []
+
+
+def catalogue() -> list[Catalogue]:
+    """Everything Plexus can connect to, grouped the way a person would look for it.
+
+    Every entry speaks the same protocol, so adding a tool never changes anything downstream.
+    An option whose credentials are missing is still listed, marked unavailable, and says what
+    it needs. Hiding it would leave someone wondering whether Plexus supports their tool.
+    """
+    out: list[Catalogue] = []
+    for category, examples in CATEGORIES:
+        options = [
+            ProviderOption(
+                key=p.key,
+                name=p.name,
+                category=p.category,
+                available=_configured(p),
+                reads=list(p.reads),
+                can_write=p.can_write,
+                transport=p.transport,
+                needs=p.requires_env or "",
+            )
+            for p in PROVIDERS
+            if p.category == category
+        ]
+        out.append(
+            Catalogue(
+                category=category,
+                label=phrases.tool_label(category),
+                blurb=CATEGORY_BLURB.get(category, ""),
+                examples=examples,
+                options=options,
+            )
+        )
+    return out
