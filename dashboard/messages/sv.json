@@ -234,6 +234,7 @@
     "noEntries": "Inget registrerat än.",
     "graph": "Vad Plexus kartlagt",
     "noNodes": "Inget kartlagt än.",
+    "noGraphStore": "Detta Plexus har inget kartlager, så det finns inget att visa här. Allt annat fungerar som vanligt.",
     "graphBody": "Personerna, företagen och dokumenten Plexus kopplat ihop. Personuppgifter visas som platshållare.",
     "api": "Utvecklargränssnitt",
     "apiBody": "Varje skärm här är byggd på samma dokumenterade gränssnitt.",
@@ -283,5 +284,25 @@
     "pseudonyms": "Personer visas som Person A, B och så vidare. Plexus håller aldrig deras namn, bara en platshållare.",
     "acrossWork": "{n} sorters arbete · {events} saker gjorda",
     "basedOn": "Byggd av {events} saker som hänt de senaste {days} dagarna, över {people} personer."
+  },
+  "gate": {
+    "title": "Konfidentiell prototyp",
+    "lead": "Plexus är en prototyp som inte har släppts, delad privat av sin ägare. Läs det här innan du går vidare.",
+    "terms": [
+      "Allt här — produkten, hur den fungerar, skärmarna och alla siffror eller uppgifter du ser — är konfidentiellt och tillhör projektets ägare.",
+      "Du delar inte den här länken eller lösenordet med någon. Åtkomsten gäller dig, inte för att skickas vidare.",
+      "Du kopierar, skärmdumpar, publicerar eller beskriver inte det du ser här för någon annan utan ägarens tillåtelse.",
+      "Du använder inte något du får veta här för att bygga eller påverka en konkurrerande produkt.",
+      "Åtkomsten kan dras in när som helst, och tystnadsplikten gäller även därefter."
+    ],
+    "accept": "Jag har läst ovanstående och åtar mig att hålla projektet och dess innehåll konfidentiellt.",
+    "passwordLabel": "Lösenord",
+    "passwordPlaceholder": "Lösenordet du fick",
+    "submit": "Godkänn och gå in",
+    "working": "Kontrollerar…",
+    "wrongPassword": "Lösenordet stämmer inte. Kontrollera med den som delade länken.",
+    "mustAccept": "Godkänn villkoren ovan innan du går in.",
+    "failed": "Något gick fel. Försök igen.",
+    "footer": "Om du inte fick den här länken direkt, stäng sidan."
   }
 }

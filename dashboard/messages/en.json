@@ -234,6 +234,7 @@
     "noEntries": "Nothing recorded yet.",
     "graph": "What Plexus has mapped",
     "noNodes": "Nothing mapped yet.",
+    "noGraphStore": "This Plexus has no map store, so there is nothing to draw here. Everything else works as usual.",
     "graphBody": "The people, companies and documents Plexus has connected together. Personal details appear as placeholders.",
     "api": "Developer interface",
     "apiBody": "Every screen here is built on the same documented interface.",
@@ -283,5 +284,25 @@
     "pseudonyms": "People are shown as Person A, B and so on. Plexus never holds their names, only a placeholder.",
     "acrossWork": "{n} kinds of work · {events} things done",
     "basedOn": "Built from {events} things that happened over the last {days} days, across {people} people."
+  },
+  "gate": {
+    "title": "Confidential prototype",
+    "lead": "Plexus is an unreleased prototype, shared privately by its owner. Please read this before you go in.",
+    "terms": [
+      "Everything here — the product, how it works, the screens, and any figures or records you see — is confidential and belongs to the owner of this project.",
+      "You will not share this link or this password with anyone. Access is for you, not for passing on.",
+      "You will not copy, screenshot, publish, or describe what you see here to anyone else without the owner's permission.",
+      "You will not use anything you learn here to build or inform a competing product.",
+      "Access can be withdrawn at any time, and this obligation continues afterwards."
+    ],
+    "accept": "I have read the above and agree to keep this project and its contents confidential.",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "The password you were given",
+    "submit": "Agree and enter",
+    "working": "Checking…",
+    "wrongPassword": "That password is not right. Check it with whoever shared the link.",
+    "mustAccept": "Please agree to the terms above before entering.",
+    "failed": "Something went wrong. Please try again.",
+    "footer": "If you were not given this link directly, please close this page."
   }
 }
