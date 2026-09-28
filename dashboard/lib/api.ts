@@ -157,3 +157,11 @@ export type ProcessDetail = ProcessSummary & {
 };
 
 export const LEVEL_KEYS = ["watches", "explains", "suggests", "actsWithOk", "actsAlone"] as const;
+
+export type ChangeResult = {
+  ok: boolean;
+  from_level: number;
+  to_level: number;
+  reason: string;
+  process: ProcessDetail;
+};

@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import WaitTimeline from "@/components/WaitTimeline";
-import { LEVEL_KEYS, get, type ProcessDetail } from "@/lib/api";
+import { LEVEL_KEYS, get, post, type ChangeResult, type ProcessDetail } from "@/lib/api";
 
 export default function ProcessPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -15,6 +15,23 @@ export default function ProcessPage({ params }: { params: Promise<{ id: string }
   const [p, setP] = useState<ProcessDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showTech, setShowTech] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [refused, setRefused] = useState<string | null>(null);
+
+  async function change(action: "promote" | "demote" | "pause" | "resume") {
+    setBusy(true);
+    setError(null);
+    setRefused(null);
+    try {
+      const result = await post<ChangeResult>(`/processes/${id}/${action}`);
+      setP(result.process);
+      if (!result.ok) setRefused(result.reason);
+    } catch (e) {
+      setError(String((e as Error).message));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   const load = useCallback(() => {
     get<ProcessDetail>(`/processes/${id}`).then(setP).catch((e) => setError(String(e.message)));
@@ -122,14 +139,30 @@ export default function ProcessPage({ params }: { params: Promise<{ id: string }
 
         <div className="row">
           {!atTop && (
-            <button className="btn" disabled={!a.can_promote} title={a.can_promote ? undefined : a.reason}>
+            <button
+              className="btn"
+              disabled={busy || !a.can_promote}
+              title={a.can_promote ? undefined : a.reason}
+              onClick={() => change("promote")}
+            >
               {t("letPlexus", { what: t(`verb.${nextKey}`) })}
             </button>
           )}
-          <button className="btn outline">{p.paused ? t("resume") : t("pause")}</button>
-          {a.level > 1 && <button className="btn quiet">{t("doLess")}</button>}
+          <button
+            className="btn outline"
+            disabled={busy}
+            onClick={() => change(p.paused ? "resume" : "pause")}
+          >
+            {p.paused ? t("resume") : t("pause")}
+          </button>
+          {a.level > 1 && (
+            <button className="btn quiet" disabled={busy} onClick={() => change("demote")}>
+              {t("doLess")}
+            </button>
+          )}
         </div>
-        <p className="small muted">{t("controlsComing")}</p>
+        {refused && <p className="small" style={{ color: "var(--warn)" }}>{refused}</p>}
+        {error && <p className="err">{error}</p>}
       </section>
 
       <button
