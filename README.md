@@ -42,8 +42,3 @@ Built for EU hosting, GDPR and the EU AI Act.
 
 
 
-```bash
-make test    # unit, property-based and architecture tests
-make lint    # ruff, mypy strict, compose validation, console checks
-PLEXUS_INTEGRATION=1 uv run pytest -m integration   # against the running stack
-```
