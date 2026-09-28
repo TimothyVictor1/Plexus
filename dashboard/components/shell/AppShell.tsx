@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
+import { ApiError, REFRESH_EVENT, get, type Org, type OrgStatus } from "@/lib/api";
 import Rail from "./Rail";
 import TopBar from "./TopBar";
 
@@ -13,9 +13,12 @@ export default function AppShell({
 }: { locale: string; labels: Record<string, string>; children: ReactNode }) {
   const [org, setOrg] = useState<Org | null>(null);
   const [status, setStatus] = useState<OrgStatus | null>(null);
+  const [offline, setOffline] = useState(false);
 
   const load = useCallback(() => {
-    get<Org>("/org").then(setOrg).catch(() => setOrg(null));
+    get<Org>("/org")
+      .then((o) => { setOrg(o); setOffline(false); })
+      .catch((e) => { setOrg(null); setOffline(e instanceof ApiError && e.offline); });
     get<OrgStatus>("/org/status").then(setStatus).catch(() => setStatus(null));
   }, []);
 
@@ -38,6 +41,19 @@ export default function AppShell({
           isDemo={org?.is_demo ?? false}
           labels={labels}
         />
+        {offline && (
+          <div
+            role="status"
+            style={{
+              marginTop: 14, padding: "14px 18px", borderRadius: "var(--radius-ctl)",
+              background: "var(--warn-bg)", border: "1px solid var(--warn)",
+              display: "flex", flexDirection: "column", gap: 4,
+            }}
+          >
+            <strong style={{ color: "var(--warn)" }}>{labels.offlineTitle}</strong>
+            <span className="small" style={{ lineHeight: 1.5 }}>{labels.offlineBody}</span>
+          </div>
+        )}
         {children}
       </div>
     </div>

@@ -15,7 +15,8 @@ const moved: [string, string][] = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: "standalone",
+  // Only for self-hosted container builds. Vercel produces its own output.
+  ...(process.env.NEXT_OUTPUT === "standalone" ? { output: "standalone" as const } : {}),
   // `next build` and `next dev` share .next by default, so building while the dev server is
   // running leaves it requiring vendor chunks the build has already replaced. Separate
   // directories remove the collision entirely.

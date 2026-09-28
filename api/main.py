@@ -23,6 +23,7 @@ from api.routers.review import router as review_router
 from api.routers.team import router as team_router
 from api.routers.twin import router as twin_router
 from core.db.pool import close_pool
+from core.settings import get_settings
 
 API_VERSION = "0.2.0"
 
@@ -47,9 +48,14 @@ def create_app() -> FastAPI:
         docs_url="/v1/docs",
         lifespan=lifespan,
     )
+    # The console runs on its own origin, which differs per deployment. Extra origins come
+    # from PLEXUS_CONSOLE_ORIGINS as a comma-separated list.
+    origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    extra = get_settings().plexus_console_origins
+    origins += [o.strip() for o in extra.split(",") if o.strip()]
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_origins=origins,
         allow_methods=["*"],
         allow_headers=["*"],
     )

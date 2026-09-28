@@ -95,5 +95,5 @@ dashboard-install: ## Install dashboard deps
 dashboard-lint: ## Lint + typecheck + i18n key parity for the dashboard
 	cd dashboard && $(PNPM) run lint && $(PNPM) run typecheck && $(PNPM) run i18n:check
 
-dashboard-build: ## Production build of dashboard
-	cd dashboard && $(PNPM) run build
+dashboard-build: ## Production build of dashboard (into .next-build, leaves dev alone)
+	cd dashboard && $(PNPM) run build:local

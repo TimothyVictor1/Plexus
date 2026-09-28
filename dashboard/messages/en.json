@@ -21,7 +21,9 @@
       "approver": "Can approve",
       "admin": "Can change settings"
     },
-    "twin": "What if"
+    "twin": "What if",
+    "offlineTitle": "Plexus cannot reach its own service",
+    "offlineBody": "The screens need the Plexus service running. Locally, start it with 'make up'. On a hosted copy, set NEXT_PUBLIC_PLEXUS_API to the address of the service."
   },
   "home": {
     "greeting": {

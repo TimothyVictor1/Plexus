@@ -21,7 +21,9 @@
       "approver": "Får godkänna",
       "admin": "Får ändra inställningar"
     },
-    "twin": "Tänk om"
+    "twin": "Tänk om",
+    "offlineTitle": "Plexus når inte sin egen tjänst",
+    "offlineBody": "Skärmarna behöver Plexus-tjänsten igång. Lokalt startar ni den med 'make up'. I en driftsatt kopia, sätt NEXT_PUBLIC_PLEXUS_API till tjänstens adress."
   },
   "home": {
     "greeting": {

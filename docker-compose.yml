@@ -158,6 +158,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
       PLEXUS_MODEL_PROFILE: ${PLEXUS_MODEL_PROFILE:-default}
+      PLEXUS_CONSOLE_ORIGINS: ${PLEXUS_CONSOLE_ORIGINS:-}
     depends_on:
       postgres:
         condition: service_healthy

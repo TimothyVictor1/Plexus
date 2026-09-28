@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # product never claims a residency the configured provider does not actually give.
     model_data_region: str = "global"
 
+    # Comma-separated origins the console may be served from, beyond localhost.
+    plexus_console_origins: str = ""
+
     postgres_host: str = "localhost"
     postgres_port: int = 5432
     postgres_db: str = "plexus"

@@ -53,6 +53,8 @@ export default async function LocaleLayout({
     role_approver: t("role.approver"),
     role_admin: t("role.admin"),
     loadingOrg: t("loadingOrg"),
+    offlineTitle: t("offlineTitle"),
+    offlineBody: t("offlineBody"),
   };
 
   return (

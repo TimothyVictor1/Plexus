@@ -42,10 +42,16 @@ export function headersFor(): HeadersInit {
 }
 
 export class ApiError extends Error {
-  constructor(readonly status: number, message: string) {
+  constructor(readonly status: number, message: string, readonly offline = false) {
     super(message);
   }
 }
+
+/** The API is a separate service. When it is not reachable, say so in words someone can act
+ *  on rather than surfacing a browser-level fetch failure. */
+const OFFLINE_MESSAGE =
+  "Plexus cannot reach its own service. If you are running it locally, start it with " +
+  "'make up'. If this is a hosted copy, the service address has not been set yet.";
 
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -62,17 +68,27 @@ async function handle<T>(res: Response): Promise<T> {
 }
 
 export async function get<T>(path: string): Promise<T> {
-  return handle<T>(await fetch(`${API_BASE}/v1${path}`, { headers: headersFor(), cache: "no-store" }));
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/v1${path}`, { headers: headersFor(), cache: "no-store" });
+  } catch {
+    throw new ApiError(0, OFFLINE_MESSAGE, true);
+  }
+  return handle<T>(res);
 }
 
 export async function post<T>(path: string, body?: unknown): Promise<T> {
-  return handle<T>(
-    await fetch(`${API_BASE}/v1${path}`, {
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}/v1${path}`, {
       method: "POST",
       headers: headersFor(),
       body: body === undefined ? undefined : JSON.stringify(body),
-    }),
-  );
+    });
+  } catch {
+    throw new ApiError(0, OFFLINE_MESSAGE, true);
+  }
+  return handle<T>(res);
 }
 
 /* ------------------------------------------------------------------ shapes */
