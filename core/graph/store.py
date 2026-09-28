@@ -10,8 +10,6 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from neo4j import AsyncGraphDatabase
-
 from core.settings import get_settings
 
 LABEL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,40}$")
@@ -19,6 +17,16 @@ LABEL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,40}$")
 
 class TenantPredicateMissingError(ValueError):
     """Cypher reached the store without a tenant predicate."""
+
+
+class GraphUnavailableError(RuntimeError):
+    """No graph store is configured or reachable.
+
+    The graph is a second store on top of Postgres. Everything a person uses day to day —
+    what needs them, the ways work gets done, the what-if model, the questions — is answered
+    from Postgres and the event log. Only the audit view that draws the map needs this, so
+    when there is no graph the honest answer is to say so, not to fail the request.
+    """
 
 
 @dataclass
@@ -52,6 +60,10 @@ def _check_label(label: str) -> str:
 
 class GraphStore:
     def __init__(self) -> None:
+        # Imported here, not at module scope, so a deployment with no graph store does not
+        # need the driver installed at all.
+        from neo4j import AsyncGraphDatabase
+
         s = get_settings()
         self._driver = AsyncGraphDatabase.driver(s.neo4j_uri, auth=(s.neo4j_user, s.neo4j_password))
 
@@ -175,8 +187,23 @@ class GraphStore:
 _store: GraphStore | None = None
 
 
+def graph_enabled() -> bool:
+    """Whether this deployment has a graph store at all."""
+    if not get_settings().graph_enabled:
+        return False
+    try:
+        import neo4j  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
 def get_store() -> GraphStore:
+    """The graph store, or a clear refusal if this deployment has none."""
     global _store
+    if not graph_enabled():
+        msg = "no graph store is configured for this deployment"
+        raise GraphUnavailableError(msg)
     if _store is None:
         _store = GraphStore()
     return _store

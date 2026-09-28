@@ -1,128 +1,62 @@
-"""The work Plexus does on its own, in the background (redesign B10).
+"""Temporal activities and workflows for the routine work (redesign B10).
 
 Nothing here runs inside a request. Naming processes, looking for stuck work and recomputing
 insights all talk to a model vendor or scan the whole event log, so a person waiting on a page
 must never be waiting on them.
 
-Temporal runs them, which is what the engineering rules ask for: anything long-running or
-waiting lives in a workflow, never a bare loop. Each run is recorded in job_runs so the
-background is as visible as anything a person clicks.
+The jobs themselves live in `workflows/tasks.py`, free of any scheduler. This module is the
+Temporal half: it wraps each one as an activity and gives them retries, timeouts and a schedule.
+That is what the engineering rules ask for — anything long-running or waiting lives in a
+workflow, never a bare loop — and it is the default whenever Plexus runs somewhere a worker can
+stay alive.
 """
 
 from __future__ import annotations
 
-import uuid
-from collections.abc import Awaitable, Callable
-from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
 from temporalio import activity, workflow
 
+from workflows import tasks
+from workflows.tasks import JOBS, JobInput, JobResult
+
 TASK_QUEUE = "plexus-jobs"
 
-
-@dataclass
-class JobInput:
-    tenant_id: str
-
-
-@dataclass
-class JobResult:
-    job: str
-    tenant_id: str
-    detail: str
-    ok: bool = True
-
-
-async def _record(tenant_id: str, job: str, status: str, detail: str) -> None:
-    from core.db.pool import tenant_conn
-
-    async with tenant_conn(tenant_id) as conn:
-        await conn.execute(
-            "INSERT INTO job_runs (id, tenant_id, job, status, detail, finished_at)"
-            " VALUES ($1,$2,$3,$4,$5, now())",
-            str(uuid.uuid4()),
-            tenant_id,
-            job,
-            status,
-            detail[:500],
-        )
-
-
-async def _run(tenant_id: str, job: str, work: Callable[[str], Awaitable[str]]) -> JobResult:
-    try:
-        detail = await work(tenant_id)
-    except Exception as exc:
-        await _record(tenant_id, job, "failed", f"{type(exc).__name__}: {exc}")
-        return JobResult(job=job, tenant_id=tenant_id, detail=str(exc), ok=False)
-    await _record(tenant_id, job, "ok", detail)
-    return JobResult(job=job, tenant_id=tenant_id, detail=detail)
+__all__ = ["JOBS", "TASK_QUEUE", "JobInput", "JobResult", "MaintenanceWorkflow", "OneJobWorkflow"]
 
 
 # ---------------------------------------------------------------- activities
 @activity.defn
 async def refresh_labels_activity(job: JobInput) -> JobResult:
-    async def work(tenant_id: str) -> str:
-        from core.processes.service import refresh_labels
-
-        results = await refresh_labels(tenant_id)
-        from_model = sum(1 for v in results.values() if v.startswith("model"))
-        return f"named {len(results)} ways of working, {from_model} by the model"
-
-    return await _run(job.tenant_id, "refresh_labels", work)
+    return await tasks.refresh_labels(job.tenant_id)
 
 
 @activity.defn
 async def check_triggers_activity(job: JobInput) -> JobResult:
-    async def work(tenant_id: str) -> str:
-        from core.review import create_from_triggers
-
-        created = await create_from_triggers(tenant_id)
-        return f"{len(created)} new things waiting for a person"
-
-    return await _run(job.tenant_id, "check_triggers", work)
+    return await tasks.check_triggers(job.tenant_id)
 
 
 @activity.defn
 async def recompute_insights_activity(job: JobInput) -> JobResult:
-    async def work(tenant_id: str) -> str:
-        from core.insights import top_insights
-
-        found = await top_insights(tenant_id)
-        return f"{len(found)} insights recomputed"
-
-    return await _run(job.tenant_id, "recompute_insights", work)
+    return await tasks.recompute_insights(job.tenant_id)
 
 
 @activity.defn
 async def sync_connections_activity(job: JobInput) -> JobResult:
-    async def work(tenant_id: str) -> str:
-        from core.db.pool import tenant_conn
-
-        # The demo connector has nothing new to pull. A real connector fetches here and
-        # writes normalised events, and the miner picks them up on its next run.
-        async with tenant_conn(tenant_id) as conn:
-            rows = await conn.fetch(
-                "SELECT category FROM connections WHERE tenant_id=$1 AND status='connected'",
-                tenant_id,
-            )
-            await conn.execute(
-                "UPDATE connections SET last_sync = now()"
-                " WHERE tenant_id=$1 AND status='connected'",
-                tenant_id,
-            )
-        return f"checked {len(rows)} connected tools"
-
-    return await _run(job.tenant_id, "sync_connections", work)
+    return await tasks.sync_connections(job.tenant_id)
 
 
 @activity.defn
 async def list_tenants_activity() -> list[str]:
-    from core.db.pool import tenant_conn
+    return await tasks.all_tenants()
 
-    async with tenant_conn("bootstrap") as conn:
-        rows = await conn.fetch("SELECT id FROM tenants ORDER BY id")
-    return [r["id"] for r in rows]
+
+ACTIVITIES = {
+    "sync_connections": sync_connections_activity,
+    "refresh_labels": refresh_labels_activity,
+    "check_triggers": check_triggers_activity,
+    "recompute_insights": recompute_insights_activity,
+}
 
 
 # ---------------------------------------------------------------- workflows
@@ -141,14 +75,11 @@ class MaintenanceWorkflow:
         results: list[JobResult] = []
         for tenant_id in tenants:
             job = JobInput(tenant_id=tenant_id)
-            for step in (
-                sync_connections_activity,
-                refresh_labels_activity,
-                check_triggers_activity,
-                recompute_insights_activity,
-            ):
+            for name in tasks.ORDER:
                 results.append(
-                    await workflow.execute_activity(step, job, start_to_close_timeout=RETRY)
+                    await workflow.execute_activity(
+                        ACTIVITIES[name], job, start_to_close_timeout=RETRY
+                    )
                 )
         return results
 
@@ -159,13 +90,7 @@ class OneJobWorkflow:
 
     @workflow.run
     async def run(self, job_name: str, tenant_id: str) -> JobResult:
-        activities = {
-            "sync_connections": sync_connections_activity,
-            "refresh_labels": refresh_labels_activity,
-            "check_triggers": check_triggers_activity,
-            "recompute_insights": recompute_insights_activity,
-        }
-        chosen = activities.get(job_name)
+        chosen = ACTIVITIES.get(job_name)
         if chosen is None:
             return JobResult(job=job_name, tenant_id=tenant_id, detail="no such job", ok=False)
         return await workflow.execute_activity(

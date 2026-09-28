@@ -7,13 +7,13 @@ from pathlib import Path
 
 import asyncpg
 
-from core.db.pool import dsn
+from core.db.pool import connect_kwargs, dsn
 
 MIGRATIONS = Path(__file__).parent / "migrations"
 
 
 async def migrate() -> list[str]:
-    conn = await asyncpg.connect(dsn())
+    conn = await asyncpg.connect(dsn(), **connect_kwargs())
     applied: list[str] = []
     try:
         await conn.execute(

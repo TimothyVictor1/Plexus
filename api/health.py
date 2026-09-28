@@ -92,17 +92,38 @@ def _host_port(url: str, default_port: int) -> tuple[str, int]:
 
 
 def default_checks(settings: Settings) -> list[Check]:
-    neo4j_host, neo4j_port = _host_port(settings.neo4j_uri, 7687)
-    redis_host, redis_port = _host_port(settings.redis_url, 6379)
-    temporal_host, temporal_port = _host_port(settings.temporal_address, 7233)
-    return [
-        TcpCheck("postgres", settings.postgres_host, settings.postgres_port),
-        TcpCheck("neo4j", neo4j_host, neo4j_port),
-        TcpCheck("redis", redis_host, redis_port),
-        TcpCheck("temporal", temporal_host, temporal_port),
-        HttpCheck("presidio-analyzer", f"{settings.presidio_analyzer_url}/health"),
-        HttpCheck("presidio-anonymizer", f"{settings.presidio_anonymizer_url}/health"),
-    ]
+    """The dependencies this deployment actually has.
+
+    Not a fixed list, because the list differs per deployment. The full Compose stack has all
+    of them; a serverless deployment has Postgres and nothing else. Reporting a service as
+    down when this Plexus was never built to use it would make every such deployment look
+    broken forever, so each check is included only when its address is configured — the same
+    rule the model vendors already follow, where an empty credential means "not here".
+    """
+    from core.db.pool import dsn
+
+    pg_host, pg_port = _host_port(dsn(settings), 5432)
+    checks: list[Check] = [TcpCheck("postgres", pg_host, pg_port)]
+
+    if settings.graph_enabled and settings.neo4j_uri:
+        neo4j_host, neo4j_port = _host_port(settings.neo4j_uri, 7687)
+        checks.append(TcpCheck("neo4j", neo4j_host, neo4j_port))
+
+    if settings.redis_url:
+        redis_host, redis_port = _host_port(settings.redis_url, 6379)
+        checks.append(TcpCheck("redis", redis_host, redis_port))
+
+    if settings.jobs_scheduler == "temporal" and settings.temporal_address:
+        temporal_host, temporal_port = _host_port(settings.temporal_address, 7233)
+        checks.append(TcpCheck("temporal", temporal_host, temporal_port))
+
+    if settings.presidio_analyzer_url:
+        checks.append(HttpCheck("presidio-analyzer", f"{settings.presidio_analyzer_url}/health"))
+    if settings.presidio_anonymizer_url:
+        checks.append(
+            HttpCheck("presidio-anonymizer", f"{settings.presidio_anonymizer_url}/health")
+        )
+    return checks
 
 
 async def run_checks(checks: list[Check]) -> HealthReport:

@@ -4,6 +4,57 @@ Read this at the start of every session. Update it at the end of every session.
 
 ## Current phase: 1 (partial) — the system runs end to end on fixtures
 
+### Session 9, 2026-09-28 — the real product runs on a serverless host
+
+The console was deployable on Vercel; the service was not, so a hosted link only ever showed the
+captured preview. It now deploys there too, backed by a managed Postgres, and every screen reads
+live. See [DEPLOY.md](../DEPLOY.md).
+
+What made it possible was measuring rather than assuming. With every container stopped except
+Postgres, all seven console endpoints still answered 200: Neo4j is reached from exactly one
+router (the audit map) and from seeding; Redis and Presidio are reached from nowhere in the code
+at all. So the dependency list a deployment needs is Postgres, and the rest is configuration.
+
+- **One entrypoint.** `service.py` exposes the FastAPI app; `[tool.vercel] entrypoint` in
+  `pyproject.toml` deploys the whole app as one function rather than one per file under `api/`.
+- **One database URL.** `DATABASE_URL` overrides the five Compose variables. `core/db/pool.py`
+  lifts the libpq-only parameters a managed host puts in the URL (`sslmode`, `channel_binding`)
+  out of it, asks for TLS the way asyncpg spells it, and turns off prepared statements behind a
+  transaction pooler — without which every other query fails on a pooled connection string.
+- **The graph is optional.** `GRAPH_ENABLED=false` skips the graph deltas during ingestion and
+  makes the map say there is none. The neo4j import is now lazy, so the driver need not be
+  installed at all. Logged as OQ-01-4.
+- **The schedule is optional, the jobs are not.** Job bodies moved to `workflows/tasks.py`, free
+  of any scheduler. `workflows/jobs.py` wraps them as Temporal activities and stays the default;
+  `JOBS_SCHEDULER=cron` calls the same functions from an HTTP trigger gated on `CRON_SECRET`,
+  which refuses outright when no secret is set. Logged as OQ-07-1.
+- **Health describes the deployment.** `default_checks` now includes a dependency only when its
+  address is configured, and probes the database the service is actually pointed at. Previously
+  a serverless deployment would have reported itself down forever and looked broken.
+- **The console stopped guessing.** A hosted page with no service address no longer attempts
+  `localhost:8000`, which could only ever produce a mixed-content error and a wait.
+
+- **The root key had to leave the disk.** `FileKMS` invents a root key when the file is missing,
+  which on a read-only serverless filesystem either fails or, worse, differs per cold start. That
+  one key derives every PII token *and* encrypts the vault, so a key per invocation would have
+  quietly made everything already stored unreadable. `EnvKMS` takes it from `PLEXUS_KMS_KEY`,
+  refuses anything under 32 bytes, and reads hex, base64 or raw text — using a decoding only when
+  it yields a usable key, so a 40-character passphrase is not silently shortened to 30 bytes.
+  It must match between seeding and serving; DEPLOY.md says so twice.
+
+Verified against a scratch database seeded through `DATABASE_URL` with no graph: migrate and
+seed both run, 556 documents and 6 processes discovered and named by the model, and the service
+answers every screen, a full cron maintenance pass over both organisations, and a write.
+
+A fresh deployment shows an empty "To review" and refuses to promote a process ("0 decisions,
+needs 10"). That is the earned-autonomy thesis working, not a fault, and it is now written down
+in DEPLOY.md so a hosted link is not mistaken for a half-built one. The tiers that make the
+local demo's review queue fill are leftovers from earlier sessions, not something seeding sets.
+
+- `make lint` clean. 274 tests pass, integration included (28 new, in
+  `tests/api/test_serverless_deployment.py`).
+
+
 `make up && make seed && make console` gives a working Plexus against the Nordvik Konsult AB
 fixtures. What follows is what is genuinely implemented, not what is planned.
 

@@ -42,5 +42,7 @@ Built for EU hosting, GDPR and the EU AI Act.
 
 ## Deploying
 
-See [DEPLOY.md](DEPLOY.md). The console deploys to Vercel from `dashboard/`; the service needs
-a host that runs containers. The engineering rules are in [ENGINEERING.md](ENGINEERING.md).
+See [DEPLOY.md](DEPLOY.md). Both the console and the service run on Vercel, backed by a managed
+Postgres — every screen is answered from Postgres and the event log. A host that runs containers
+gives the full stack, with the graph store and a Temporal worker. The engineering rules are in
+[ENGINEERING.md](ENGINEERING.md).

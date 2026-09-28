@@ -20,15 +20,18 @@ export default function AdvancedPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [chains, setChains] = useState<Chain[]>([]);
   const [nodes, setNodes] = useState<GraphNode[]>([]);
+  // A deployment may have no graph store at all, which is a different thing from having
+  // one that is empty. The two say different things to whoever is reading this page.
+  const [graphHere, setGraphHere] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(() => {
     get<{ entries: Entry[]; chains: Chain[] }>("/ledger?limit=40")
       .then((d) => { setEntries(d.entries); setChains(d.chains); })
       .catch((e) => setError(String(e.message)));
-    get<{ nodes: GraphNode[] }>("/graph/nodes?limit=24")
-      .then((d) => setNodes(d.nodes))
-      .catch(() => setNodes([]));
+    get<{ nodes: GraphNode[]; available?: boolean }>("/graph/nodes?limit=24")
+      .then((d) => { setNodes(d.nodes); setGraphHere(d.available !== false); })
+      .catch(() => { setNodes([]); setGraphHere(true); });
   }, []);
   useEffect(load, [load]);
 
@@ -104,7 +107,9 @@ export default function AdvancedPage() {
             </span>
           ))}
         </div>
-        {nodes.length === 0 && <p className="muted">{t("noNodes")}</p>}
+        {nodes.length === 0 && (
+          <p className="muted">{graphHere ? t("noNodes") : t("noGraphStore")}</p>
+        )}
       </section>
 
       <section className="card stack">

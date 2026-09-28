@@ -1,0 +1,13 @@
+# The console is a separate Vercel project with its own root directory. Keeping it out of the
+# service bundle keeps the function small and the two deploys independent.
+dashboard/
+tests/
+evals/
+docs/
+specs/
+design/
+.venv/
+__pycache__/
+*.pyc
+data/
+.env

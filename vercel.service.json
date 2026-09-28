@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "fastapi",
+  "functions": {
+    "service.py": {
+      "maxDuration": 60,
+      "excludeFiles": "{dashboard/**,tests/**,evals/**,docs/**,specs/**,design/**,.venv/**,**/__pycache__/**,**/*.pyc,scripts/fixtures/**,data/**}"
+    }
+  },
+  "crons": [
+    {
+      "path": "/v1/jobs/maintenance",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

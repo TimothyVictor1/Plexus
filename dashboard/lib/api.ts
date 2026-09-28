@@ -1,6 +1,25 @@
 "use client";
 
-export const API_BASE = process.env.NEXT_PUBLIC_PLEXUS_API || "http://localhost:8000";
+const CONFIGURED_API = process.env.NEXT_PUBLIC_PLEXUS_API ?? "";
+
+/** Where the Plexus service is. Unconfigured, the guess is the developer's own machine, which
+ *  is right locally and wrong everywhere else — see `serviceOutOfReach` below. */
+export const API_BASE = CONFIGURED_API || "http://localhost:8000";
+
+/** Is this console being served from somewhere other than the machine looking at it? */
+function servedRemotely(): boolean {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname;
+  return host !== "localhost" && host !== "127.0.0.1" && host !== "[::1]";
+}
+
+/** A hosted console with no service address configured cannot reach localhost: the browser is
+ *  not on the machine that would be serving it, and an https page is not allowed to call http
+ *  at all. Attempting it only costs a mixed-content error in the console and a wait for the
+ *  timeout, so in that one case go straight to the snapshot. */
+function serviceOutOfReach(): boolean {
+  return !CONFIGURED_API && servedRemotely();
+}
 
 /** Preview mode.
  *
@@ -156,6 +175,7 @@ async function fromSnapshot<T>(path: string): Promise<T> {
 
 export async function get<T>(path: string): Promise<T> {
   if (previewMode) return fromSnapshot<T>(path);
+  if (serviceOutOfReach() && (await fallBackToPreview())) return fromSnapshot<T>(path);
 
   let res: Response;
   try {
@@ -192,6 +212,7 @@ function previewRefusal(): PreviewError {
 }
 
 export async function post<T>(path: string, body?: unknown): Promise<T> {
+  if (!previewMode && serviceOutOfReach()) await fallBackToPreview();
   if (previewMode) {
     if (path === "/twin/what-if") return (await previewScenario(body)) as T;
     throw previewRefusal();
@@ -386,6 +407,7 @@ export async function askStream(
     return { sources: [] as Source[], conversationId: null, grounded: false };
   };
 
+  if (!previewMode && serviceOutOfReach()) await fallBackToPreview();
   if (previewMode) return cannotAnswerHere();
 
   let res: Response;

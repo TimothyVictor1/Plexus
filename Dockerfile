@@ -13,4 +13,6 @@ COPY api ./api
 COPY config ./config
 COPY prompts ./prompts
 EXPOSE 8000
-CMD ["uv", "run", "--no-sync", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# A managed host assigns the port and passes it in as $PORT; Compose passes nothing and gets
+# 8000. Shell form, because the exec form would take "${PORT:-8000}" literally.
+CMD ["sh", "-c", "uv run --no-sync uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

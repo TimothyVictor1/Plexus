@@ -19,7 +19,7 @@ from agents.extract.ingest import Ingestor, seed_gazetteer
 from core.db.migrate import migrate
 from core.db.pool import close_pool, tenant_conn
 from core.events.model import read_events
-from core.graph.store import get_store
+from core.graph.store import get_store, graph_enabled
 from core.org.service import ensure_org, get_org
 from core.pii.boundary import get_boundary
 from core.pii.vault import TokenVault
@@ -144,8 +144,12 @@ async def seed_demo() -> None:
             )
             connection_ids[source_id] = str(row["id"])
 
-    store = get_store()
-    await store.init_schema()
+    store = None
+    if graph_enabled():
+        store = get_store()
+        await store.init_schema()
+    else:
+        print("  no graph store configured; seeding Postgres only")
     ingestor = Ingestor(get_boundary(), TokenVault(), store)
 
     totals = {"documents": 0, "nodes": 0, "edges": 0, "events": 0}
@@ -204,9 +208,11 @@ async def seed_demo() -> None:
         print(f"  {process_id:20} {outcome}")
 
     vault = await TokenVault().count(DEMO_TENANT)
-    graph = await store.counts(DEMO_TENANT)
-    await store.close()
-    print(f"\ntotals {totals}\nvault {vault}\ngraph {graph}")
+    graph: dict[str, int] = {}
+    if store is not None:
+        graph = await store.counts(DEMO_TENANT)
+        await store.close()
+    print(f"\ntotals {totals}\nvault {vault}\ngraph {graph or 'not configured'}")
 
 
 async def seed_empty(tenant_id: str, name: str) -> None:

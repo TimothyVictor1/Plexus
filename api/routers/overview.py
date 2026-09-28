@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, Query
 
 from api.deps import tenant_context
 from core.db.pool import tenant_conn
-from core.graph.store import get_store
+from core.graph.store import get_store, graph_enabled
 from core.ledger import ledger
 from core.pii.vault import TokenVault
 from core.tenancy import TenantContext
@@ -49,11 +49,12 @@ async def overview(ctx: TenantContext = Depends(tenant_context)) -> dict[str, An
         writes = await conn.fetchval("SELECT count(*) FROM adapter_records WHERE tenant_id=$1", t)
 
     chains = await ledger.verify_all(t)
-    store = get_store()
-    try:
-        graph = await store.counts(t)
-    except Exception:
-        graph = {}
+    graph: dict[str, int] = {}
+    if graph_enabled():
+        try:
+            graph = await get_store().counts(t)
+        except Exception:
+            graph = {}
 
     return {
         "tenant": {"id": t, "paused": bool(paused)},
@@ -62,6 +63,7 @@ async def overview(ctx: TenantContext = Depends(tenant_context)) -> dict[str, An
         "events": events,
         "graph": graph,
         "graph_nodes": sum(graph.values()),
+        "graph_available": graph_enabled(),
         "vault_entries": await TokenVault().count(t),
         "pending_actions": pending,
         "adapter_writes": writes,
@@ -86,14 +88,22 @@ async def overview(ctx: TenantContext = Depends(tenant_context)) -> dict[str, An
     }
 
 
+# The map is drawn from a graph store, which is a second database on top of Postgres. Not every
+# deployment has one, and nothing a person uses day to day depends on it, so these two endpoints
+# answer "there is no map here" rather than failing the request.
+NO_GRAPH = "This Plexus has no graph store, so there is no map. Everything else is unaffected."
+
+
 @router.get("/graph/nodes")
 async def graph_nodes(
     q: str = Query(default=""),
     limit: int = Query(default=60, le=200),
     ctx: TenantContext = Depends(tenant_context),
 ) -> dict[str, Any]:
+    if not graph_enabled():
+        return {"nodes": [], "available": False, "reason": NO_GRAPH}
     rows = await get_store().search(ctx.tenant_id, q, limit)
-    return {"nodes": rows}
+    return {"nodes": rows, "available": True}
 
 
 @router.get("/graph/nodes/{key:path}")
@@ -102,7 +112,10 @@ async def graph_node(
     depth: int = Query(default=1, ge=1, le=3),
     ctx: TenantContext = Depends(tenant_context),
 ) -> dict[str, Any]:
-    return await get_store().neighbourhood(ctx.tenant_id, key, depth)
+    if not graph_enabled():
+        return {"nodes": [], "edges": [], "available": False, "reason": NO_GRAPH}
+    found = await get_store().neighbourhood(ctx.tenant_id, key, depth)
+    return {**found, "available": True}
 
 
 @router.get("/events")

@@ -21,9 +21,11 @@ from core.pii.vault import TokenVault
 
 
 class Ingestor:
-    def __init__(self, boundary: Boundary, vault: TokenVault, store: GraphStore) -> None:
+    def __init__(self, boundary: Boundary, vault: TokenVault, store: GraphStore | None) -> None:
         self.boundary = boundary
         self.vault = vault
+        # A deployment may have no graph store. Documents, the vault and the event log still
+        # get written, which is what every screen reads from; only the map is skipped.
         self.store = store
 
     async def ingest(
@@ -175,7 +177,8 @@ class Ingestor:
                 )
             )
 
-        await self.store.apply(GraphDelta(tenant_id=tenant_id, nodes=nodes, edges=edges))
+        if self.store is not None:
+            await self.store.apply(GraphDelta(tenant_id=tenant_id, nodes=nodes, edges=edges))
         await write_events(tenant_id, events)
         return {
             "documents": documents,
