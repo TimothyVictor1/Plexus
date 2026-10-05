@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -7,11 +7,11 @@ import { routing } from "@/i18n/routing";
 import AppShell from "@/components/shell/AppShell";
 import "../globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-jakarta",
+  variable: "--font-inter",
 });
 
 export function generateStaticParams() {
@@ -60,7 +60,15 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} className={jakarta.variable}>
+    <html lang={locale} className={inter.variable}>
+      <head>
+        {/* The display face for headings, the same one the landing page uses, so the two
+            read as one product. It is served from a CDN because it is not ours to ship. */}
+        <link
+          href="https://db.onlinewebfonts.com/c/8cb707a9b8a73f8a7403336b861c3074?family=BubbledotICG-FinePos"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <NextIntlClientProvider>
           <AppShell locale={locale} labels={labels}>{children}</AppShell>

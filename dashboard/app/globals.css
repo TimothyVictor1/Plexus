@@ -2,36 +2,45 @@
    Palette and spacing come from design/plexus-redesign-mockup.html. */
 
 :root {
-  --ground:#040405;
-  --panel:#09090B;
-  --card:#101013;
-  --raised:#16161A;
-  --raised-2:#18181C;
+  --ground:#000000;
+  --panel:#070708;
+  --card:#0E0E10;
+  --raised:#141417;
+  --raised-2:#18181B;
   --line:#1C1C21;
   --line-2:#202025;
-  --line-3:#27272D;
-  --text:#F2F2F3;
-  --muted:#A1A1A8;
-  --faint:#8A8A92;
-  --dim:#55555C;
+  --line-3:#2A2A30;
+  --text:#FFFFFF;
+  --muted:#8E8E8E;
+  --faint:#6E6E76;
+  --dim:#4A4A50;
 
-  --accent:#5EEAD4;
-  --accent-soft:#0C2624;
-  --accent-deep:#0C1F20;
-  --accent-edge:#1F5C55;
-  --on-accent:#040405;
+  --accent:#FFFFFF;
+  --accent-soft:#1A1A1D;
+  --accent-deep:#141416;
+  --accent-edge:rgba(255,255,255,0.35);
+  --on-accent:#000000;
 
-  --good:#5EEAD4;      --good-bg:#0C2624;
-  --warn:#FBBF24;      --warn-bg:#2A1F09;
-  --slow:#FB923C;      --slow-bg:#2C170C;
-  --alert:#FB7185;     --alert-bg:#2A1219;
-  --info:#93B4FF;      --info-bg:#141C30;
-  --violet:#C4B5FD;    --violet-bg:#1E172E;
+  /* Monochrome, so the console reads as one piece with the landing page. Meaning survives
+     as brightness rather than hue, and the scale is deliberately inverted from the old
+     palette: what needs a person is brightest, what is fine is quietest. */
+  --slow:#FFFFFF;      --slow-bg:#242428;
+  --warn:#C4C2C3;      --warn-bg:#1C1C20;
+  --good:#8E8E8E;      --good-bg:#141417;
+  --alert:#FFFFFF;     --alert-bg:#242428;
+  --info:#C8C8C8;      --info-bg:#17171A;
+  --violet:#A8A8B0;    --violet-bg:#151518;
 
   --radius:16px;
   --radius-card:14px;
   --radius-ctl:10px;
-  --font: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-pill:999px;
+  --glow:0 0 0 1px rgba(255,255,255,0.15), 0 0 22px rgba(255,255,255,0.32),
+         0 0 44px rgba(255,255,255,0.12);
+  --glow-strong:0 0 0 1px rgba(255,255,255,0.25), 0 0 32px rgba(255,255,255,0.45),
+         0 0 60px rgba(255,255,255,0.2);
+  --font: var(--font-inter), "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-display: "BubbledotICG-FinePos", "Geist Pixel Circle", monospace;
   --mono:ui-monospace, Menlo, "SF Mono", monospace;
 }
 
@@ -46,12 +55,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 h1, h2, h3 { margin:0; font-weight:800; letter-spacing:-0.02em; text-wrap:balance; }
-h1 { font-size:34px; }
+h1 { font-family: var(--font-display); font-weight:400; font-size:34px; letter-spacing:-0.04em; }
 h2 { font-size:16px; font-weight:700; letter-spacing:-0.01em; }
 h3 { font-size:15px; font-weight:700; letter-spacing:0; }
 p { margin:0; }
 a { color: var(--accent); text-underline-offset:3px; }
-a:hover { color:#99F6E4; }
+a:hover { color:#FFFFFF; opacity:0.78; }
 button { font-family:inherit; cursor:pointer; }
 button:disabled { cursor:not-allowed; }
 input, textarea, select { font-family:inherit; }
@@ -78,7 +87,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 .rail-btn:hover { background: var(--raised-2); color: var(--text); }
 .rail-btn[aria-current="page"] { background: var(--raised-2); color: var(--text); }
 .rail-btn.primary { background: var(--accent); color: var(--on-accent); margin-bottom:8px; }
-.rail-btn.primary:hover { background:#99F6E4; color: var(--on-accent); }
+.rail-btn.primary:hover { background:#F0F0F0; color: var(--on-accent); }
 .rail-spacer { flex-grow:1; }
 .rail-sep { width:28px; height:1px; background: var(--line); margin-bottom:6px; }
 .rail-badge {
@@ -103,7 +112,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
   color: var(--muted); font-size:12px; font-weight:600; white-space:nowrap;
 }
 .avatar {
-  width:36px; height:36px; border-radius:18px; background:#F97316; color:var(--on-accent);
+  width:36px; height:36px; border-radius:18px; background:#FFFFFF; color:var(--on-accent);
   font-size:15px; font-weight:700; display:grid; place-items:center; border:none;
 }
 .page { display:flex; flex-direction:column; gap:22px; padding-top:28px; }
@@ -122,18 +131,20 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 
 /* ---------------------------------------------------------------- controls */
 .btn {
-  min-height:44px; padding:0 20px; border:none; border-radius: var(--radius-ctl);
-  background: var(--accent); color: var(--on-accent); font-size:14px; font-weight:700;
+  min-height:44px; padding:0 22px; border:none; border-radius: var(--radius-pill);
+  background: var(--accent); color: var(--on-accent); font-size:14px; font-weight:600;
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
   text-decoration:none; white-space:nowrap;
+  box-shadow: var(--glow);
+  transition: transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s cubic-bezier(.22,1,.36,1);
 }
-.btn:hover:not(:disabled) { background:#99F6E4; }
-.btn:disabled { background: var(--raised-2); color: var(--faint); }
-.btn.secondary { background: var(--raised-2); color: var(--text); }
+.btn:hover:not(:disabled) { background:#FFFFFF; transform:translateY(-2px) scale(1.02); box-shadow: var(--glow-strong); }
+.btn:disabled { background: var(--raised-2); color: var(--faint); box-shadow:none; }
+.btn.secondary { box-shadow:none; background: var(--raised-2); color: var(--text); }
 .btn.secondary:hover:not(:disabled) { background: var(--line-3); }
-.btn.outline { background:transparent; border:1px solid var(--line-3); color: var(--text); font-weight:600; }
+.btn.outline { box-shadow:none; background:transparent; border:1px solid var(--line-3); border-radius: var(--radius-pill); color: var(--text); font-weight:600; }
 .btn.outline:hover:not(:disabled) { background: var(--raised); }
-.btn.quiet { background:transparent; color: var(--muted); font-weight:500; padding:0 14px; }
+.btn.quiet { box-shadow:none; background:transparent; color: var(--muted); font-weight:500; padding:0 14px; }
 .btn.quiet:hover:not(:disabled) { color: var(--text); }
 .btn.sm { min-height:36px; padding:0 14px; font-size:13px; }
 
@@ -167,7 +178,9 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
   display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:6px;
   font-size:12px; font-weight:700; white-space:nowrap;
 }
-.chip.good { background: var(--good-bg); color: var(--good); }
+/* The health values are smooth | watch | slow, so that is what the chip classes must be.
+   `.good` is kept as an alias because it is the older name and costs nothing. */
+.chip.smooth, .chip.good { background: var(--good-bg); color: var(--good); }
 .chip.watch { background: var(--warn-bg); color: var(--warn); }
 .chip.slow { background: var(--slow-bg); color: var(--slow); }
 .chip.neutral { background: var(--raised-2); color: var(--muted); }
