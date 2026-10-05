@@ -21,6 +21,14 @@
   --accent-edge:rgba(255,255,255,0.35);
   --on-accent:#000000;
 
+  /* One hue, and it earns its place. White is the brand and stays the primary control, so
+     this is reserved for "look here": where you are, what has focus, what is waiting, and
+     how far a process has been trusted. Everything else stays monochrome. Violet because the
+     landing video is lavender, so the two pages agree. */
+  --hi:#A78BFA;
+  --hi-soft:#1B1630;
+  --hi-edge:rgba(167,139,250,0.45);
+
   /* Monochrome, so the console reads as one piece with the landing page. Meaning survives
      as brightness rather than hue, and the scale is deliberately inverted from the old
      palette: what needs a person is brightest, what is fine is quietest. */
@@ -74,9 +82,14 @@
   --accent-edge:rgba(0,0,0,0.35);
   --on-accent:#FFFFFF;
 
+  /* Darker on white, so it clears 4.5:1 against the page as the skill's checklist asks. */
+  --hi:#6D28D9;
+  --hi-soft:#F1ECFD;
+  --hi-edge:rgba(109,40,217,0.4);
+
   --slow:#000000;      --slow-bg:#E4E4E9;
   --warn:#3C3C44;      --warn-bg:#EDEDF0;
-  --good:#7A7A83;      --good-bg:#F4F4F6;
+  --good:#5A5A62;      --good-bg:#F4F4F6;   /* 4.5:1 on its own chip; #7A7A83 was 3.87 */
   --alert:#000000;     --alert-bg:#E4E4E9;
   --info:#3C3C44;      --info-bg:#EDEDF0;
   --violet:#5F5F67;    --violet-bg:#F0F0F3;
@@ -101,13 +114,13 @@ h1 { font-family: var(--font-display); font-weight:400; font-size:34px; letter-s
 h2 { font-size:16px; font-weight:700; letter-spacing:-0.01em; }
 h3 { font-size:15px; font-weight:700; letter-spacing:0; }
 p { margin:0; }
-a { color: var(--accent); text-underline-offset:3px; }
-a:hover { color: var(--accent); opacity:0.78; }
+a { color: var(--hi); text-underline-offset:3px; }
+a:hover { opacity:0.78; }
 button { font-family:inherit; cursor:pointer; }
 button:disabled { cursor:not-allowed; }
 input, textarea, select { font-family:inherit; }
 input::placeholder, textarea::placeholder { color: var(--faint); }
-:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+:focus-visible { outline:2px solid var(--hi); outline-offset:2px; }
 
 /* ---------------------------------------------------------------- shell */
 .shell {
@@ -125,16 +138,17 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 .rail-btn {
   position:relative; width:44px; height:44px; border:none; border-radius:12px;
   display:grid; place-items:center; background:transparent; color:var(--muted);
+  cursor:pointer; transition: background .18s ease, color .18s ease;
 }
 .rail-btn:hover { background: var(--raised-2); color: var(--text); }
-.rail-btn[aria-current="page"] { background: var(--raised-2); color: var(--text); }
+.rail-btn[aria-current="page"] { background: var(--hi-soft); color: var(--hi); }
 .rail-btn.primary { background: var(--accent); color: var(--on-accent); margin-bottom:8px; }
 .rail-btn.primary:hover { background: var(--accent); color: var(--on-accent); opacity:0.88; }
 .rail-spacer { flex-grow:1; }
 .rail-sep { width:28px; height:1px; background: var(--line); margin-bottom:6px; }
 .rail-badge {
   position:absolute; top:4px; right:3px; min-width:18px; height:18px; padding:0 5px;
-  border-radius:9px; background: var(--alert); color: var(--on-accent);
+  border-radius:9px; background: var(--hi); color:#FFFFFF;
   font-size:11px; font-weight:700; display:grid; place-items:center;
 }
 
@@ -217,6 +231,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 }
 
 .chip {
+  transition: background .18s ease, color .18s ease;
   display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:6px;
   font-size:12px; font-weight:700; white-space:nowrap;
 }
@@ -237,7 +252,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 
 .dots { display:flex; gap:4px; }
 .dot { width:16px; height:5px; border-radius:3px; background: var(--line-2); }
-.dot.on { background: var(--accent); }
+.dot.on { background: var(--hi); }
 .dot.paused { background: var(--dim); }
 
 .skeleton {
