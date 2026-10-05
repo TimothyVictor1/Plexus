@@ -122,12 +122,12 @@ function LogoMark() {
   if (!found) {
     return (
       <svg viewBox="0 0 24 24" role="img" aria-label="Plexus">
-        <circle cx="12" cy="12" r="3.2" fill="#000" />
-        <circle cx="12" cy="3.4" r="1.9" fill="#000" />
-        <circle cx="12" cy="20.6" r="1.9" fill="#000" />
-        <circle cx="3.4" cy="12" r="1.9" fill="#000" />
-        <circle cx="20.6" cy="12" r="1.9" fill="#000" />
-        <g stroke="#000" strokeWidth="1.1">
+        <circle cx="12" cy="12" r="3.2" fill="#8B5CF6" />
+        <circle cx="12" cy="3.4" r="1.9" fill="#8B5CF6" />
+        <circle cx="12" cy="20.6" r="1.9" fill="#8B5CF6" />
+        <circle cx="3.4" cy="12" r="1.9" fill="#8B5CF6" />
+        <circle cx="20.6" cy="12" r="1.9" fill="#8B5CF6" />
+        <g stroke="#8B5CF6" strokeWidth="1.1">
           <line x1="12" y1="5.3" x2="12" y2="8.8" />
           <line x1="12" y1="15.2" x2="12" y2="18.7" />
           <line x1="5.3" y1="12" x2="8.8" y2="12" />

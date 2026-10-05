@@ -7,8 +7,8 @@ const base = {
 };
 
 export const PlexusMark = (p: SVGProps<SVGSVGElement>) => (
-  // The mark follows the theme: white on black, ink on white. It was the last hue left.
-  <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="var(--accent)"
+  // Lavender, the one hue the product allows itself, and the colour of the landing video.
+  <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="var(--hi)"
        strokeWidth="2.2" strokeLinecap="round" aria-hidden="true" {...p}>
     <circle cx="15" cy="15" r="3.2" /><circle cx="5" cy="7" r="2.2" />
     <circle cx="25" cy="7" r="2.2" /><circle cx="5" cy="23" r="2.2" />
