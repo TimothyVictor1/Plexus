@@ -53,6 +53,8 @@ export default async function LocaleLayout({
     role_approver: t("role.approver"),
     role_admin: t("role.admin"),
     loadingOrg: t("loadingOrg"),
+    themeLight: t("themeLight"),
+    themeDark: t("themeDark"),
     offlineTitle: t("offlineTitle"),
     offlineBody: t("offlineBody"),
     previewTitle: t("previewTitle"),
@@ -62,6 +64,15 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={inter.variable}>
       <head>
+        {/* Runs before the first paint, so a light-theme visitor never sees a black flash.
+            It is inline for that reason: anything loaded as a file arrives too late. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('plexus.theme')==='light')" +
+              "document.documentElement.dataset.theme='light'}catch(e){}",
+          }}
+        />
         {/* The display face for headings, the same one the landing page uses, so the two
             read as one product. It is served from a CDN because it is not ours to ship. */}
         <link

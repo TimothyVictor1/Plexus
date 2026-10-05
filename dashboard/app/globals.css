@@ -44,6 +44,48 @@
   --mono:ui-monospace, Menlo, "SF Mono", monospace;
 }
 
+/* Light mode.
+   Dark is what Plexus is, so it stays the default and light is chosen, not inherited from the
+   operating system — a viewer on a light desktop should still meet the product as designed.
+   The toggle writes data-theme on <html>; a small script in the layout applies the stored
+   choice before first paint so the wrong theme never flashes.
+
+   Two things invert rather than merely lighten. The accent is the ink colour, so a primary
+   control is a black pill on white exactly as it is a white pill on black. And the health
+   scale keeps its meaning by keeping its contrast: what needs a person is the darkest thing
+   here, as it is the brightest thing in the dark theme. */
+:root[data-theme="light"] {
+  --ground:#FFFFFF;
+  --panel:#F7F7F8;
+  --card:#FFFFFF;
+  --raised:#F1F1F3;
+  --raised-2:#E9E9EC;
+  --line:#E6E6EA;
+  --line-2:#DEDEE3;
+  --line-3:#D2D2D9;
+  --text:#09090B;
+  --muted:#5F5F67;
+  --faint:#7A7A83;
+  --dim:#A8A8B0;
+
+  --accent:#000000;
+  --accent-soft:#F1F1F3;
+  --accent-deep:#E9E9EC;
+  --accent-edge:rgba(0,0,0,0.35);
+  --on-accent:#FFFFFF;
+
+  --slow:#000000;      --slow-bg:#E4E4E9;
+  --warn:#3C3C44;      --warn-bg:#EDEDF0;
+  --good:#7A7A83;      --good-bg:#F4F4F6;
+  --alert:#000000;     --alert-bg:#E4E4E9;
+  --info:#3C3C44;      --info-bg:#EDEDF0;
+  --violet:#5F5F67;    --violet-bg:#F0F0F3;
+
+  /* A white glow is invisible on white, so the pill gets a real shadow instead. */
+  --glow:0 0 0 1px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.12), 0 8px 28px rgba(0,0,0,0.07);
+  --glow-strong:0 0 0 1px rgba(0,0,0,0.14), 0 4px 16px rgba(0,0,0,0.18), 0 12px 36px rgba(0,0,0,0.12);
+}
+
 * { box-sizing: border-box; }
 html, body { margin:0; padding:0; height:100%; }
 body {
@@ -60,7 +102,7 @@ h2 { font-size:16px; font-weight:700; letter-spacing:-0.01em; }
 h3 { font-size:15px; font-weight:700; letter-spacing:0; }
 p { margin:0; }
 a { color: var(--accent); text-underline-offset:3px; }
-a:hover { color:#FFFFFF; opacity:0.78; }
+a:hover { color: var(--accent); opacity:0.78; }
 button { font-family:inherit; cursor:pointer; }
 button:disabled { cursor:not-allowed; }
 input, textarea, select { font-family:inherit; }
@@ -87,7 +129,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 .rail-btn:hover { background: var(--raised-2); color: var(--text); }
 .rail-btn[aria-current="page"] { background: var(--raised-2); color: var(--text); }
 .rail-btn.primary { background: var(--accent); color: var(--on-accent); margin-bottom:8px; }
-.rail-btn.primary:hover { background:#F0F0F0; color: var(--on-accent); }
+.rail-btn.primary:hover { background: var(--accent); color: var(--on-accent); opacity:0.88; }
 .rail-spacer { flex-grow:1; }
 .rail-sep { width:28px; height:1px; background: var(--line); margin-bottom:6px; }
 .rail-badge {
@@ -112,7 +154,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
   color: var(--muted); font-size:12px; font-weight:600; white-space:nowrap;
 }
 .avatar {
-  width:36px; height:36px; border-radius:18px; background:#FFFFFF; color:var(--on-accent);
+  width:36px; height:36px; border-radius:18px; background: var(--accent); color:var(--on-accent);
   font-size:15px; font-weight:700; display:grid; place-items:center; border:none;
 }
 .page { display:flex; flex-direction:column; gap:22px; padding-top:28px; }
@@ -138,7 +180,7 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
   box-shadow: var(--glow);
   transition: transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s cubic-bezier(.22,1,.36,1);
 }
-.btn:hover:not(:disabled) { background:#FFFFFF; transform:translateY(-2px) scale(1.02); box-shadow: var(--glow-strong); }
+.btn:hover:not(:disabled) { background: var(--accent); transform:translateY(-2px) scale(1.02); box-shadow: var(--glow-strong); }
 .btn:disabled { background: var(--raised-2); color: var(--faint); box-shadow:none; }
 .btn.secondary { box-shadow:none; background: var(--raised-2); color: var(--text); }
 .btn.secondary:hover:not(:disabled) { background: var(--line-3); }
@@ -354,3 +396,6 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 .gate-footer a {
   color: var(--faint);
 }
+
+/* The theme toggle lives in the rail with the other controls. */
+.rail-btn.theme svg { width:20px; height:20px; }

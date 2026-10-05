@@ -6,6 +6,7 @@ import {
   AskIcon, ConnectIcon, HomeIcon, PlexusMark, PlusIcon, ReviewIcon, SettingsIcon, TwinIcon,
   WorkIcon,
 } from "./Icons";
+import ThemeToggle from "./ThemeToggle";
 
 type Item = { href: string; label: string; icon: React.ReactNode; badge?: number };
 
@@ -57,6 +58,7 @@ export default function Rail({
 
       <span className="rail-spacer" />
       <span className="rail-sep" />
+      <ThemeToggle labels={labels} />
       <Link href={`${base}/settings`} className="rail-btn" aria-label={labels.settings}
             title={labels.settings} aria-current={isCurrent(`${base}/settings`) ? "page" : undefined}>
         <SettingsIcon />

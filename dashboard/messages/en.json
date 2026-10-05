@@ -25,7 +25,9 @@
     "offlineTitle": "Plexus cannot reach its own service",
     "offlineBody": "The screens need the Plexus service running. Locally, start it with 'make up'. On a hosted copy, set NEXT_PUBLIC_PLEXUS_API to the address of the service.",
     "previewTitle": "Preview",
-    "previewBody": "Real output from an example company, captured once. Nothing here can be changed. Point this console at a Plexus service to use your own work."
+    "previewBody": "Real output from an example company, captured once. Nothing here can be changed. Point this console at a Plexus service to use your own work.",
+    "themeLight": "Switch to light",
+    "themeDark": "Switch to dark"
   },
   "home": {
     "greeting": {
