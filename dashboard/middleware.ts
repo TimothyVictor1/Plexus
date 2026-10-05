@@ -20,6 +20,10 @@ export default async function middleware(request: NextRequest): Promise<NextResp
     url.search = `?next=${encodeURIComponent(request.nextUrl.pathname)}`;
     return NextResponse.redirect(url);
   }
+  // The landing page owns "/" and is not localised, so next-intl must not redirect it to
+  // /sv. Everything below "/" is the console, which is.
+  if (request.nextUrl.pathname === "/") return NextResponse.next();
+
   return intl(request);
 }
 
