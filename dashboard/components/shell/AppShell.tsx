@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { ApiError, REFRESH_EVENT, get, isPreview, type Org, type OrgStatus } from "@/lib/api";
+import PageTransition from "./PageTransition";
 import Rail from "./Rail";
 import TopBar from "./TopBar";
 
@@ -71,7 +72,7 @@ export default function AppShell({
             <span className="small" style={{ lineHeight: 1.5 }}>{labels.offlineBody}</span>
           </div>
         )}
-        {children}
+        <PageTransition>{children}</PageTransition>
       </div>
     </div>
   );
