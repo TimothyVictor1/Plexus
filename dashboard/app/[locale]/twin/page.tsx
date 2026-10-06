@@ -4,8 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   get, post,
-  type OrgModel, type TwinAnswer, type TwinLensOption,
+  type FinancialTwin, type GeneralTwin, type OrgModel, type PeopleTwin,
+  type TwinAnswer, type TwinKind, type TwinLensOption,
 } from "@/lib/api";
+import { FinancialView, GeneralView, PeopleView, TwinTabs } from "@/components/TwinPicker";
 
 type Kind = "person_leaves" | "demand_changes" | "process_changes";
 
@@ -29,6 +31,13 @@ export default function TwinPage() {
   // as it always did until someone chooses otherwise.
   const [lens, setLens] = useState("operations");
   const [lenses, setLenses] = useState<TwinLensOption[]>([]);
+  // Which twin is being looked at. "operational" is the one that answers what-ifs, so it
+  // stays the default and the screen behaves as it did before the others arrived.
+  const [kinds, setKinds] = useState<TwinKind[]>([]);
+  const [twinId, setTwinId] = useState("general");
+  const [general, setGeneral] = useState<GeneralTwin | null>(null);
+  const [financial, setFinancial] = useState<FinancialTwin | null>(null);
+  const [peopleTwin, setPeopleTwin] = useState<PeopleTwin | null>(null);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => {
@@ -40,6 +49,10 @@ export default function TwinPage() {
       })
       .catch((e) => setError(String(e.message)));
     get<TwinLensOption[]>("/twin/lenses").then(setLenses).catch(() => setLenses([]));
+    get<TwinKind[]>("/twins").then(setKinds).catch(() => setKinds([]));
+    get<GeneralTwin>("/twins/general").then(setGeneral).catch(() => setGeneral(null));
+    get<FinancialTwin>("/twins/financial").then(setFinancial).catch(() => setFinancial(null));
+    get<PeopleTwin>("/twins/people").then(setPeopleTwin).catch(() => setPeopleTwin(null));
   }, []);
   useEffect(load, [load]);
 
@@ -69,10 +82,36 @@ export default function TwinPage() {
         <p>{t("sub")}</p>
       </div>
 
+      {kinds.length > 0 && (
+        <TwinTabs
+          kinds={kinds}
+          chosen={twinId}
+          onChoose={setTwinId}
+          unready={new Set((general?.cards ?? []).filter((c) => !c.readiness.ready).map((c) => c.id))}
+        />
+      )}
+
+      {twinId === "general" && general && <GeneralView twin={general} onOpen={setTwinId} />}
+      {twinId === "financial" && financial && <FinancialView twin={financial} />}
+      {twinId === "people" && peopleTwin && <PeopleView twin={peopleTwin} />}
+      {(twinId === "business" || twinId === "technical") && general && (
+        <section className="card stack">
+          <h2>{general.cards.find((c) => c.id === twinId)?.label}</h2>
+          <div className="sunken stack" style={{ gap: 6 }}>
+            <span style={{ lineHeight: 1.55 }}>
+              {general.cards.find((c) => c.id === twinId)?.readiness.reason}
+            </span>
+            <span className="small muted">
+              Connect: {general.cards.find((c) => c.id === twinId)?.readiness.needs.join(", ")}.
+            </span>
+          </div>
+        </section>
+      )}
+
       {error && <section className="card"><p className="err">{error}</p></section>}
       {!model && !error && <div className="skeleton" style={{ height: 260 }} />}
 
-      {model && (
+      {twinId === "operational" && model && (
         <>
           <section className="card stack">
             <h2>{t("askWhatIf")}</h2>

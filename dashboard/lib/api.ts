@@ -628,3 +628,78 @@ export type TwinLensView = {
 
 /** What the service returns: the same scenario, plus the reading that was asked for. */
 export type TwinAnswer = { scenario: TwinScenario; lens: TwinLensView };
+
+/* ------------------------------------------------------- the twins of a company */
+
+/** One view of the company. `general` places the others side by side. */
+export type TwinKind = { id: string; label: string; blurb: string; requires: string[] };
+
+/** Whether a twin can be built from what this company has connected, and what is missing. */
+export type Readiness = { ready: boolean; reason: string; needs: string[] };
+
+export type TwinCard = {
+  id: string;
+  label: string;
+  blurb: string;
+  readiness: Readiness;
+  headline: string;
+  figures: string[];
+};
+
+export type GeneralTwin = {
+  window_days: number;
+  people: number;
+  processes: number;
+  events: number;
+  summary: string;
+  cards: TwinCard[];
+};
+
+export type MoneyAtRest = {
+  process_id: string;
+  process_name: string;
+  currency: string;
+  total: number;
+  records: number;
+  waits_at: string;
+  wait: { seconds: number; text: string } | null;
+  note: string;
+};
+
+export type FinancialTwin = {
+  window_days: number;
+  currencies: string[];
+  at_rest: MoneyAtRest[];
+  without_amounts: string[];
+  summary: string;
+  ready: boolean;
+  reason: string;
+};
+
+export type Handover = {
+  process_id: string;
+  process_name: string;
+  step: string;
+  events: number;
+  share: number;
+  others: number;
+  urgency: string;
+  note: string;
+};
+
+export type PersonTwin = {
+  token: string;
+  label: string;
+  events: number;
+  processes: string[];
+  handover: Handover[];
+  overlaps_with: string[];
+  summary: string;
+};
+
+export type PeopleTwin = {
+  window_days: number;
+  people: PersonTwin[];
+  only_one_person: number;
+  summary: string;
+};
