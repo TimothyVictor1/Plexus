@@ -10,6 +10,11 @@ from pydantic import BaseModel, Field
 from api.deps import tenant_context
 from core.processes import get_process
 from core.tenancy import TenantContext
+from twin.financial import FinancialTwin
+from twin.financial import build as build_financial
+from twin.general import GeneralTwin
+from twin.general import build as build_general
+from twin.kinds import KINDS, TwinKind
 from twin.lenses import LENSES, LensOption, LensView, view
 from twin.organisation import (
     OrgModel,
@@ -19,6 +24,8 @@ from twin.organisation import (
     person_leaves,
     process_changes,
 )
+from twin.people import PeopleTwin, PersonTwin, successor_brief
+from twin.people import build as build_people
 
 router = APIRouter(tags=["twin"])
 
@@ -50,6 +57,53 @@ class WhatIf(BaseModel):
 async def twin(ctx: TenantContext = Depends(tenant_context)) -> OrgModel:
     """The model itself: who does what, how much, and where that is fragile."""
     return await build_model(ctx.tenant_id)
+
+
+@router.get("/twins", response_model=list[TwinKind])
+async def twins() -> list[TwinKind]:
+    """Every view of the company a person can choose between."""
+    return KINDS
+
+
+@router.get("/twins/general", response_model=GeneralTwin)
+async def general(ctx: TenantContext = Depends(tenant_context)) -> GeneralTwin:
+    """All the twins side by side, each saying whether it can be built from what is connected."""
+    return build_general(await build_model(ctx.tenant_id))
+
+
+@router.get("/twins/financial", response_model=FinancialTwin)
+async def financial(ctx: TenantContext = Depends(tenant_context)) -> FinancialTwin:
+    """Where money sits, in the currencies the records actually carry."""
+    return build_financial(await build_model(ctx.tenant_id))
+
+
+@router.get("/twins/people", response_model=PeopleTwin)
+async def people(ctx: TenantContext = Depends(tenant_context)) -> PeopleTwin:
+    """What each person does, and what would not survive their leaving."""
+    return build_people(await build_model(ctx.tenant_id))
+
+
+class Brief(BaseModel):
+    """What to tell whoever takes this work over, in the order it will come up."""
+
+    person: str
+    lines: list[str]
+
+
+@router.get("/twins/people/{token}/handover", response_model=Brief)
+async def handover(token: str, ctx: TenantContext = Depends(tenant_context)) -> Brief:
+    twin = await person(token, ctx)
+    return Brief(person=twin.label, lines=successor_brief(twin))
+
+
+@router.get("/twins/people/{token}", response_model=PersonTwin)
+async def person(token: str, ctx: TenantContext = Depends(tenant_context)) -> PersonTwin:
+    """One person's twin: what they do, and the handover if they go."""
+    twin = build_people(await build_model(ctx.tenant_id))
+    for candidate in twin.people:
+        if candidate.token == token or candidate.label == token:
+            return candidate
+    raise HTTPException(404, "nobody by that name shows up in the recent record")
 
 
 @router.get("/twin/lenses", response_model=list[LensOption])

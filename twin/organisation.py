@@ -87,6 +87,10 @@ class ProcessModel(BaseModel):
     steps: list[StepLoad] = Field(default_factory=list)
     cycle: Duration
     slowest_verb: str = ""
+    # The step work waits behind, and how long for. Read off the mined process rather than
+    # recomputed here, so the twin and the process screen never disagree.
+    slowest_step: str = ""
+    slowest_wait: Duration | None = None
     # Only some work carries a figure. Expenses and invoices do; an onboarding does not, and
     # inventing one for it would be worse than saying so. None means "not recorded here".
     money: float = 0.0
@@ -257,6 +261,8 @@ async def build_model(tenant_id: str, window_days: int = WINDOW_DAYS) -> OrgMode
                 steps=loads,
                 cycle=process.total_duration,
                 slowest_verb="",
+                slowest_step=process.slowest.to_step or process.slowest.from_step,
+                slowest_wait=process.slowest.duration,
                 money=round(raw.money.get(process.id, 0.0), 2),
                 currency=raw.currency.get(process.id, ""),
                 money_events=raw.money_events.get(process.id, 0),
