@@ -285,7 +285,8 @@
     "whoDoesWhat": "Who does what",
     "pseudonyms": "People are shown as Person A, B and so on. Plexus never holds their names, only a placeholder.",
     "acrossWork": "{n} kinds of work · {events} things done",
-    "basedOn": "Built from {events} things that happened over the last {days} days, across {people} people."
+    "basedOn": "Built from {events} things that happened over the last {days} days, across {people} people.",
+    "lensLabel": "Answer it for"
   },
   "gate": {
     "title": "Confidential prototype",

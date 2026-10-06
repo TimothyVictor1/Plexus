@@ -285,7 +285,8 @@
     "whoDoesWhat": "Vem gör vad",
     "pseudonyms": "Personer visas som Person A, B och så vidare. Plexus håller aldrig deras namn, bara en platshållare.",
     "acrossWork": "{n} sorters arbete · {events} saker gjorda",
-    "basedOn": "Byggd av {events} saker som hänt de senaste {days} dagarna, över {people} personer."
+    "basedOn": "Byggd av {events} saker som hänt de senaste {days} dagarna, över {people} personer.",
+    "lensLabel": "Svara för"
   },
   "gate": {
     "title": "Konfidentiell prototyp",

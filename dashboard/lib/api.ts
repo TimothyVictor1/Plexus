@@ -197,8 +197,29 @@ async function previewScenario(body: unknown): Promise<unknown> {
       ? `person_leaves:${ask.person}`
       : `demand_changes:${ask.process_id}:${ask.multiplier ?? 2}`;
   const all = await preview<Record<string, unknown>>("twin-scenarios");
-  const found = all[key];
-  if (found) return found;
+  const found = all[key] as TwinScenario | undefined;
+  if (found) {
+    // The snapshot was captured before scenarios had readings, and holds the scenario alone.
+    // Wrap it in the shape the screen now expects, and say plainly that the other readings
+    // need a live service rather than pretending the preview can compute them.
+    const effects = found.effects ?? [];
+    const stops = effects.filter((e) => e.severity === "stops").length;
+    const slower = effects.filter((e) => e.severity === "slower").length;
+    const bits = [stops && `${stops} would stop`, slower && `${slower} would slow`].filter(
+      Boolean,
+    ) as string[];
+    const answer: TwinAnswer = {
+      scenario: found,
+      lens: {
+        id: "operations",
+        label: "How work runs",
+        summary: bits.length ? `${bits.join("; ")}.` : "Nothing measurable moves.",
+        findings: [],
+        unavailable: "",
+      },
+    };
+    return answer;
+  }
   throw new PreviewError(
     "This preview holds a set of worked examples. Connect a Plexus service to ask anything.",
   );
@@ -587,4 +608,23 @@ export type TwinScenario = {
   effects: TwinEffect[];
   assumptions: string[];
   cover: string[];
+  magnitude?: number | null;
 };
+
+/** One of the readings a scenario can be asked for. */
+export type TwinLensOption = { id: string; label: string; blurb: string };
+
+export type TwinLensFinding = { label: string; value: string; detail: string };
+
+/** The chosen reading. `unavailable` is set when the records cannot answer it, and the screen
+ *  shows that instead of findings — an empty answer always says why it is empty. */
+export type TwinLensView = {
+  id: string;
+  label: string;
+  summary: string;
+  findings: TwinLensFinding[];
+  unavailable: string;
+};
+
+/** What the service returns: the same scenario, plus the reading that was asked for. */
+export type TwinAnswer = { scenario: TwinScenario; lens: TwinLensView };

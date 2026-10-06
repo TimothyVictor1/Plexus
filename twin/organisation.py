@@ -87,6 +87,11 @@ class ProcessModel(BaseModel):
     steps: list[StepLoad] = Field(default_factory=list)
     cycle: Duration
     slowest_verb: str = ""
+    # Only some work carries a figure. Expenses and invoices do; an onboarding does not, and
+    # inventing one for it would be worse than saying so. None means "not recorded here".
+    money: float = 0.0
+    currency: str = ""
+    money_events: int = 0
 
 
 class Risk(BaseModel):
@@ -116,13 +121,17 @@ class _Raw:
     per_person: dict[str, int] = field(default_factory=lambda: defaultdict(int))
     cases: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
     externals: set[str] = field(default_factory=set)
+    money: dict[str, float] = field(default_factory=lambda: defaultdict(float))
+    money_events: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    currency: dict[str, str] = field(default_factory=dict)
 
 
 async def _gather(tenant_id: str, since: datetime) -> _Raw:
     raw = _Raw()
     async with tenant_conn(tenant_id) as conn:
         rows = await conn.fetch(
-            "SELECT actor, verb, objects FROM event_log WHERE tenant_id=$1 AND ts >= $2",
+            "SELECT actor, verb, objects, attributes FROM event_log"
+            " WHERE tenant_id=$1 AND ts >= $2",
             tenant_id,
             since,
         )
@@ -134,6 +143,14 @@ async def _gather(tenant_id: str, since: datetime) -> _Raw:
         token = str(actor.get("token", "unknown"))
         verb = str(row["verb"])
 
+        attributes = row["attributes"]
+        attributes = json.loads(attributes) if isinstance(attributes, str) else (attributes or {})
+        amount = attributes.get("amount")
+        try:
+            amount = float(amount) if amount is not None else None
+        except (TypeError, ValueError):
+            amount = None
+
         for obj in objects:
             kind = str(obj.get("object_type", ""))
             if kind in {"doc", ""}:
@@ -141,6 +158,10 @@ async def _gather(tenant_id: str, since: datetime) -> _Raw:
             raw.per_step[(kind, verb)] += 1
             raw.per_person_step[(token, kind, verb)] += 1
             raw.cases[kind].add(str(obj.get("object_id", "")))
+            if amount is not None:
+                raw.money[kind] += amount
+                raw.money_events[kind] += 1
+                raw.currency.setdefault(kind, str(attributes.get("currency", "")))
         raw.per_person[token] += 1
         if token.startswith("<ORG_"):
             raw.externals.add(token)
@@ -236,6 +257,9 @@ async def build_model(tenant_id: str, window_days: int = WINDOW_DAYS) -> OrgMode
                 steps=loads,
                 cycle=process.total_duration,
                 slowest_verb="",
+                money=round(raw.money.get(process.id, 0.0), 2),
+                currency=raw.currency.get(process.id, ""),
+                money_events=raw.money_events.get(process.id, 0),
             )
         )
 
@@ -300,6 +324,10 @@ class Scenario(BaseModel):
     effects: list[Effect] = Field(default_factory=list)
     assumptions: list[str] = Field(default_factory=list)
     cover: list[str] = Field(default_factory=list)
+    # How much more work arrives, for the scenarios that change volume. A lens needs it:
+    # demand says nothing about durations on purpose, but it says plenty about how much
+    # money rides on the same step.
+    magnitude: float | None = None
 
 
 def _slower_by(share: float) -> float:
@@ -467,6 +495,7 @@ def demand_changes(model: OrgModel, process_id: str, multiplier: float) -> Scena
         title=f"If {direction} work comes in",
         summary=summary,
         effects=effects,
+        magnitude=multiplier,
         assumptions=[
             f"Based on the last {model.window_days} days of real volume.",
             "Shows how much more work each step would carry, not how many people it needs: "

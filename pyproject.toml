@@ -41,7 +41,8 @@ entrypoint = "service:app"
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-extend-exclude = ["dashboard", ".venv", "scripts/fixtures", "*.md"]
+# .claude holds vendored agent skills — third-party code we do not own and do not style.
+extend-exclude = ["dashboard", ".venv", "scripts/fixtures", "*.md", ".claude"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "N", "S", "ANN", "RUF", "TID"]

@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from api.deps import tenant_context
 from core.processes import get_process
 from core.tenancy import TenantContext
+from twin.lenses import LENSES, LensOption, LensView, view
 from twin.organisation import (
     OrgModel,
     Scenario,
@@ -22,8 +23,22 @@ from twin.organisation import (
 router = APIRouter(tags=["twin"])
 
 
+class Answer(BaseModel):
+    """A scenario and the chosen reading of it.
+
+    The scenario is the same whichever lens is asked for: the arithmetic over what happened
+    does not change because of who is reading it. Only the second half does.
+    """
+
+    scenario: Scenario
+    lens: LensView
+
+
 class WhatIf(BaseModel):
     kind: Literal["person_leaves", "demand_changes", "process_changes"]
+    # Which reading of the answer to return alongside the operational one. Defaults to the
+    # operational reading, so a caller that knows nothing about lenses behaves as before.
+    lens: Literal["operations", "cash", "people", "risk"] = "operations"
     person: str | None = None
     process_id: str | None = None
     multiplier: float = Field(default=2.0, ge=0.1, le=10.0)
@@ -37,15 +52,25 @@ async def twin(ctx: TenantContext = Depends(tenant_context)) -> OrgModel:
     return await build_model(ctx.tenant_id)
 
 
-@router.post("/twin/what-if", response_model=Scenario)
-async def what_if(body: WhatIf, ctx: TenantContext = Depends(tenant_context)) -> Scenario:
+@router.get("/twin/lenses", response_model=list[LensOption])
+async def lenses() -> list[LensOption]:
+    """The readings a person can choose between before running a scenario."""
+    return LENSES
+
+
+@router.post("/twin/what-if", response_model=Answer)
+async def what_if(body: WhatIf, ctx: TenantContext = Depends(tenant_context)) -> Answer:
     """Try a change against the model before making it for real.
 
     Nothing here touches the live graph or any customer system. It is arithmetic over what
     already happened, which is why every answer carries the assumptions it rests on.
     """
     model = await build_model(ctx.tenant_id)
+    scenario = await _run(model, body, ctx.tenant_id)
+    return Answer(scenario=scenario, lens=view(model, scenario, body.lens))
 
+
+async def _run(model: OrgModel, body: WhatIf, tenant_id: str) -> Scenario:
     if body.kind == "person_leaves":
         if not body.person:
             raise HTTPException(400, "say which person")
@@ -57,7 +82,7 @@ async def what_if(body: WhatIf, ctx: TenantContext = Depends(tenant_context)) ->
     if body.kind == "demand_changes":
         return demand_changes(model, body.process_id, body.multiplier)
 
-    detail = await get_process(ctx.tenant_id, body.process_id)
+    detail = await get_process(tenant_id, body.process_id)
     if detail is None:
         raise HTTPException(404, "no such way of working")
     waits = [(w.from_step, w.to_step, w.duration.seconds) for w in detail.waits]

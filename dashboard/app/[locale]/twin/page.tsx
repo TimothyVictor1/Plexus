@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { get, post, type OrgModel, type TwinScenario } from "@/lib/api";
+import {
+  get, post,
+  type OrgModel, type TwinAnswer, type TwinLensOption,
+} from "@/lib/api";
 
 type Kind = "person_leaves" | "demand_changes" | "process_changes";
 
@@ -21,7 +24,11 @@ export default function TwinPage() {
   const [processId, setProcessId] = useState("");
   const [multiplier, setMultiplier] = useState(2);
   const [speedUp, setSpeedUp] = useState(50);
-  const [result, setResult] = useState<TwinScenario | null>(null);
+  const [result, setResult] = useState<TwinAnswer | null>(null);
+  // Which reading to ask for. The operational one is the default, so the screen behaves
+  // as it always did until someone chooses otherwise.
+  const [lens, setLens] = useState("operations");
+  const [lenses, setLenses] = useState<TwinLensOption[]>([]);
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(() => {
@@ -32,6 +39,7 @@ export default function TwinPage() {
         if (m.processes[0]) setProcessId(m.processes[0].id);
       })
       .catch((e) => setError(String(e.message)));
+    get<TwinLensOption[]>("/twin/lenses").then(setLenses).catch(() => setLenses([]));
   }, []);
   useEffect(load, [load]);
 
@@ -39,8 +47,9 @@ export default function TwinPage() {
     setBusy(true);
     setError(null);
     try {
-      setResult(await post<TwinScenario>("/twin/what-if", {
+      setResult(await post<TwinAnswer>("/twin/what-if", {
         kind,
+        lens,
         person: kind === "person_leaves" ? person : null,
         process_id: kind === "person_leaves" ? null : processId,
         multiplier,
@@ -130,16 +139,38 @@ export default function TwinPage() {
                 {busy ? t("working") : t("run")}
               </button>
             </div>
+
+            {lenses.length > 0 && (
+              <div className="stack" style={{ gap: 8 }}>
+                <span className="small muted" style={{ fontWeight: 700 }}>
+                  {t("lensLabel")}
+                </span>
+                <div className="row" style={{ gap: 8 }}>
+                  {lenses.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      className={`btn sm ${lens === option.id ? "" : "outline"}`}
+                      aria-pressed={lens === option.id}
+                      onClick={() => setLens(option.id)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+                <span className="small muted">{lenses.find((o) => o.id === lens)?.blurb}</span>
+              </div>
+            )}
           </section>
 
           {result && (
             <section className="card stack">
-              <h2>{result.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.55 }}>{result.summary}</p>
+              <h2>{result.scenario.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.55 }}>{result.scenario.summary}</p>
 
-              {result.effects.length > 0 && (
+              {result.scenario.effects.length > 0 && (
                 <div className="stack" style={{ gap: 8 }}>
-                  {result.effects.map((e, i) => (
+                  {result.scenario.effects.map((e, i) => (
                     <div key={i} className="sunken" style={{
                       display: "flex", gap: 12, alignItems: "flex-start",
                     }}>
@@ -159,13 +190,47 @@ export default function TwinPage() {
                 </div>
               )}
 
-              {result.cover.length > 0 && (
+              {/* The second reading. Always present, even when it is only to say that the
+                  records cannot answer it — an empty panel that explains itself. */}
+              {result.lens.id !== "operations" && (
+                <div className="stack" style={{
+                  gap: 10, padding: "16px 18px", borderRadius: "var(--radius-ctl)",
+                  background: "var(--accent-deep)", border: "1px solid var(--accent-edge)",
+                }}>
+                  <span className="small" style={{ fontWeight: 700, color: "var(--hi)" }}>
+                    {result.lens.label}
+                  </span>
+
+                  {result.lens.unavailable ? (
+                    <p className="small muted" style={{ lineHeight: 1.55 }}>
+                      {result.lens.unavailable}
+                    </p>
+                  ) : (
+                    <>
+                      <p style={{ fontSize: 15, lineHeight: 1.55 }}>{result.lens.summary}</p>
+                      {result.lens.findings.map((f, i) => (
+                        <div key={i} className="stack" style={{ gap: 2 }}>
+                          <span style={{ fontWeight: 600 }}>{f.value}</span>
+                          <span className="small muted">{f.label}</span>
+                          {f.detail && (
+                            <span className="small muted" style={{ lineHeight: 1.5 }}>
+                              {f.detail}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {result.scenario.cover.length > 0 && (
                 <p className="small muted">
-                  {t("couldCover", { people: result.cover.join(", ") })}
+                  {t("couldCover", { people: result.scenario.cover.join(", ") })}
                 </p>
               )}
 
-              {result.assumptions.length > 0 && (
+              {result.scenario.assumptions.length > 0 && (
                 <div className="stack" style={{ gap: 4 }}>
                   <span className="small muted" style={{ fontWeight: 700 }}>
                     {t("restsOn")}
@@ -174,7 +239,7 @@ export default function TwinPage() {
                     margin: 0, paddingLeft: 18, display: "flex",
                     flexDirection: "column", gap: 3,
                   }}>
-                    {result.assumptions.map((a) => <li key={a}>{a}</li>)}
+                    {result.scenario.assumptions.map((a) => <li key={a}>{a}</li>)}
                   </ul>
                 </div>
               )}
