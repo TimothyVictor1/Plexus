@@ -165,6 +165,25 @@ async def create_from_triggers(tenant_id: str, now: datetime | None = None) -> l
                 hit.trigger.process_id,
                 hit.dedupe_key,
             )
+        # The shadow record of this: what the agent would do, written before anyone has
+        # looked at it. Scored later against whatever the person actually decides.
+        from core.shadow import service as shadow
+
+        await shadow.predict(
+            tenant_id,
+            process_id=hit.trigger.process_id,
+            agent=hit.trigger.kind,
+            trigger_kind=hit.trigger.kind,
+            dedupe_key=hit.dedupe_key,
+            review_item_id=item_id,
+            predicted={
+                "operation": hit.trigger.operation,
+                "title": draft.title,
+                "draft": draft.body,
+                "target": hit.trigger.target_source_id,
+            },
+            confidence=1.0 if verdict.decision == "approve" else 0.0,
+        )
         created.append(item_id)
     return created
 
@@ -260,6 +279,16 @@ async def _settle(
             error,
             draft_text,
         )
+
+    from core.shadow import service as shadow
+
+    await shadow.observe(
+        tenant_id,
+        item_id,
+        status=status,
+        edited=draft_text is not None,
+        observed={"status": status, "by": subject, "edited_text": draft_text},
+    )
 
 
 async def skip(tenant_id: str, item_id: str, subject: str) -> Decision:

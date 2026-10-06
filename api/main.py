@@ -20,6 +20,7 @@ from api.routers.overview import router as overview_router
 from api.routers.pii import router as pii_router
 from api.routers.processes import router as processes_router
 from api.routers.review import router as review_router
+from api.routers.shadow import router as shadow_router
 from api.routers.team import router as team_router
 from api.routers.twin import router as twin_router
 from core.db.pool import close_pool
@@ -67,6 +68,7 @@ def create_app() -> FastAPI:
         connections_router,
         processes_router,
         review_router,
+        shadow_router,
         team_router,
         jobs_router,
         twin_router,
