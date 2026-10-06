@@ -23,6 +23,7 @@ class FieldKind(StrEnum):
     """What a field turned out to be, in terms the rest of the product can use."""
 
     money = "money"
+    currency = "currency"
     quantity = "quantity"
     timestamp = "timestamp"
     identity = "identity"
