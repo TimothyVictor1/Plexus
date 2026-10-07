@@ -37,6 +37,40 @@ def known_names(tenant_id: str) -> frozenset[str]:
     return frozenset(_GAZETTEER.get(tenant_id, set()))
 
 
+# Short enough to be an ordinary word as often as a name. "Ek" is a Swedish surname and also
+# the word for oak; masking every oak would destroy the meaning of the text it is protecting.
+MIN_ALIAS = 3
+
+
+def name_aliases(tenant_id: str) -> dict[str, str]:
+    """Every form a known person's name is written in, mapped to the name it belongs to.
+
+    A gazetteer of full names only catches a full name, and almost nothing is written that way.
+    People are greeted by their first name and referred to by their surname, so "Hej Nils" left
+    a real name in clear text in every email that opened with it.
+
+    The value an alias maps to is what the token is derived from, so "Nils" and "Nils Ahlgren"
+    become the same person rather than two. Where an alias is ambiguous — two colleagues called
+    Anna — it maps to itself instead: masked, but deliberately not resolved, because guessing
+    which Anna was meant is worse than admitting we cannot tell.
+    """
+    aliases: dict[str, str] = {}
+    ambiguous: set[str] = set()
+    for full in _GAZETTEER.get(tenant_id, set()):
+        aliases[full] = full
+        for part in full.split():
+            part = part.strip(".,;:")
+            if len(part) < MIN_ALIAS or part == full:
+                continue
+            if part in aliases and aliases[part] != full:
+                ambiguous.add(part)
+            else:
+                aliases[part] = full
+    for part in ambiguous:
+        aliases[part] = part
+    return aliases
+
+
 @dataclass
 class TokenMap:
     """token -> real value. Redacts itself in every representation."""
@@ -86,7 +120,7 @@ class Boundary:
         self, text: str, *, tenant_id: str, token_map: TokenMap | None = None
     ) -> tuple[str, TokenMap]:
         tmap = token_map if token_map is not None else TokenMap()
-        spans = find_spans(text, known_names(tenant_id))
+        spans = find_spans(text, name_aliases(tenant_id))
         if not spans:
             return text, tmap
         out: list[str] = []

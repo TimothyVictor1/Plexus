@@ -93,7 +93,7 @@ RECOGNISERS: tuple[Recogniser, ...] = (
 )
 
 
-def find_spans(text: str, extra_names: frozenset[str] = frozenset()) -> list[Span]:
+def find_spans(text: str, extra_names: frozenset[str] | dict[str, str] = frozenset()) -> list[Span]:
     """All recogniser hits, overlaps resolved by earliest start then highest priority."""
     spans: list[Span] = []
     for rec in RECOGNISERS:
@@ -104,11 +104,13 @@ def find_spans(text: str, extra_names: frozenset[str] = frozenset()) -> list[Spa
             spans.append(
                 Span(match.start(), match.end(), rec.entity_type, raw, rec.priority, rec.score)
             )
-    for name in extra_names:
-        start = text.find(name)
-        while start != -1:
-            spans.append(Span(start, start + len(name), "PERSON", name, 5, 0.85))
-            start = text.find(name, start + 1)
+    # Names are matched on word boundaries so a name never matches inside another word, and
+    # the span carries the person it belongs to rather than the form it was written in — that
+    # is what keeps "Nils" and "Nils Ahlgren" the same person once tokenised.
+    aliases = extra_names if isinstance(extra_names, dict) else {n: n for n in extra_names}
+    for written, belongs_to in sorted(aliases.items(), key=lambda kv: -len(kv[0])):
+        for match in re.finditer(rf"\b{re.escape(written)}\b", text):
+            spans.append(Span(match.start(), match.end(), "PERSON", belongs_to, 5, 0.85))
 
     spans.sort(key=lambda s: (s.start, s.priority, -(s.end - s.start)))
     kept: list[Span] = []
