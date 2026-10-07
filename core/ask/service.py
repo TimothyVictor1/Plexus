@@ -14,7 +14,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from core.ask.retrieval import as_sources, process_facts, search_documents
+from core.ask.entities import as_notes, find_entities
+from core.ask.retrieval import _terms, as_sources, process_facts, search_documents
 from core.db.pool import tenant_conn
 from core.models.router import get_router, render
 from core.models.types import ModelUnavailableError, Role, SchemaValidationError
@@ -51,9 +52,11 @@ class AnswerText(BaseModel):
     answer: str
 
 
-def _notes(facts: list[Any], passages: list[Any]) -> str:
+def _notes(facts: list[Any], passages: list[Any], entity_notes: str = "") -> str:
     lines = ["What Plexus has measured about how this company works:"]
     lines += [f"  - {f.text}" for f in facts]
+    if entity_notes:
+        lines += ["", entity_notes]
     if passages:
         lines += ["", "Relevant records:"]
         lines += [f"  - [{p.source_id}] {p.title}: {p.text[:220]}" for p in passages]
@@ -77,14 +80,23 @@ async def answer(
 
     passages = await search_documents(tenant_id, question)
     facts = await process_facts(tenant_id, question)
+    # Where a named thing has got to is not written in any document: it is the shape of the
+    # events that touched it. Document search alone cannot answer "what is happening with X".
+    entities = await find_entities(tenant_id, _terms(question), question)
+    entity_notes = as_notes(entities)
 
-    if not passages and not facts:
+    if not passages and not facts and not entities:
         return Answer(text=_cannot_tell(question), sources=[], grounded=False)
 
     try:
         completion = await get_router().complete(
             Role.workhorse,
-            render([("system", SYSTEM), ("user", f"{_notes(facts, passages)}\n\nQ: {question}")]),
+            render(
+                [
+                    ("system", SYSTEM),
+                    ("user", f"{_notes(facts, passages, entity_notes)}\n\nQ: {question}"),
+                ]
+            ),
             tenant_id=tenant_id,
             schema=AnswerText,
             max_tokens=1500,
@@ -95,7 +107,12 @@ async def answer(
 
     if not text:
         # No model, but the measured facts are still true and still useful.
-        text = facts[0].text if facts else _cannot_tell(question)
+        if facts:
+            text = facts[0].text
+        elif entities:
+            text = entities[0].sentence()
+        else:
+            text = _cannot_tell(question)
 
     sources = [Source(**s) for s in as_sources(passages)]
     conversation_id = await _remember(tenant_id, subject, conversation_id, question, text, sources)
