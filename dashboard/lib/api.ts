@@ -703,3 +703,39 @@ export type PeopleTwin = {
   only_one_person: number;
   summary: string;
 };
+
+/* --------------------------------------------- the shadow workforce's record */
+
+/** One agent's record on one process. Accuracy counts only settled predictions. */
+export type Scorecard = {
+  process_id: string;
+  process_name: string;
+  agent: string;
+  predictions: number;
+  settled: number;
+  agreed: number;
+  edited: number;
+  rejected: number;
+  accuracy: number;
+  weighted: number;
+  ready: boolean;
+  needs: number;
+  verdict_text: string;
+};
+
+export type Scoreboard = { window_days: number; cards: Scorecard[]; summary: string };
+
+/** One thing an agent would have done, and what the person did instead. */
+export type ShadowRun = {
+  id: string;
+  process_id: string;
+  agent: string;
+  trigger_kind: string;
+  predicted: Record<string, unknown>;
+  predicted_at: string;
+  confidence: number;
+  verdict: "pending" | "agreed" | "edited" | "rejected" | "expired";
+  observed: Record<string, unknown> | null;
+  observed_at: string | null;
+  note: string;
+};

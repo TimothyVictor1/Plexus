@@ -40,6 +40,7 @@ export default async function LocaleLayout({
     work: t("work"),
     review: t("review"),
     twin: t("twin"),
+    shadow: t("shadow"),
     connections: t("connections"),
     settings: t("settings"),
     waitingCount: t.raw("waitingCount") as string,

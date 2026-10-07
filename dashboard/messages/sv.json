@@ -27,7 +27,8 @@
     "previewTitle": "Förhandsvisning",
     "previewBody": "Verklig utdata från ett exempelföretag, hämtad en gång. Inget här går att ändra. Peka konsolen mot en Plexus-tjänst för att använda ert eget arbete.",
     "themeLight": "Byt till ljust",
-    "themeDark": "Byt till mörkt"
+    "themeDark": "Byt till mörkt",
+    "shadow": "Lär sig"
   },
   "home": {
     "greeting": {
@@ -307,5 +308,25 @@
     "mustAccept": "Godkänn villkoren ovan innan du går in.",
     "failed": "Något gick fel. Försök igen.",
     "footer": "Om du inte fick den här länken direkt, stäng sidan."
+  },
+  "shadow": {
+    "title": "Lär sig",
+    "sub": "Agenter som ser hur arbetet görs. De gör ingenting själva — de bygger ett facit, så att du kan se hur de skulle fungera innan du släpper in dem någonstans.",
+    "nobody": "Ingen agent har sett något än. De börjar så snart det finns arbete att följa.",
+    "watching": "Ser fortfarande på",
+    "ready": "Redo när du är det",
+    "agreed": "Höll med dig",
+    "edited": "Du ändrade formuleringen",
+    "rejected": "Du sa nej",
+    "settled": "{n} beslut sedda",
+    "accuracy": "{n}% rätt",
+    "showRuns": "Visa vad den hade gjort",
+    "hideRuns": "Dölj",
+    "predicted": "Den hade",
+    "outcome": "Du",
+    "pending": "Inte avgjort än",
+    "nothingYet": "Inget att visa än. Förslag dyker upp här när arbete uppstår.",
+    "howItWorks": "Så fungerar det",
+    "howItWorksBody": "När arbete dyker upp skriver varje agent i tysthet ner vad den skulle göra, och gör sedan ingenting. Senare hanterar du arbetet, och de två jämförs. Inget skickas, ändras eller raderas av en agent i det här läget."
   }
 }

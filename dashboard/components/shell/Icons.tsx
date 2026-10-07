@@ -65,3 +65,13 @@ export const TwinIcon = () => (
     <path d="M10.4 7.8 7 14.6M13.6 7.8 17 14.6M8 17.4h8" />
   </svg>
 );
+
+// The shadow workforce: someone doing the work, and the outline learning it from behind.
+export const ShadowIcon = () => (
+  <svg {...base} aria-hidden="true">
+    <circle cx="9" cy="8" r="3" />
+    <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
+    <circle cx="16.5" cy="8.5" r="2.2" strokeDasharray="2 2" />
+    <path d="M13.5 19a4.6 4.6 0 0 1 7 0" strokeDasharray="2 2" />
+  </svg>
+);

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  AskIcon, ConnectIcon, HomeIcon, PlexusMark, PlusIcon, ReviewIcon, SettingsIcon, TwinIcon,
-  WorkIcon,
+  AskIcon, ConnectIcon, HomeIcon, PlexusMark, PlusIcon, ReviewIcon, SettingsIcon, ShadowIcon,
+  TwinIcon, WorkIcon,
 } from "./Icons";
 import ThemeToggle from "./ThemeToggle";
 
@@ -22,6 +22,7 @@ export default function Rail({
     { href: `${base}/work`, label: labels.work, icon: <WorkIcon /> },
     { href: `${base}/review`, label: labels.review, icon: <ReviewIcon />, badge: reviewCount },
     { href: `${base}/twin`, label: labels.twin, icon: <TwinIcon /> },
+    { href: `${base}/shadow`, label: labels.shadow, icon: <ShadowIcon /> },
     { href: `${base}/connections`, label: labels.connections, icon: <ConnectIcon /> },
   ];
 

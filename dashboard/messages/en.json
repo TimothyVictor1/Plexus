@@ -27,7 +27,8 @@
     "previewTitle": "Preview",
     "previewBody": "Real output from an example company, captured once. Nothing here can be changed. Point this console at a Plexus service to use your own work.",
     "themeLight": "Switch to light",
-    "themeDark": "Switch to dark"
+    "themeDark": "Switch to dark",
+    "shadow": "Learning"
   },
   "home": {
     "greeting": {
@@ -307,5 +308,25 @@
     "mustAccept": "Please agree to the terms above before entering.",
     "failed": "Something went wrong. Please try again.",
     "footer": "If you were not given this link directly, please close this page."
+  },
+  "shadow": {
+    "title": "Learning",
+    "sub": "Agents watching how the work is done. They act on nothing — they are building a record, so you can see what they would be like before you let them near anything.",
+    "nobody": "No agent has watched anything yet. They start as soon as there is work to watch.",
+    "watching": "Still watching",
+    "ready": "Ready when you are",
+    "agreed": "Agreed with you",
+    "edited": "You changed the wording",
+    "rejected": "You said no",
+    "settled": "{n} decisions seen",
+    "accuracy": "{n}% right",
+    "showRuns": "Show what it would have done",
+    "hideRuns": "Hide",
+    "predicted": "It would have",
+    "outcome": "You",
+    "pending": "Not decided yet",
+    "nothingYet": "Nothing to show yet. Predictions appear here as work comes up.",
+    "howItWorks": "How this works",
+    "howItWorksBody": "When work comes up, each agent privately writes down what it would do and then does nothing. Later you deal with that work, and the two are compared. Nothing is ever sent, changed or deleted by an agent at this stage."
   }
 }
